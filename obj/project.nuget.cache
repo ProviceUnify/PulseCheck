@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "0ALl1qEvm+uJviDloA8mHvdm4WnUYTaqzawGpQsO+J85QJfT5Ups3NI+3gcPGNg22bzqgzXEx16JUhzKvT6A9w==",
+  "success": true,
+  "projectFilePath": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\SSWContorol.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.aspnetcore.authentication.negotiate\\7.0.4\\microsoft.aspnetcore.authentication.negotiate.7.0.4.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\7.0.4\\microsoft.aspnetcore.connections.abstractions.7.0.4.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.features\\7.0.4\\microsoft.extensions.features.7.0.4.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\system.directoryservices.protocols\\7.0.0\\system.directoryservices.protocols.7.0.0.nupkg.sha512",
+    "C:\\Users\\Provice\\.nuget\\packages\\system.io.pipelines\\7.0.0\\system.io.pipelines.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
