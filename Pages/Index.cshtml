@@ -5,5 +5,12 @@
 }
 
 <div class="text-center">
-    
+    @if (User.Identity.IsAuthenticated)
+    {
+    <iframe scrolling="no" style="width: 80vw; height: 80vh" src="healthchecks-ui">
+    </iframe>
+    } else
+    {
+        <h1>You should be authorized!</h1>
+    }
 </div>

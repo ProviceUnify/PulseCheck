@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2yRrvvj0ClCHhnnn2FV09xTcQA2GsjL/QxqmO9o1wc0=",
+  "Hash": "SFoE7e1/VhUDDBJfX8f2RzqSoLIwqxjzXELgW5fQDsQ=",
   "Source": "SSWControl.Monitor",
   "BasePath": "_content/SSWControl.Monitor",
   "Mode": "Default",
@@ -1069,6 +1069,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SSWControl.Monitor.bundle.scp.css"
+    },
+    {
+      "Identity": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\wwwroot\\css\\healthcheck_custom_style.css",
+      "SourceId": "SSWControl.Monitor",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\wwwroot\\",
+      "BasePath": "_content/SSWControl.Monitor",
+      "RelativePath": "css/healthcheck_custom_style.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\healthcheck_custom_style.css"
     },
     {
       "Identity": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\wwwroot\\css\\site.css",

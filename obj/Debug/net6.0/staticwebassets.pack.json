@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\SSWControl.Monitor.bundle.scp.css"
     },
     {
+      "Id": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\wwwroot\\css\\healthcheck_custom_style.css",
+      "PackagePath": "staticwebassets\\css\\healthcheck_custom_style.css"
+    },
+    {
       "Id": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

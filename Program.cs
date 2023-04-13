@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using SSWControl.Data;
 
 
@@ -37,11 +36,16 @@ internal class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-        app.MapHealthChecksUI(); // включает доступ к HC через /healthchecks-ui
-        app.MapControllers(); // нужно для работы HC* (*HC - HealthCheck)
+        app.MapHealthChecksUI(settings =>
+            {
+                settings.AddCustomStylesheet("wwwroot\\css\\healthcheck_custom_style.css");
+                settings.AsideMenuOpened = false;
+            }
+        ); // включает доступ к HC через /healthchecks-ui
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapRazorPages();
-
         app.Run();
+
     }
 }
