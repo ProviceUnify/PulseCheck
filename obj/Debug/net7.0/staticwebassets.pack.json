@@ -1,8 +1,8 @@
 {
   "Files": [
     {
-      "Id": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\SSWControl.bundle.scp.css",
-      "PackagePath": "staticwebassets\\SSWControl.bundle.scp.css"
+      "Id": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\SSWControl.Monitor.bundle.scp.css",
+      "PackagePath": "staticwebassets\\SSWControl.Monitor.bundle.scp.css"
     },
     {
       "Id": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl\\wwwroot\\css\\site.css",
@@ -245,20 +245,20 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.SSWControl.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.SSWControl.Monitor.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.SSWControl.props",
-      "PackagePath": "build\\SSWControl.props"
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.SSWControl.Monitor.props",
+      "PackagePath": "build\\SSWControl.Monitor.props"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.SSWControl.props",
-      "PackagePath": "buildMultiTargeting\\SSWControl.props"
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.SSWControl.Monitor.props",
+      "PackagePath": "buildMultiTargeting\\SSWControl.Monitor.props"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.SSWControl.props",
-      "PackagePath": "buildTransitive\\SSWControl.props"
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.SSWControl.Monitor.props",
+      "PackagePath": "buildTransitive\\SSWControl.Monitor.props"
     }
   ],
   "ElementsToRemove": []
