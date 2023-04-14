@@ -7,7 +7,7 @@ namespace SSWControl.Services.HealthChecks
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             using var client = new HttpClient();
-            using var response = await client.GetAsync("https://google.com", cancellationToken);
+            using var response = await client.GetAsync("https://drive.google.com/", cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 return HealthCheckResult.Unhealthy($"HTTP request failed with status code {response.StatusCode}");

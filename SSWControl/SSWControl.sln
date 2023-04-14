@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{1A00876F-0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2EC59FE1-D62E-475C-BC75-50F0C9941D45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSWControl.Services", "..\SSWControl.Services\SSWControl.Services.csproj", "{9F0CD610-3BD7-4709-90AD-FEA4C9B8D10B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSWControl.Services", "..\SSWControl.Services\SSWControl.Services.csproj", "{9F0CD610-3BD7-4709-90AD-FEA4C9B8D10B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
