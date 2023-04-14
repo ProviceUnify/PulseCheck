@@ -1,0 +1,19 @@
+{
+  "HealthChecksUI": {
+    "HealthChecks": [
+      {
+        "Name": "test2",
+        "Uri": "https://localhost:44337/health"
+      },
+      {
+        "Name": "ttt",
+        "Uri": "uuu"
+      },
+      {
+        "Name": "zzz",
+        "Uri": "yyy"
+      }
+    ],
+    "PollingRate": "43"
+  }
+}

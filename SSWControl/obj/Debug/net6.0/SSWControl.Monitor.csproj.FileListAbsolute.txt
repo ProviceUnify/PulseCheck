@@ -238,3 +238,7 @@ D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\
 D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\obj\Debug\net6.0\SSWControl.Monitor.pdb
 D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\obj\Debug\net6.0\SSWControl.Monitor.genruntimeconfig.cache
 D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\obj\Debug\net6.0\ref\SSWControl.Monitor.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\bin\Debug\net6.0\healthcheck-settings.json
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
