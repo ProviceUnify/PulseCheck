@@ -2,23 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SSWControl.Data;
+using SSWControl.Monitor;
+using System.Security.Claims;
 
-public class HCUI_Entries 
-{
-    public string Name { get; set; }
-    public string Uri { get; set; }
-}
-
-public class HCUI
-{
-    public List<HCUI_Entries> HealthChecks = new List<HCUI_Entries>();
-    public string? PollingRate = "10";
-
-}
-public class HC_Settings
-{
-    public HCUI? HealthChecksUI;
-}
 internal class Program
 {
     private static void Main(string[] args)
@@ -36,6 +22,8 @@ internal class Program
             .AddEntityFrameworkStores<ApplicationDbContext>(); //авторизация
         builder.Services.AddRazorPages();
         builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(HC_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
+
+        builder.Services.AddAuthorization(options => options.AddPolicy("promoted", policy => policy.RequireClaim("userType", "promoted")));
 
         var app = builder.Build();
 
@@ -68,20 +56,20 @@ internal class Program
         StreamReader r = new StreamReader("healthcheck-settings.json");
         var json = r.ReadToEnd();
         r.Close();
-        HC_Settings ser = JsonConvert.DeserializeObject<HC_Settings>(json);
-        ser.HealthChecksUI.HealthChecks.Add(new HCUI_Entries { Name = "ttt", Uri = "uuu"});
-        ser.HealthChecksUI.HealthChecks.Add(new HCUI_Entries { Name = "zzz", Uri = "yyy"});
-        ser.HealthChecksUI.PollingRate = "43";
+        HealthChecksClass ser = JsonConvert.DeserializeObject<HealthChecksClass>(json);
+        //ser.HealthChecksUI.HealthChecks.Add(new HealthCheckEntries { Name = "ttt", Uri = "uuu"});
+        //ser.HealthChecksUI.HealthChecks.Add(new HealthCheckEntries { Name = "zzz", Uri = "yyy"});
+        //ser.HealthChecksUI.PollingRate = "43";
 
-        json = JsonConvert.SerializeObject(ser);
-        JsonSerializer serializer = new JsonSerializer();
-        serializer.Formatting = Formatting.Indented;
-        using (StreamWriter sw = new StreamWriter("healthcheck-settings.json"))
-        using (JsonWriter writer = new JsonTextWriter(sw))
-        {
-            serializer.Serialize(writer, ser);
-        }
-
+        //json = JsonConvert.SerializeObject(ser);
+        //JsonSerializer serializer = new JsonSerializer();
+        //serializer.Formatting = Formatting.Indented;
+        //using (StreamWriter sw = new StreamWriter("healthcheck-settings.json"))
+        //using (JsonWriter writer = new JsonTextWriter(sw))
+        //{
+        //    serializer.Serialize(writer, ser);
+        //}
         app.Run();
+        
     }
 }
