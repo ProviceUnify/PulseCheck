@@ -11,6 +11,8 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.5" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.5" />
+    <!--<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.3" />-->
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.16" />
@@ -20,10 +22,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <!--<PackageReference Include="Microsoft.Owin" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.2.2" />
+    <PackageReference Include="Owin" Version="1.0.0" />-->
   </ItemGroup>
 
 </Project>

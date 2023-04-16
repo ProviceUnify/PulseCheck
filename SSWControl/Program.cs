@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SSWControl.Data;
 using SSWControl.Monitor;
 using System.Security.Claims;
+using System.Web.Mvc;
 
 internal class Program
 {
@@ -17,13 +18,15 @@ internal class Program
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-        builder.Services.AddControllers().AddNewtonsoftJson();
+        builder.Services.AddControllers();
         builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>(); //авторизация
         builder.Services.AddRazorPages();
-        builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(HC_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
 
-        builder.Services.AddAuthorization(options => options.AddPolicy("promoted", policy => policy.RequireClaim("userType", "promoted")));
+        builder.Services.AddControllers().AddNewtonsoftJson();
+        builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(HC_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
+        builder.Services.AddAuthorization(options => options.AddPolicy("PromotedUsers", policy => policy.RequireRole("promoted")));
 
         var app = builder.Build();
 
@@ -52,6 +55,10 @@ internal class Program
         app.UseAuthorization();
         app.MapRazorPages();
 
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller}/{action}/{id?}");
+
         // эксперименты с записью в json
         StreamReader r = new StreamReader("healthcheck-settings.json");
         var json = r.ReadToEnd();
@@ -70,6 +77,6 @@ internal class Program
         //    serializer.Serialize(writer, ser);
         //}
         app.Run();
-        
+
     }
 }

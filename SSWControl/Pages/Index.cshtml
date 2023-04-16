@@ -11,14 +11,13 @@
     @{
         try {
 
-            ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
-            Claim newClaim = new Claim(ClaimTypes.Role, "promoted");
-            claimsIdentity.AddClaim(newClaim);
-            var e = User.Identity;
-            var principal = new ClaimsPrincipal(User.Identity);
-            //HttpContext.User = principal;
-
-            var t = User.HasClaim(ClaimTypes.Role, "promoted");
+            //ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
+            //Claim newClaim = new Claim(ClaimTypes.Role, "promoted");
+            //claimsIdentity.AddClaim(newClaim);
+            //var e = User.Identity;
+            //var principal = new ClaimsPrincipal(User.Identity);
+            ////HttpContext.User = principal;
+            //var t = User.HasClaim(ClaimTypes.Role, "promoted");
 
             if (User.Identity!.IsAuthenticated)
             {
