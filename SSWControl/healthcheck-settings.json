@@ -2,10 +2,10 @@
   "HealthChecksUI": {
     "HealthChecks": [
       {
-        "Name": "test2",
+        "Name": "HTTP/S Connections",
         "Uri": "https://localhost:44337/health"
       }
     ],
-    "PollingRate": "10"
+    "PollingRate": "2"
   }
 }

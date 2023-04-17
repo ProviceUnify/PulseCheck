@@ -238,3 +238,12 @@ D:\Software_SVN\Общие\Web\SSWControl\SSWControl.Services\obj\Debug\net6.0\r
 D:\Software_SVN\Общие\Web\SSWControl\SSWControl.Services\obj\Debug\net6.0\SSWControl.Services.pdb
 D:\Software_SVN\Общие\Web\SSWControl\SSWControl.Services\obj\Debug\net6.0\SSWControl.Services.genruntimeconfig.cache
 D:\Software_SVN\Общие\Web\SSWControl\SSWControl.Services\obj\Debug\net6.0\ref\SSWControl.Services.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\HealthChecks.SqlServer.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\HealthChecks.Uris.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\Azure.Core.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\Azure.Identity.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\HealthChecks.System.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\System.ServiceProcess.ServiceController.dll
+D:\!KAN\actual\1. Проектирование ИС (ВКР)\!ВКР\SSWControl\SSWControl.Services\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.ServiceProcess.ServiceController.dll

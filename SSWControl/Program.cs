@@ -15,6 +15,7 @@ internal class Program
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         builder.Configuration.AddJsonFile("healthcheck-settings.json"); // настраиваемая конфигурация подключенных компонентов
         int HC_pollingRate = builder.Configuration.GetSection("HealthChecksUI").GetValue<int>("PollingRate");
+        
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -45,12 +46,16 @@ internal class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-        app.MapHealthChecksUI(settings =>
-            {
-                settings.AddCustomStylesheet("wwwroot\\css\\healthcheck_custom_style.css");
-                settings.AsideMenuOpened = false;
-            }
-        ); // включает доступ к HC через /healthchecks-ui
+        try
+        {
+            app.MapHealthChecksUI(settings =>
+                {
+                    settings.AddCustomStylesheet("wwwroot\\css\\healthcheck_custom_style.css");
+                    settings.AsideMenuOpened = false;
+                }
+            ); // включает доступ к HC через /healthchecks-ui
+        }
+        catch { }
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapRazorPages();
