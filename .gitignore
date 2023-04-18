@@ -229,3 +229,6 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+*.zip
+/SSWControl/obj/Debug/net6.0/
+/SSWControl/obj/Debug/net6.0/SSWControl.Monitor.assets.cache
