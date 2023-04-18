@@ -1,7 +1,4 @@
 ﻿@page
-@using System.Security.Claims;
-@using Microsoft.AspNetCore.Identity;
-@using Microsoft.AspNetCore.Authentication;
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -11,18 +8,9 @@
     @{
         try {
 
-            //ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
-            //Claim newClaim = new Claim(ClaimTypes.Role, "promoted");
-            //claimsIdentity.AddClaim(newClaim);
-            //var e = User.Identity;
-            //var principal = new ClaimsPrincipal(User.Identity);
-            ////HttpContext.User = principal;
-            //var t = User.HasClaim(ClaimTypes.Role, "promoted");
-
             if (User.Identity!.IsAuthenticated)
             {
-            <iframe scrolling="no" style="width: 80vw; height: 80vh" src="healthchecks-ui">
-            </iframe>
+                <iframe scrolling="no" style="width: 80vw; height: 80vh" src="healthchecks-ui"></iframe>
             } else
             {
                 <h1 style="margin-top: 7em">
@@ -32,7 +20,9 @@
             }
         } catch
         {
-            <h1>You should be authorized!</h1>
+            <h1 style="margin-top: 7em">
+                You should be <a asp-area="Identity" asp-page="/Account/Login">authorized</a>!
+            </h1>
         }
     }
 </div>

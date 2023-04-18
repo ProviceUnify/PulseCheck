@@ -1,11 +1,17 @@
 {
   "HealthChecksUI": {
     "HealthChecks": [
+      //{
+      //  "Name": "HTTP/S Connections",
+      //  "Uri": "https://localhost:44337/health"
+      //}
       {
         "Name": "HTTP/S Connections",
-        "Uri": "https://localhost:44337/health"
+        "Uri": "http://test.core600.org/health"
       }
     ],
     "PollingRate": "2"
   }
 }
+
+

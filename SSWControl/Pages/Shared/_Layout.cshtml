@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,12 +21,23 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="AddClaimToCurrentUser" asp-action="Index">Add role</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="AddHealthCheckEntry" asp-action="Index">Add HC service</a>
-                        </li>
+                        @{
+                            if ((await AuthorizationService.AuthorizeAsync(User, "Admins")).Succeeded)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="ManageHealthCheckInstances" asp-action="Index">💊 Healthchecks</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="ManageUsers" asp-action="Index">♿ User Management</a>
+                                </li>
+                            }
+                            else if ((await AuthorizationService.AuthorizeAsync(User, "HealthManagers")).Succeeded)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="ManageHealthCheckInstances" asp-action="Index">💊 Healthchecks</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

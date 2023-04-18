@@ -1,10 +1,10 @@
+using k8s.KubeConfigModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SSWControl.Data;
 using SSWControl.Monitor;
-using System.Security.Claims;
-using System.Web.Mvc;
 
 internal class Program
 {
@@ -27,7 +27,10 @@ internal class Program
 
         builder.Services.AddControllers().AddNewtonsoftJson();
         builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(HC_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
-        builder.Services.AddAuthorization(options => options.AddPolicy("PromotedUsers", policy => policy.RequireRole("promoted")));
+        builder.Services.AddAuthorization(options => {
+            options.AddPolicy("Admins", policy => policy.RequireRole("user_manager", "health_manager"));
+            options.AddPolicy("HealthManagers", policy => policy.RequireRole("health_manager"));
+        });
 
         var app = builder.Build();
 

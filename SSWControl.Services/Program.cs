@@ -1,11 +1,10 @@
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SSWControl.Services.Data;
 using SSWControl.Services.HealthChecks;
-using HealthChecks.System;
 using System.ServiceProcess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +22,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+//builder.Services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
+//    .AddCertificate(options =>
+//    {
+//        options.AllowedCertificateTypes = CertificateTypes.All;
+//    });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -48,9 +52,8 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
