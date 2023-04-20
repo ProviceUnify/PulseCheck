@@ -33,7 +33,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
 builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", predicate: s => s.Status == ServiceControllerStatus.Running);
-builder.Services.AddHealthChecks().AddProcessHealthCheck("CalculatorApp", predicate: p => p.Length > 0);
+builder.Services.AddHealthChecks().AddProcessHealthCheck("Calculator", predicate: p => p.Length > 0);
 builder.Services.AddHealthChecks().AddCheck<CheckByHttpRequest>("test1");
 //builder.Services.AddHealthChecks().AddCheck<CheckByOtherHttpRequest>("test2");
 

@@ -6514,23 +6514,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Provice\\.nuget\\packages\\": {},
+    "C:\\Users\\PravotkinIA\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl.Services\\SSWControl.Services.csproj",
+      "projectUniqueName": "D:\\Software_SVN\\Общие\\Web\\SSWControl\\SSWControl.Services\\SSWControl.Services.csproj",
       "projectName": "SSWControl.Services",
-      "projectPath": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl.Services\\SSWControl.Services.csproj",
-      "packagesPath": "C:\\Users\\Provice\\.nuget\\packages\\",
-      "outputPath": "D:\\!KAN\\actual\\1. Проектирование ИС (ВКР)\\!ВКР\\SSWControl\\SSWControl.Services\\obj\\",
+      "projectPath": "D:\\Software_SVN\\Общие\\Web\\SSWControl\\SSWControl.Services\\SSWControl.Services.csproj",
+      "packagesPath": "C:\\Users\\PravotkinIA\\.nuget\\packages\\",
+      "outputPath": "D:\\Software_SVN\\Общие\\Web\\SSWControl\\SSWControl.Services\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Provice\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PravotkinIA\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -6631,7 +6631,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }
