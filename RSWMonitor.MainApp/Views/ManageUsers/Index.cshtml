@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+@using RSWMonitor.MainApp.Models
+
+@{ ViewData["Title"] = "User Management";}
+<div class="container text-center">
+    <div class="row">
+        <div class="col-8">
+            <h1>Users</h1>
+            <hr />
+            <table id="dtBasicExample" class="table table-striped table-sm">
+                <tr><th>#</th><th>Email</th><th>Email confirmed</th><th>Health manager?</th><th>User manager?</th></tr>
+                @foreach (var item in Model.users)
+                {
+                    
+                    <tr><td>@((Model.users).IndexOf(item) + 1)</td>
+                        <td>@item.Email</td>
+                        <td><input type="checkbox" @((@item.EmailConfirmed) ? "checked disabled" : "") /></td>
+                        <td><input type="checkbox" /></td>
+                        <td><input type="checkbox" /></td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col"></div>
+        <div class="col-3">
+            <div class="row">
+            <div class="col-3">
+
+            </div>
+            <div class="col-6">
+                <h1>Roles</h1>
+            </div>
+            <div class="col-3">
+                    <h1><button type="button" class="btn btn-success btn-sm">+</button></h1>
+            </div>
+            </div>
+            <hr />
+            <table class="table table-striped">
+                <tr><th>#</th><th>Name</th></tr>
+                @foreach (var item in Model.roles)
+                {
+                    <tr><td>@((Model.roles).IndexOf(item) + 1)</td><td>@item.Name</td></tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

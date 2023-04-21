@@ -1,0 +1,13 @@
+{
+  "HealthChecksUI": {
+    "HealthChecks": [
+      {
+        "Name": "HTTP/S Connections",
+        "Uri": "https://localhost:44338/health"
+      }
+    ],
+    "PollingRate": "2"
+  }
+}
+
+

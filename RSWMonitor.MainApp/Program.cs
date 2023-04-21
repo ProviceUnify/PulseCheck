@@ -12,13 +12,26 @@ namespace RSWMonitor.MainApp
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            builder.Configuration.AddJsonFile("healthcheck-settings.json"); // настраиваемая конфигурация подключенных компонентов
+            int health_check_pollingRate = builder.Configuration.GetSection("HealthChecksUI").GetValue<int>("PollingRate");
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>(); //авторизация
             builder.Services.AddRazorPages();
+
+            builder.Services.AddControllers().AddNewtonsoftJson();
+
+            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
+            builder.Services.AddAuthorization(options => {
+                options.AddPolicy("Admins", policy => policy.RequireRole("user_manager", "health_manager"));
+                options.AddPolicy("HealthManagers", policy => policy.RequireRole("health_manager"));
+            });
 
             var app = builder.Build();
 
@@ -39,10 +52,26 @@ namespace RSWMonitor.MainApp
 
             app.UseRouting();
 
+            try
+            {
+                app.MapHealthChecksUI(settings =>
+                {
+                    settings.AddCustomStylesheet("wwwroot\\css\\healthcheck_custom_style.css");
+                    settings.AsideMenuOpened = false;
+                }
+                ); // включает доступ к HC через /healthchecks-ui
+            }
+            catch { }
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller}/{action}/{id?}"
+            );
 
             app.Run();
         }

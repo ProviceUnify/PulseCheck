@@ -1,6 +1,9 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RSWMonitor.RemoteMonitor.Data;
+using System.ServiceProcess;
 
 namespace RSWMonitor.RemoteMonitor
 {
@@ -10,15 +13,28 @@ namespace RSWMonitor.RemoteMonitor
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //services.AddHealthChecks()
+            //  .AddSqlServer(Configuration["ConnectionString"]) // Your database connection string
+            //  .AddDiskStorageHealthCheck(s => s.AddDrive("C:\\", 1024)) // 1024 MB (1 GB) free minimum
+            //  .AddProcessAllocatedMemoryHealthCheck(512) // 512 MB max allocated memory
+            //  .AddProcessHealthCheck("ProcessName", p => p.Length > 0) // check if process is running
+            //  .AddWindowsServiceHealthCheck("someservice", s => s.Status == ServiceControllerStatus.Running); // check if a windows service is running
+
             // Add services to the container.
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+            builder.Services.AddControllers();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddRazorPages();
+
+            builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
+            builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", predicate: s => s.Status == ServiceControllerStatus.Running);
+            builder.Services.AddHealthChecks().AddProcessHealthCheck("Calculator", predicate: p => p.Length > 0);
+            //builder.Services.AddHealthChecks().AddCheck<CheckByHttpRequest>("test1");
 
             var app = builder.Build();
 
@@ -41,6 +57,10 @@ namespace RSWMonitor.RemoteMonitor
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHealthChecks("/health", new HealthCheckOptions {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 
             app.MapRazorPages();
 
