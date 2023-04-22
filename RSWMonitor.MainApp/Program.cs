@@ -29,8 +29,9 @@ namespace RSWMonitor.MainApp
 
             builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
             builder.Services.AddAuthorization(options => {
-                options.AddPolicy("Admins", policy => policy.RequireRole("user_manager", "health_manager"));
-                options.AddPolicy("HealthManagers", policy => policy.RequireRole("health_manager"));
+                options.AddPolicy("Admins", policy => policy.RequireRole("User manager", "Health manager"));
+                options.AddPolicy("HealthManagers", policy => policy.RequireRole("Health manager"));
+                options.AddPolicy("UserManagers", policy => policy.RequireRole("User manager"));
             });
 
             var app = builder.Build();
