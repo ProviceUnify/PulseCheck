@@ -60,5 +60,27 @@ namespace RSWMonitor.MainApp.Controllers
 
             return Ok();
         }
+
+        public async Task<IActionResult> CreateRole(string roleName)
+        {
+            if (string.IsNullOrEmpty(roleName))
+            {
+                return BadRequest(Json(new { value = "Role name is empty!" }));
+            }
+            await _roleManager.CreateAsync(new IdentityRole(roleName));
+            return Ok();
+        }
+        public async Task<IActionResult> RemoveRole(string roleName)
+        {
+            IdentityRole roleToDelete = await _roleManager.FindByNameAsync(roleName);
+            var result = await _roleManager.DeleteAsync(roleToDelete);
+            if (result.Succeeded)
+            {
+                return Ok();
+            } else
+            {
+                return BadRequest(Json(new { value = result.Errors.First().Description }));
+            }
+        }
     }
 }

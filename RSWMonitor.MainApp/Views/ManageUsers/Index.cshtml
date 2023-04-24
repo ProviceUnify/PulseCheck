@@ -8,10 +8,10 @@
 @inject UserManager<IdentityUser> userManager
 
 @{ ViewData["Title"] = "User Management";}
-<div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Action success</strong>
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div id="success-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success">
+            <strong class="me-auto text-light">Action result</strong>
             <small></small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
@@ -19,7 +19,35 @@
             The performed action was processed successfully!
         </div>
     </div>
+    <div id="error-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-danger">
+            <strong class="me-auto text-light">Action result</strong>
+            <small></small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="error-toast-text">
+        </div>
+    </div>
 </div>
+
+<div class="modal fade" id="confirm-deletion" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Role deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure that you want to delete this role?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary btn-ok">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container text-center">
     <div class="row">
         <div class="col-8">
@@ -31,32 +59,40 @@
                     <div class="col-2">
                     </div>
                 <hr />
-                @*
-                <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-                Dropdown button
-                </button>
-                <ul class="dropdown-menu" style="">
-                <li class=""><span class="dropdown-item"><input name="ttt@gmail.com" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" checked=""><label for="ttt@gmail.com" class="form-check-label"> Health manager</label></span></li>
-
-
-                <li class=""><span class="dropdown-item"><input name="ttt@gmail.com" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" checked=""><label for="ttt@gmail.com" class="form-check-label"> Health manager</label></span></li><li class=""><span class="dropdown-item"><input name="ttt@gmail.com" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" checked=""><label for="ttt@gmail.com" class="form-check-label"> Health manager</label></span></li></ul>
-                </div>
-                *@
                 <table id="dtBasicExample" class="table table-striped table-sm">
-                    <tr><th>#</th><th>User name</th><th>Email confirmed</th><th>Health manager?</th><th>User manager?</th></tr>
-                    @foreach (var item in Model.users!)
-                    {
-                        int index = (Model.users).IndexOf(item) + 1;
-                        IdentityUser user = await userManager.FindByNameAsync(item.UserName);
-                        var userRoles = await userManager.GetRolesAsync(user);
-                        <tr>
-                            <td>@index</td>
-                            <td>@item.Email</td>
-                            <td><input name="@item.Email" type="checkbox" value="EmailConfirmed" onclick="updateUserRole(this)" class="user-settings" @((item.EmailConfirmed) ? "checked disabled" : "") /></td>
-                            <td><input name="@item.Email" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings" @((userRoles.Contains(Model.roles![0].Name)) ? "checked" : "") /></td>
-                            <td><input name="@item.Email" type="checkbox" value="User manager" onclick="updateUserRole(this)" class="user-settings" @((userRoles.Contains(Model.roles![1].Name)) ? "checked" : "") /></td>
-                        </tr>
+                    <tr><th>#</th><th>User name</th><th>Email confirmed</th><th>Roles</th></tr>
+                    @{
+                        IdentityUser user;
+                        foreach (var item in Model.users!)
+                        {
+                            int index = (Model.users).IndexOf(item) + 1;
+                            user = await userManager.FindByNameAsync(item.UserName);
+                            var userRoles = await userManager.GetRolesAsync(user);
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.UserName</td>
+                                <td><input style="margin-top: .5em" name="@item.Email" type="checkbox" value="EmailConfirmed" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" @((item.EmailConfirmed) ? "checked disabled" : "")></td>
+                                <td>
+                                    <div class="btn-group dropend">
+                                        <button class="btn border-primary border-1 text-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                            User roles
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            @foreach (var itemRole in Model.roles!)
+                                            {
+                                                int indexRole = (Model.roles).IndexOf(itemRole) + 1;
+                                                <li>
+                                                    <span class="dropdown-item">
+                                                        <input name="@item.Email" id="@(index.ToString() + indexRole.ToString())" type="checkbox" value="@itemRole.Name" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" @((userRoles.Contains(itemRole.Name)) ? "checked" : "")>
+                                                        <label for="@(index.ToString() + indexRole.ToString())" class="form-check-label"> @itemRole.Name</label>
+                                                    </span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
                 </table>
             </form>
@@ -64,14 +100,21 @@
         <div class="col"></div>
         <div class="col-3">
             <div class="col-12">
-                <h1>Roles @*<a class="font-weight-bold text-decoration-none text-success" asp-controller="ManageUsers">+</a>*@</h1>
+                <h1>
+                    Roles
+                </h1>
+            </div>
+            <div class="input-group">
+                <input type="text"  class="form-control" placeholder="Role name" aria-label="Role name" aria-describedby="btnGroupAddon2">
+                <button id="add-role-button" onclick="createRole(this)" type="button" class="btn btn-success">Add role</button>
             </div>
             <hr />
             <table class="table table-striped">
-                <tr><th>#</th><th>Name</th></tr>
+                <tr><th>#</th><th>Name</th><th><i class="bi bi-trash"></i></th></tr>
                 @foreach (var item in Model.roles!)
                 {
-                    <tr><td>@((Model.roles).IndexOf(item) + 1)</td><td>@item.Name</td></tr>
+                    int roleIndex = (Model.roles).IndexOf(item) + 1;
+                    <tr><td>@roleIndex</td><td>@item.Name</td><td><button value="@item.Name" id="rd-btn-@roleIndex" type="button" class="btn border-danger border-1 text-danger btn-sm" data-bs-toggle="modal" data-onclick="removeRole('rd-btn-@roleIndex')" data-bs-target="#confirm-deletion"><i class="bi bi-trash"></i></button></td></tr>
                 }
             </table>
         </div>
