@@ -23,6 +23,8 @@ namespace RSWMonitor.MainApp.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            //await _roleManager.CreateAsync(new IdentityRole("Health manager"));
+            //await _roleManager.CreateAsync(new IdentityRole("User manager"));
             UsersAndRoles usersAndRoles = new UsersAndRoles();
             var roles = await _roleManager.Roles.ToListAsync();
             var users = await _userManager.Users.ToListAsync();
@@ -48,7 +50,8 @@ namespace RSWMonitor.MainApp.Controllers
                 await _userManager.RemoveFromRoleAsync(user, value);
             }
             await _userManager.UpdateAsync(user);
-            if (user == currentUser)
+            
+            if (user.UserName == currentUser.UserName)
             {
                 await _signInManager.RefreshSignInAsync(currentUser);
             }

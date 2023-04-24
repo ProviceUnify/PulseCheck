@@ -31,6 +31,18 @@
                     <div class="col-2">
                     </div>
                 <hr />
+                @*
+                <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                Dropdown button
+                </button>
+                <ul class="dropdown-menu" style="">
+                <li class=""><span class="dropdown-item"><input name="ttt@gmail.com" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" checked=""><label for="ttt@gmail.com" class="form-check-label"> Health manager</label></span></li>
+
+
+                <li class=""><span class="dropdown-item"><input name="ttt@gmail.com" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" checked=""><label for="ttt@gmail.com" class="form-check-label"> Health manager</label></span></li><li class=""><span class="dropdown-item"><input name="ttt@gmail.com" type="checkbox" value="Health manager" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" checked=""><label for="ttt@gmail.com" class="form-check-label"> Health manager</label></span></li></ul>
+                </div>
+                *@
                 <table id="dtBasicExample" class="table table-striped table-sm">
                     <tr><th>#</th><th>User name</th><th>Email confirmed</th><th>Health manager?</th><th>User manager?</th></tr>
                     @foreach (var item in Model.users!)

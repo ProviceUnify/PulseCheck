@@ -13,21 +13,25 @@ namespace RSWMonitor.MainApp
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            builder.Configuration.AddJsonFile("healthcheck-settings.json"); // настраиваемая конфигурация подключенных компонентов
+            builder.Configuration.AddJsonFile("healthcheck-settings.json"); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             int health_check_pollingRate = builder.Configuration.GetSection("HealthChecksUI").GetValue<int>("PollingRate");
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+            builder.Services.ConfigureApplicationCookie(options => {
+                options.Cookie.Name = "AspNetCore.Identity.Application";
+                options.ExpireTimeSpan = TimeSpan.FromHours(16);
+                options.SlidingExpiration = true;
+            });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>(); //авторизация
+            .AddEntityFrameworkStores<ApplicationDbContext>(); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             builder.Services.AddRazorPages();
 
             builder.Services.AddControllers().AddNewtonsoftJson();
 
-            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage(); // UI чекера здоровья
+            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage(); // UI пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             builder.Services.AddAuthorization(options => {
                 options.AddPolicy("Admins", policy => policy.RequireRole("User manager", "Health manager"));
                 options.AddPolicy("HealthManagers", policy => policy.RequireRole("Health manager"));
@@ -60,7 +64,7 @@ namespace RSWMonitor.MainApp
                     settings.AddCustomStylesheet("wwwroot\\css\\healthcheck_custom_style.css");
                     settings.AsideMenuOpened = false;
                 }
-                ); // включает доступ к HC через /healthchecks-ui
+                ); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ HC пїЅпїЅпїЅпїЅпїЅ /healthchecks-ui
             }
             catch { }
 
