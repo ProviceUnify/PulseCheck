@@ -59,8 +59,9 @@
                     <div class="col-2">
                     </div>
                 <hr />
+                <div class="scrollable-tables">
                 <table id="dtBasicExample" class="table table-striped table-sm">
-                    <tr><th>#</th><th>User name</th><th>Email confirmed</th><th>Roles</th></tr>
+                        <tr class="sticky-table-headers bg-light"><th>#</th><th>User name</th><th>Email confirmed</th><th>Roles</th></tr>
                     @{
                         IdentityUser user;
                         foreach (var item in Model.users!)
@@ -74,8 +75,9 @@
                                 <td><input style="margin-top: .5em" name="@item.Email" type="checkbox" value="EmailConfirmed" onclick="updateUserRole(this)" class="user-settings form-check-input me-1" @((item.EmailConfirmed) ? "checked disabled" : "")></td>
                                 <td>
                                     <div class="btn-group dropend">
-                                        <button class="btn border-primary border-1 text-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                            User roles
+                                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                        @*<button class="btn border-primary border-1 text-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                            *@User roles
                                         </button>
                                         <ul class="dropdown-menu">
                                             @foreach (var itemRole in Model.roles!)
@@ -95,6 +97,7 @@
                         }
                     }
                 </table>
+                </div>
             </form>
         </div>
         <div class="col"></div>
@@ -109,14 +112,16 @@
                 <button id="add-role-button" onclick="createRole(this)" type="button" class="btn btn-success">Add role</button>
             </div>
             <hr />
+            <div class="scrollable-tables" style="height: 62em">
             <table class="table table-striped">
-                <tr><th>#</th><th>Name</th><th><i class="bi bi-trash"></i></th></tr>
+                <tr class="sticky-table-headers bg-light"><th>#</th><th>Name</th><th><i class="bi bi-trash"></i></th></tr>
                 @foreach (var item in Model.roles!)
                 {
                     int roleIndex = (Model.roles).IndexOf(item) + 1;
-                    <tr><td>@roleIndex</td><td>@item.Name</td><td><button value="@item.Name" id="rd-btn-@roleIndex" type="button" class="btn border-danger border-1 text-danger btn-sm" data-bs-toggle="modal" data-onclick="removeRole('rd-btn-@roleIndex')" data-bs-target="#confirm-deletion"><i class="bi bi-trash"></i></button></td></tr>
+                    <tr><td>@roleIndex</td><td>@item.Name</td><td><button value="@item.Name" id="rd-btn-@roleIndex" type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-onclick="removeRole('rd-btn-@roleIndex')" data-bs-target="#confirm-deletion"><i class="bi bi-trash"></i></button></td></tr>
                 }
             </table>
+            </div>
         </div>
     </div>
 </div>

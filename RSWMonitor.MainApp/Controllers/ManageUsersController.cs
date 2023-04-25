@@ -7,7 +7,6 @@ using RSWMonitor.MainApp.Models;
 namespace RSWMonitor.MainApp.Controllers
 {
     [Route("ManageUsers/{action=Index}/{parameter?}")]
-    [Authorize(Policy = "Admins")]
     [Authorize(Policy = "UserManagers")]
     public class ManageUsers : Controller
     {

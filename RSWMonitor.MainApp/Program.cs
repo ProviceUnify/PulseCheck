@@ -31,9 +31,11 @@ namespace RSWMonitor.MainApp
 
             builder.Services.AddControllers().AddNewtonsoftJson();
 
-            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage(); // UI ������ ��������
+            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddSqlServerStorage(connectionString); // UI ������ ��������
+            //builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage(); // UI ������ ��������
             builder.Services.AddAuthorization(options => {
-                options.AddPolicy("Admins", policy => policy.RequireRole("User manager", "Health manager"));
+                options.AddPolicy("Admins", policy => { policy.RequireRole("User manager"); policy.RequireRole("Health manager"); });
+                //options.AddPolicy("Admins", policy => policy.RequireRole("User manager", "Health manager"));
                 options.AddPolicy("HealthManagers", policy => policy.RequireRole("Health manager"));
                 options.AddPolicy("UserManagers", policy => policy.RequireRole("User manager"));
             });

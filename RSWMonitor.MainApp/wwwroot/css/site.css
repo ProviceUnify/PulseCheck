@@ -20,3 +20,14 @@ body {
 .container {
     min-width: 80%;
 }
+
+.scrollable-tables {
+    overflow-y: auto;
+    height: 65em;
+}
+
+.sticky-table-headers {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
