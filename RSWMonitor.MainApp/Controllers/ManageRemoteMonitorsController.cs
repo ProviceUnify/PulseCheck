@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RSWMonitor.MainApp.Data;
 using RSWMonitor.MainApp.Models;
-using System.Linq;
 
 namespace RSWMonitor.MainApp.Controllers
 {
@@ -11,10 +9,10 @@ namespace RSWMonitor.MainApp.Controllers
     [Authorize(Policy = "HealthManagers")]
     public class ManageRemoteMonitorsController : Controller
     {
-        private readonly HealthChecksDbContext _context;
+        private readonly HealthChecksDbContext HCDbContext;
         public ManageRemoteMonitorsController(HealthChecksDbContext context)
         {
-            _context = context;
+            HCDbContext = context;
         }
         public IActionResult Index()
         {
@@ -23,12 +21,12 @@ namespace RSWMonitor.MainApp.Controllers
                 Uri = "t",
                 Name = "t"
             };
-            _context.Configurations.Add(configuration);
-            _context.SaveChanges();
-            configuration = _context.Configurations.Where(c => c.Name == "t").FirstOrDefault();
+            //HCDbContext.Configurations?.Add(configuration);
+            //HCDbContext.SaveChanges();
+            //configuration = HCDbContext.Configurations?.Where(c => c.Name == "t").FirstOrDefault();
 
-            _context.Configurations.Remove(configuration);
-            _context.SaveChanges();
+            //HCDbContext.Configurations?.Remove(configuration!);
+            //HCDbContext.SaveChanges();
             return View();
         }
     }
