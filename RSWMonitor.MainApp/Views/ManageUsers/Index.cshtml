@@ -54,11 +54,11 @@
             <form name="user-setting-section">
                     <div class="col-2"></div>
                     <div class="col-12">
-                        <h1>Users</h1>
+                        <h1 class="text-start">Users</h1>
                     </div>
                     <div class="col-2">
                     </div>
-                <hr />
+                @*<hr />*@
                 <div class="scrollable-tables">
                 <table id="dtBasicExample" class="table table-striped table-sm">
                         <tr class="sticky-table-headers bg-light"><th>#</th><th>User name</th><th>Email confirmed</th><th>Roles</th></tr>
@@ -103,18 +103,16 @@
         <div class="col"></div>
         <div class="col-3">
             <div class="col-12">
-                <h1>
-                    Roles
-                </h1>
+                <h1 class="text-start">Roles</h1>
             </div>
             <div class="input-group">
                 <input type="text"  class="form-control" placeholder="Role name" aria-label="Role name" aria-describedby="btnGroupAddon2">
                 <button id="add-role-button" onclick="createRole(this)" type="button" class="btn btn-success">Add role</button>
             </div>
             <hr />
-            <div class="scrollable-tables" style="height: 62em">
+            <div class="scrollable-tables" style="/*height: 62em*/">
             <table class="table table-striped">
-                <tr class="sticky-table-headers bg-light"><th>#</th><th>Name</th><th><i class="bi bi-trash"></i></th></tr>
+                    <tr class="sticky-table-headers bg-light"><th>#</th><th>Name</th><th class="text-danger"><i class="bi bi-trash"></i></th></tr>
                 @foreach (var item in Model.roles!)
                 {
                     int roleIndex = (Model.roles).IndexOf(item) + 1;

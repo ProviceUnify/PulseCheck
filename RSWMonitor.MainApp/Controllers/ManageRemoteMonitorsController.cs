@@ -5,22 +5,20 @@ using RSWMonitor.MainApp.Models;
 
 namespace RSWMonitor.MainApp.Controllers
 {
-    [Route("ManageRemoteMonitors/{action=Index}/{parameter?}")]
+    [Route("ManageRemoteMonitors/{action=Index}/{top?}")]
     [Authorize(Policy = "HealthManagers")]
     public class ManageRemoteMonitorsController : Controller
     {
-        private readonly HealthChecksDbContext HCDbContext;
+        private readonly HealthChecksDbContext HealthChecksDbContext;
         public ManageRemoteMonitorsController(HealthChecksDbContext context)
         {
-            HCDbContext = context;
+            HealthChecksDbContext = context;
         }
-        public IActionResult Index()
+        
+        public async Task<IActionResult> Index(int top = 3)
         {
-            var configuration = new Configurations()
-            {
-                Uri = "t",
-                Name = "t"
-            };
+            Configurations configurations = new Configurations();
+            var result = HealthChecksDbContext.Configurations.Take(top);
             //HCDbContext.Configurations?.Add(configuration);
             //HCDbContext.SaveChanges();
             //configuration = HCDbContext.Configurations?.Where(c => c.Name == "t").FirstOrDefault();

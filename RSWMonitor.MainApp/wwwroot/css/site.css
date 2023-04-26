@@ -23,7 +23,7 @@ body {
 
 .scrollable-tables {
     overflow-y: auto;
-    height: 65em;
+    /*height: 65em;*/
 }
 
 .sticky-table-headers {
