@@ -36,9 +36,14 @@ namespace RSWMonitor.MainApp.Controllers
             Configurations configurationToRemove = HealthChecksDbContext.Configurations.Where(c => c.Name == formCollection["uri"].ToString()).FirstOrDefault();
             HealthChecksDbContext.Configurations.Remove(configurationToRemove);
             HealthChecksDbContext.SaveChanges();
-            //await Index();
             return RedirectToAction("Index");
-            //return View("Index");
         }
+
+        //[HttpPost]
+        //public async Task<RedirectToActionResult> RemoveConfiguration()
+        //{
+
+        //    return RedirectToAction("Index");
+        //}
     }
 }
