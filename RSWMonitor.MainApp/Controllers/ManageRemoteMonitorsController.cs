@@ -10,22 +10,35 @@ namespace RSWMonitor.MainApp.Controllers
     public class ManageRemoteMonitorsController : Controller
     {
         private readonly HealthChecksDbContext HealthChecksDbContext;
+        private Configurations configurations = new Configurations();
         public ManageRemoteMonitorsController(HealthChecksDbContext context)
         {
             HealthChecksDbContext = context;
         }
-        
-        public async Task<IActionResult> Index(int top = 3)
+
+        //[HttpPost]
+        public async Task<IActionResult> Index(int top = 50)
         {
-            Configurations configurations = new Configurations();
-            var result = HealthChecksDbContext.Configurations.Take(top);
+            List<Configurations> Configurations = HealthChecksDbContext.Configurations.Take(top).ToList();
             //HCDbContext.Configurations?.Add(configuration);
             //HCDbContext.SaveChanges();
             //configuration = HCDbContext.Configurations?.Where(c => c.Name == "t").FirstOrDefault();
 
             //HCDbContext.Configurations?.Remove(configuration!);
             //HCDbContext.SaveChanges();
-            return View();
+            return View(Configurations);
+        }
+
+        [HttpPost]
+        public async Task<RedirectToActionResult> AddConfiguration(IFormCollection formCollection)
+        {
+
+            Configurations configurationToRemove = HealthChecksDbContext.Configurations.Where(c => c.Name == formCollection["uri"].ToString()).FirstOrDefault();
+            HealthChecksDbContext.Configurations.Remove(configurationToRemove);
+            HealthChecksDbContext.SaveChanges();
+            //await Index();
+            return RedirectToAction("Index");
+            //return View("Index");
         }
     }
 }
