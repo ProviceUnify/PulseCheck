@@ -10,6 +10,44 @@
     <link rel="stylesheet" href="~/RSWMonitor.MainApp.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="success-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success">
+                <strong class="me-auto text-light">Action result</strong>
+                <small></small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                The performed action was processed successfully!
+            </div>
+        </div>
+        <div id="error-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger">
+                <strong class="me-auto text-light">Action result</strong>
+                <small></small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="error-toast-text">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm-deletion" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure that you want to delete this item?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary btn-ok">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -51,7 +89,7 @@
                                     <a class="dropdown-item" href="#">New around here? Sign up</a>
                                     <a class="dropdown-item" href="#">Forgot password?</a>
                                 </div>*@
-                                <a class="nav-link text-dark" asp-controller="ManageRemoteMonitors" asp-action="Index">🩺📜 Healthchecks • Logs</a>
+                                <a class="nav-link text-dark" asp-controller="ManageRemoteMonitors" asp-action="Index">🩺 Healthchecks</a>
                                 </li>
                             }
                             @if (User.IsInRole("User manager"))

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityModel.OidcClient;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace RSWMonitor.MainApp.Controllers
         {
             //await _roleManager.CreateAsync(new IdentityRole("Health manager"));
             //await _roleManager.CreateAsync(new IdentityRole("User manager"));
-            UsersAndRoles usersAndRoles = new UsersAndRoles();
+            UsersAndRolesViewModel usersAndRoles = new UsersAndRolesViewModel();
             var roles = await _roleManager.Roles.ToListAsync();
             var users = await _userManager.Users.ToListAsync();
             
@@ -36,38 +37,50 @@ namespace RSWMonitor.MainApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveUsersRoles(string name, string value, bool isChecked)
         {
-            IdentityUser user = await _userManager.FindByNameAsync(name);
-            IdentityUser currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
-            if (value == "EmailConfirmed" && isChecked)
+            try
             {
-                user.EmailConfirmed = true;
-            } else if (isChecked)
-            {
-                await _userManager.AddToRoleAsync(user, value);
-            } else
-            {
-                await _userManager.RemoveFromRoleAsync(user, value);
-            }
-            await _userManager.UpdateAsync(user);
+                IdentityUser user = await _userManager.FindByNameAsync(name);
+                IdentityUser currentUser = await _userManager.FindByNameAsync(User.Identity!.Name);
+                if (value == "EmailConfirmed" && isChecked)
+                {
+                    user.EmailConfirmed = true;
+                } else if (isChecked)
+                {
+                    await _userManager.AddToRoleAsync(user, value);
+                } else
+                {
+                    await _userManager.RemoveFromRoleAsync(user, value);
+                }
+                await _userManager.UpdateAsync(user);
             
-            if (user.UserName == currentUser.UserName)
+                if (user.UserName == currentUser.UserName)
+                {
+                    await _signInManager.RefreshSignInAsync(currentUser);
+                }
+
+                //ApplicationUserManager.IsInRoleAsync(TKey userId, string role) // get user roles from db
+
+                return Ok();
+            } catch (Exception ex)
             {
-                await _signInManager.RefreshSignInAsync(currentUser);
+                return BadRequest(Json(new { value = ex.Message }));
             }
-
-            //ApplicationUserManager.IsInRoleAsync(TKey userId, string role) // get user roles from db
-
-            return Ok();
         }
 
         public async Task<IActionResult> CreateRole(string roleName)
         {
-            if (string.IsNullOrEmpty(roleName))
+            try
             {
-                return BadRequest(Json(new { value = "Role name is empty!" }));
+                if (string.IsNullOrEmpty(roleName))
+                {
+                    return BadRequest(Json(new { value = "Role name is empty!" }));
+                }
+                await _roleManager.CreateAsync(new IdentityRole(roleName));
+                return Ok();
+            } catch (Exception ex)
+            {
+                return BadRequest(Json(new { value = ex.Message }));
             }
-            await _roleManager.CreateAsync(new IdentityRole(roleName));
-            return Ok();
         }
         public async Task<IActionResult> RemoveRole(string roleName)
         {

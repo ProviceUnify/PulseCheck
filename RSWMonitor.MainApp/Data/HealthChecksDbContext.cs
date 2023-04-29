@@ -15,5 +15,6 @@ namespace RSWMonitor.MainApp.Data
 
         }
         public DbSet<Configurations>? Configurations { get; set; }
+        public DbSet<ConfigurationTypes>? ConfigurationTypes { get; set; }
     }
 }

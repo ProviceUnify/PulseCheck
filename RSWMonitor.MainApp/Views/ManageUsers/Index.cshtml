@@ -4,11 +4,11 @@
 }
 @using Microsoft.AspNetCore.Identity;
 @using RSWMonitor.MainApp.Models
-@model UsersAndRoles
+@model UsersAndRolesViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @inject UserManager<IdentityUser> userManager
 
-<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+@*<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
     <div id="success-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header bg-success">
             <strong class="me-auto text-light">Action result</strong>
@@ -28,9 +28,9 @@
         <div class="toast-body" id="error-toast-text">
         </div>
     </div>
-</div>
+</div>*@
 
-<div class="modal fade" id="confirm-deletion" tabindex="-1">
+@*<div class="modal fade" id="confirm-deletion" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
 <div class="container text-center">
     <div class="row">
@@ -110,7 +110,7 @@
                 <button id="add-role-button" onclick="createRole(this)" type="button" class="btn btn-success">Add role</button>
             </div>
             <hr />
-            <div class="scrollable-tables" style="/*height: 62em*/">
+            <div class="scrollable-tables">
             <table class="table table-striped">
                     <tr class="sticky-table-headers bg-light"><th>#</th><th>Name</th><th class="text-danger"><i class="bi bi-trash"></i></th></tr>
                 @foreach (var item in Model.roles!)

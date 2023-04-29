@@ -2,7 +2,7 @@
 
 namespace RSWMonitor.MainApp.Models
 {
-    public class UsersAndRoles
+    public class UsersAndRolesViewModel
     {
         public List<IdentityUser>? users;
         public List<IdentityRole>? roles;
