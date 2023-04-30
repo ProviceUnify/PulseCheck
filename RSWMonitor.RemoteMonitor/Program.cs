@@ -27,13 +27,13 @@ namespace RSWMonitor.RemoteMonitor
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddControllers();
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddRazorPages();
+            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            //builder.Services.AddRazorPages();
 
             builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
             builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", predicate: s => s.Status == ServiceControllerStatus.Running);
-            builder.Services.AddHealthChecks().AddProcessHealthCheck("Calculator", predicate: p => p.Length > 0);
+            builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
             //builder.Services.AddHealthChecks().AddCheck<CheckByHttpRequest>("test1");
 
             var app = builder.Build();
@@ -55,14 +55,14 @@ namespace RSWMonitor.RemoteMonitor
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
             app.MapHealthChecks("/health", new HealthCheckOptions {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
 
-            app.MapRazorPages();
+            //app.MapRazorPages();
 
             app.Run();
         }

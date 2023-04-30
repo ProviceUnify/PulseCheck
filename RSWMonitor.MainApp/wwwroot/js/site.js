@@ -2,6 +2,24 @@
 const errorToast = document.getElementById('error-toast');
 
 $(document).ready(function () {
+    $("input.add-configuration-roles").change(function () {
+        $.each($("input.add-configuration-roles"), function () {
+            this.setCustomValidity('');
+        });
+        var checked = $("input.add-configuration-roles:checked").length;
+        if (checked == 0) {
+            alert('Please select at least 1 role');
+        }
+    });
+    $("#add-configuration-form").submit(function () {
+        var checked = $("input.add-configuration-roles:checked").length;
+        if (checked == 0) {
+            alert('Please select at least 1 role');
+            return false;
+        } else {
+            return true;
+        }
+    });
 });
 
 function fillConfiguration(elementId) {

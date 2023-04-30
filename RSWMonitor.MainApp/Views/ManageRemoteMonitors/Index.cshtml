@@ -28,14 +28,14 @@
                     <h5 class="modal-title" id="configurations-toats-title">Add/edit configuration</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form name="add-configuration-form" method="post" asp-controller="ManageRemoteMonitors" asp-action="AddConfiguration">
+                <form name="add-configuration-form" id="add-configuration-form" method="post" asp-controller="ManageRemoteMonitors" asp-action="AddConfiguration">
                     <div class="modal-body">
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Configuration name</span>
                             <input type="text" id="configuration-name" name="configuration-name" placeholder="Name" class="form-control" aria-label="Configuration name" aria-describedby="inputGroup-sizing-sm" required>
                             <div class="btn-group dropend">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                    Available for roles
+                                <button id="add-configuration-roles-button" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                    Roles
                                 </button>
                                 <ul class="dropdown-menu">
                                     @foreach (var item in ViewBag.Roles!)
@@ -67,10 +67,10 @@
                         
                         </div>
                         <div class="form-check text-start">
-                            <input class="form-check-input" type="checkbox" name="configuration-has-controls" value="true" id="configuration-has-controls">
+                            <input class="form-check-input" type="checkbox" title="not ready yet" name="configuration-has-controls" value="true" id="configuration-has-controls" disabled>
                             <input class="form-check-input" style="display: none;" type="checkbox" name="configuration-db-id" value="-1" id="configuration-db-id" checked>
                             <label class="form-check-label" for="configuration-has-controls">
-                                Has controls?
+                                Has controls? (not ready yet)
                             </label>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                     <tr>
                         <td class="align-middle configuration-entry-id">@index</td>
                         <td class="align-middle configuration-entry-name">@configuration.Name</td>
-                        <td class="align-middle configuration-entry-uri">@configuration.Uri</td>
+                        <td class="align-middle configuration-entry-uri"><a target="_blank" href="@configuration.Uri">@configuration.Uri</a></td>
                         <td class="align-middle configuration-entry-type" data-type="@configuration.ConfigurationTypes?.ConfigurationTypesId">@configuration.ConfigurationTypes?.ConfigurationTypesName</td>
                         <td class="align-middle configuration-entry-roles" data-configuration-roles="@configuration.ConfigurationRoles">
                             @{
