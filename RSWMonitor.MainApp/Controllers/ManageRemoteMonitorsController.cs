@@ -21,7 +21,7 @@ namespace RSWMonitor.MainApp.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
 
         private Configurations configurations = new Configurations();
-        private ConfigurationTypes configurationTypes = new ConfigurationTypes();
+        //private ConfigurationTypes configurationTypes = new ConfigurationTypes();
         public ManageRemoteMonitorsController(HealthChecksDbContext HCContext, RoleManager<IdentityRole> roleManager)
         {
             HealthChecksDbContext = HCContext;
@@ -29,10 +29,10 @@ namespace RSWMonitor.MainApp.Controllers
         }
         public async Task<IActionResult> Index(string failure = "", int top = 50)
         {
-            List<Configurations>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.ConfigurationTypes).ToList();
+            List<Configurations>? configurations = HealthChecksDbContext.Configurations?.ToList();
 
             // deleting predefined system roles from list
-            List<ConfigurationTypes>? configurationTypes = HealthChecksDbContext.ConfigurationTypes?.ToList();
+            List<ComponentTypes>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();
             
             try
             {
@@ -44,7 +44,7 @@ namespace RSWMonitor.MainApp.Controllers
                 ViewBag.Roles = Roles;
             } catch { }
 
-            ViewBag.ConfigurationTypes = configurationTypes;
+            ViewBag.ComponentTypes = componentTypes;
             ViewBag.failure = failure;
 
             return View(configurations);
@@ -82,9 +82,9 @@ namespace RSWMonitor.MainApp.Controllers
                 {
                     Name = configurationProperties.name,
                     Uri = configurationProperties.uri,
-                    HasControls = configurationProperties.hasControls,
-                    ConfigurationTypesId = configurationProperties.type,
-                    ConfigurationRoles = configurationRoles
+                    //HasControls = configurationProperties.hasControls,
+                    //ConfigurationTypesId = configurationProperties.type,
+                    //ConfigurationRoles = configurationRoles
 
                 };
                 HealthChecksDbContext.Configurations.Add(configurations);
@@ -94,9 +94,9 @@ namespace RSWMonitor.MainApp.Controllers
                 configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationProperties.id).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationProperties.name;
                 configurationToEdit.Uri = configurationProperties.uri;
-                configurationToEdit.HasControls = configurationProperties.hasControls;
-                configurationToEdit.ConfigurationTypesId = configurationProperties.type;
-                configurationToEdit.ConfigurationRoles = configurationRoles;
+                //configurationToEdit.HasControls = configurationProperties.hasControls;
+                //configurationToEdit.ConfigurationTypesId = configurationProperties.type;
+                //configurationToEdit.ConfigurationRoles = configurationRoles;
             }
             HealthChecksDbContext.SaveChanges();
             return RedirectToAction("Index", routeValues: new { failure = "" } );

@@ -1,7 +1,10 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using RSWMonitor.RemoteMonitor.Controllers;
 using RSWMonitor.RemoteMonitor.Data;
 using System.ServiceProcess;
 
@@ -9,9 +12,26 @@ namespace RSWMonitor.RemoteMonitor
 {
     public class Program
     {
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    // Конфигурация сервисов
+                    services.AddDbContext<HealthChecksDbContext>(options =>
+                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")));
+
+                    //services.AddControllersWithViews();
+                });
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var host = CreateHostBuilder(args).Build();
+
+            // Получаем сервис из контейнера зависимостей
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var healthChecksDbContext = services.GetRequiredService<HealthChecksDbContext>();
+
 
             //services.AddHealthChecks()
             //  .AddSqlServer(Configuration["ConnectionString"]) // Your database connection string
@@ -22,18 +42,24 @@ namespace RSWMonitor.RemoteMonitor
 
             // Add services to the container.
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            var HealthChecksDBString = builder.Configuration.GetConnectionString("HealthChecksDBString") ?? throw new InvalidOperationException("Connection string 'HealthChecksDBString' not found.");
+            builder.Services.AddDbContext<HealthChecksDbContext>(options =>
+                options.UseSqlServer(HealthChecksDBString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddControllers();
             //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             //builder.Services.AddRazorPages();
 
-            builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
-            builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", predicate: s => s.Status == ServiceControllerStatus.Running);
-            builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
+            //var t = healthChecksDbContext.Table_test;
+            //foreach (var elem in t)
+            //{
+            //    builder.Services.AddHealthChecks().AddUrlGroup(new Uri(elem.Uri), elem.Name);
+            //}
+
+            //builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
+            builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", name: "tt", predicate: s => s.Status == ServiceControllerStatus.Running);
+            //builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
             //builder.Services.AddHealthChecks().AddCheck<CheckByHttpRequest>("test1");
 
             var app = builder.Build();
