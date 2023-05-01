@@ -29,7 +29,7 @@ namespace RSWMonitor.MainApp.Controllers
         }
         public async Task<IActionResult> Index(string failure = "", int top = 50)
         {
-            List<Configurations>? configurations = HealthChecksDbContext.Configurations?.ToList();
+            List<Configurations>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
 
             // deleting predefined system roles from list
             List<ComponentTypes>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();

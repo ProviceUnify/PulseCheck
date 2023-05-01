@@ -31,3 +31,9 @@ body {
     top: 0;
     z-index: 999;
 }
+
+tr.config-collapse.collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none;
+}
