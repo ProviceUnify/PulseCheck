@@ -6,20 +6,20 @@ using RSWMonitor.MainApp.Models;
 
 namespace RSWMonitor.MainApp.Data
 {
-    public partial class HealthChecksDbContext : DbContext
+    public partial class HealthChecksDBContext : DbContext
     {
-        public HealthChecksDbContext()
+        public HealthChecksDBContext()
         {
         }
 
-        public HealthChecksDbContext(DbContextOptions<HealthChecksDbContext> options)
+        public HealthChecksDBContext(DbContextOptions<HealthChecksDBContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Component> Components { get; set; } = null!;
-        public virtual DbSet<ComponentTypes> ComponentTypes { get; set; } = null!;
-        public virtual DbSet<Configurations> Configurations { get; set; } = null!;
+        public virtual DbSet<ComponentType> ComponentTypes { get; set; } = null!;
+        public virtual DbSet<Configuration> Configurations { get; set; } = null!;
         public virtual DbSet<Execution> Executions { get; set; } = null!;
         public virtual DbSet<Failure> Failures { get; set; } = null!;
         public virtual DbSet<HealthCheckExecutionEntry> HealthCheckExecutionEntries { get; set; } = null!;
@@ -29,8 +29,7 @@ namespace RSWMonitor.MainApp.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=HealthChecksDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Name=ConnectionStrings:HealthChecksDBString");
             }
         }
 
@@ -55,11 +54,10 @@ namespace RSWMonitor.MainApp.Data
                 entity.HasOne(d => d.Configuration)
                     .WithMany(p => p.Components)
                     .HasForeignKey(d => d.ConfigurationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Components_Configurations");
             });
 
-            modelBuilder.Entity<ComponentTypes>(entity =>
+            modelBuilder.Entity<ComponentType>(entity =>
             {
                 entity.HasKey(e => e.ComponentTypesId);
 
@@ -68,10 +66,8 @@ namespace RSWMonitor.MainApp.Data
                 entity.Property(e => e.ComponentTypesName).HasMaxLength(500);
             });
 
-            modelBuilder.Entity<Configurations>(entity =>
+            modelBuilder.Entity<Configuration>(entity =>
             {
-                entity.HasIndex(e => e.Id, "IX_Configurations");
-
                 entity.Property(e => e.DiscoveryService).HasMaxLength(100);
 
                 entity.Property(e => e.Name).HasMaxLength(500);

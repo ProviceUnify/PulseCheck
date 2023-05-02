@@ -6,7 +6,7 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model List<Configurations>
+@model List<Configuration>
 
 @{
     if (ViewBag.failure != "")
@@ -58,13 +58,13 @@
                             <label class="input-group-text" for="configuration-type">Type of configuration</label>
                             <select class="form-select" name="configuration-type" id="configuration-type">
                                 @{
-                                    foreach(var item in ViewBag.componentTypes)
+                                    foreach (var item in ViewBag.componentTypes)
                                     {
                                         <option value=@item.ComponentTypesId>@item.ComponentTypesName</option>
                                     }
                                 }
                             </select>
-                        
+
                         </div>
                         <div class="form-check text-start">
                             <input class="form-check-input" type="checkbox" title="not ready yet" name="configuration-has-controls" value="true" id="configuration-has-controls" disabled>
@@ -83,10 +83,10 @@
         </div>
     </div>
     @*<nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-configurations-tab" data-bs-toggle="tab" data-bs-target="#nav-configurations" type="button" role="tab" aria-controls="nav-configurations" aria-selected="true">Configurations</button>
-            <button class="nav-link" id="nav-logs-tab" data-bs-toggle="tab" data-bs-target="#nav-logs" type="button" role="tab" aria-controls="nav-lgos" aria-selected="false">Logs</button>
-        </div>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-configurations-tab" data-bs-toggle="tab" data-bs-target="#nav-configurations" type="button" role="tab" aria-controls="nav-configurations" aria-selected="true">Configurations</button>
+    <button class="nav-link" id="nav-logs-tab" data-bs-toggle="tab" data-bs-target="#nav-logs" type="button" role="tab" aria-controls="nav-lgos" aria-selected="false">Logs</button>
+    </div>
     </nav>*@
     <br />
     <div class="tab-content row col-12" id="nav-tabContent">
@@ -112,10 +112,10 @@
                 </div>
 
             </div>
-            <table class="table table table-sm">
+            <table class="shadow-sm table table table-sm">
                 <tr class="sticky-table-headers">
-                    <th class="col-1">#</th>
-                    <th class="col-4">Name</th>
+                    <th class="col-auto text-end border-end">#</th>
+                    <th class="col-5">Name</th>
                     <th class="col-5">URI</th>
                     @*<th>Configuration type</th>*@
                     @*<th>Roles</th>*@
@@ -128,64 +128,67 @@
                 {
                     int index = (Model).IndexOf(configuration) + 1;
                     <tr>
-                        <td class="align-middle configuration-entry-id">
-                            @if (configuration.Components.Count > 0) {
-                                <a title="click to reveal components of configuration" class="text-decoration-none text-success" data-bs-toggle="collapse" href="#collapse-@index" role="button" aria-expanded="false" aria-controls="collapse-@index">
-                                    <i class="bi bi-plus-circle"></i>
-                                </a> @index
-                            } else
+                        <td class="border-end align-middle text-end configuration-entry-id">
+                            @if (configuration.Components.Count > 0)
                             {
-                                <i title="no components" class="bi bi-x-circle opacity-50"></i> @index
+                                <a title="Click to reveal components of configuration" class="text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapse-@index" role="button" aria-expanded="false" aria-controls="collapse-@index">
+                                    <i class="bi bi-chevron-bar-expand text-primary"></i> @index
+                                </a>
+                            }
+                            else
+                            {
+                                 <i title="No components" class="bi bi-x text-danger opacity-0"></i> @index
                             }
                         </td>
                         <td class="align-middle configuration-entry-name">@configuration.Name</td>
                         <td class="align-middle configuration-entry-uri"><a target="_blank" href="@configuration.Uri">@configuration.Uri</a></td>
                         @*<td class="align-middle configuration-entry-type" data-type="@configuration.ComponentTypes?.ComponentTypesId">@configuration.ComponentTypes?.ComponentTypesName</td>*@
                         @*<td class="align-middle configuration-entry-roles" data-configuration-roles="@configuration.ConfigurationRoles">
-                            @{
-                                var listOfConfigurationRoles = JsonConvert.DeserializeObject<List<string>>(@configuration.ConfigurationRoles);
-                                foreach(var item in listOfConfigurationRoles)
-                                {
-                                    <span class="badge bg-primary" data-role-name="@item">@item</span>
-                                }
-                            }
-                        </td>*@
+                    @{
+                    var listOfConfigurationRoles = JsonConvert.DeserializeObject<List<string>>(@configuration.ConfigurationRoles);
+                    foreach(var item in listOfConfigurationRoles)
+                    {
+                    <span class="badge bg-primary" data-role-name="@item">@item</span>
+                    }
+                    }
+                    </td>*@
                         @*<td class="align-middle configuration-entry-has-controls" data-has-controls="@((bool)configuration.HasControls)">
-                            @if ((bool)configuration.HasControls)
-                            {
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-success btn-sm"><i class="bi bi-play-fill"></i></button>
-                                    <button type="button" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
-                                </div>
-                                    <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-stop-fill"></i></button>
-                            } else
-                            {
-                                <span class="fst-italic text-body">-</span>
-                            }
-                        </td>*@
+                    @if ((bool)configuration.HasControls)
+                    {
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success btn-sm"><i class="bi bi-play-fill"></i></button>
+                    <button type="button" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-stop-fill"></i></button>
+                    } else
+                    {
+                    <span class="fst-italic text-body">-</span>
+                    }
+                    </td>*@
                         @{
                             index = (Model).IndexOf(configuration) + 1;
                         }
                         <td class="align-middle">
                             <button type="button" value="@configuration.Id" id="ed-btn-@index" data-onclick="" onclick="fillConfiguration('ed-btn-@index')" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-configuration">
                                 <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button type="button" value="@configuration.Id" id="rd-btn-@index" data-onclick="removeConfiguration('rd-btn-@index')" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirm-deletion">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                                </td>
-                        @if (configuration.Components.Count > 0) {
+                            </button>
+                            <button type="button" value="@configuration.Id" id="rd-btn-@index" data-onclick="removeConfiguration('rd-btn-@index')" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirm-deletion">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                        @if (configuration.Components.Count > 0)
+                        {
                         <tr class="collapse config-collapse" id="collapse-@index">
-                                <td colspan="5" class="px-0 pt-0 pb-1">
-                                <table class="table table-striped">
-                                    @*<caption class="caption-top">List of components:</caption>*@
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Type</th>
-                                            <th>Name</th>
-                                            <th>Signature</th>
-                                            <th>Roles</th>
-                                        </tr>
+                            <td colspan="5" class="px-0 pt-0 pb-1">
+                                <table class="shadow-sm table table-striped">
+                                        @*<caption class="caption-top">List of components:</caption>*@
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Type</th>
+                                        <th>Name</th>
+                                        <th>Signature</th>
+                                        <th>Roles</th>
+                                    </tr>
                                         @foreach (var component in configuration.Components)
                                         {
                                             int componentIndex = (configuration.Components.ToList()).IndexOf(component) + 1;
@@ -197,12 +200,12 @@
                                             <td>@component.ComponentRoletags</td>
                                         </tr>
                                         }
-                                    </table>
-                                </td>
-                            </tr>
+                                </table>
+                            </td>
+                        </tr>
                         }
                         @*<td class="align-middle"><button type="button" value="@configuration.Id" id="ed-btn-@index" data-onclick="" onclick="fillConfiguration('ed-btn-@index')" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-configuration"><i class="bi bi-pencil-square"></i></button></td>
-                        <td class="align-middle"><button type="button" value="@configuration.Id" id="rd-btn-@index" data-onclick="removeConfiguration('rd-btn-@index')" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirm-deletion"><i class="bi bi-trash"></i></button></td>*@
+                <td class="align-middle"><button type="button" value="@configuration.Id" id="rd-btn-@index" data-onclick="removeConfiguration('rd-btn-@index')" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirm-deletion"><i class="bi bi-trash"></i></button></td>*@
                     </tr>
                 }
             </table>

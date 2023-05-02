@@ -11,8 +11,9 @@ namespace RSWMonitor.MainApp.Models
         public string ComponentName { get; set; } = null!;
         public string ComponentSignature { get; set; } = null!;
         public string? ComponentRoletags { get; set; }
+        public bool ComponentHasControls { get; set; }
 
-        public virtual ComponentTypes ComponentTypes { get; set; } = null!;
-        public virtual Configurations Configuration { get; set; } = null!;
+        public virtual ComponentType ComponentTypes { get; set; } = null!;
+        public virtual Configuration Configuration { get; set; } = null!;
     }
 }

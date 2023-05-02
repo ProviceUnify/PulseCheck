@@ -17,22 +17,22 @@ namespace RSWMonitor.MainApp.Controllers
     [Authorize(Policy = "HealthManagers")]
     public class ManageRemoteMonitorsController : Controller
     {
-        private readonly HealthChecksDbContext HealthChecksDbContext;
+        private readonly HealthChecksDBContext HealthChecksDbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        private Configurations configurations = new Configurations();
+        private Models.Configuration configurations = new Models.Configuration();
         //private ConfigurationTypes configurationTypes = new ConfigurationTypes();
-        public ManageRemoteMonitorsController(HealthChecksDbContext HCContext, RoleManager<IdentityRole> roleManager)
+        public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager)
         {
             HealthChecksDbContext = HCContext;
             _roleManager = roleManager;
         }
         public async Task<IActionResult> Index(string failure = "", int top = 50)
         {
-            List<Configurations>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
+            List<Models.Configuration>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
 
             // deleting predefined system roles from list
-            List<ComponentTypes>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();
+            List<ComponentType>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();
             
             try
             {
@@ -78,7 +78,7 @@ namespace RSWMonitor.MainApp.Controllers
             var configurationRoles = JsonConvert.SerializeObject(selectedRoles);
             if (configurationProperties.id < 0)
             {
-                Configurations configurations = new Configurations
+                Models.Configuration configurations = new Models.Configuration
                 {
                     Name = configurationProperties.name,
                     Uri = configurationProperties.uri,
@@ -90,7 +90,7 @@ namespace RSWMonitor.MainApp.Controllers
                 HealthChecksDbContext.Configurations.Add(configurations);
             } else
             {
-                Configurations? configurationToEdit = new Configurations();
+                Models.Configuration? configurationToEdit = new Models.Configuration();
                 configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationProperties.id).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationProperties.name;
                 configurationToEdit.Uri = configurationProperties.uri;
@@ -109,7 +109,7 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 if (configurationId >= 0)
                 {
-                    Configurations? configurationToDelete = new Configurations();
+                    Models.Configuration? configurationToDelete = new Models.Configuration();
                     configurationToDelete = HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationId).FirstOrDefault();
                     HealthChecksDbContext.Configurations?.Remove(configurationToDelete!);
                     HealthChecksDbContext.SaveChanges();

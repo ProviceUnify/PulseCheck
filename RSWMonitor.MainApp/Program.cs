@@ -19,7 +19,7 @@ namespace RSWMonitor.MainApp
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(AspDBConnectionString));
-            builder.Services.AddDbContext<HealthChecksDbContext>(options =>
+            builder.Services.AddDbContext<HealthChecksDBContext>(options =>
                 options.UseSqlServer(HealthChecksDBString));
 
             // Web session timeout (16h OR 1 session)

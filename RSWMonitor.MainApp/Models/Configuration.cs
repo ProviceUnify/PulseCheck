@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace RSWMonitor.MainApp.Models
 {
-    public partial class Configurations
+    public partial class Configuration
     {
-        public Configurations()
+        public Configuration()
         {
             Components = new HashSet<Component>();
         }
