@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RSWMonitor.MainApp.Data;
+using RSWMonitor.MainApp.Models;
 
 namespace RSWMonitor.MainApp
 {

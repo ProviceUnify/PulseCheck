@@ -9,7 +9,7 @@ namespace RSWMonitor.MainApp.Models
         public int ComponentTypesId { get; set; }
         public int ConfigurationId { get; set; }
         public string ComponentName { get; set; } = null!;
-        public string ComponentSignature { get; set; } = null!;
+        public string ComponentQuery { get; set; } = null!;
         public string? ComponentRoletags { get; set; }
         public bool ComponentHasControls { get; set; }
 

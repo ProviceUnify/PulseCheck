@@ -2,25 +2,43 @@
 const errorToast = document.getElementById('error-toast');
 
 $(document).ready(function () {
-    $("input.add-configuration-roles").change(function () {
-        $.each($("input.add-configuration-roles"), function () {
-            this.setCustomValidity('');
-        });
-        var checked = $("input.add-configuration-roles:checked").length;
-        if (checked == 0) {
-            alert('Please select at least 1 role');
-        }
-    });
-    $("#add-configuration-form").submit(function () {
-        var checked = $("input.add-configuration-roles:checked").length;
-        if (checked == 0) {
-            alert('Please select at least 1 role');
-            return false;
-        } else {
-            return true;
+    //$("input.add-configuration-roles").change(function () {
+    //    $.each($("input.add-configuration-roles"), function () {
+    //        this.setCustomValidity('');
+    //    });
+    //    var checked = $("input.add-configuration-roles:checked").length;
+    //    if (checked == 0) {
+    //        alert('Please select at least 1 role');
+    //    }
+    //});
+    //$("#add-configuration-form").submit(function () {
+    //    var checked = $("input.add-configuration-roles:checked").length;
+    //    if (checked == 0) {
+    //        alert('Please select at least 1 role');
+    //        return false;
+    //    } else {
+    //        return true;
+    //    }
+    //});
+    $('input.init').on('keypress', function () {
+        //debugger;
+        if ($('input#components-count')[0].value == 0) {
+            $('input#components-count')[0].value = 1;
         }
     });
 });
+
+function addComponentRow() {
+    //debugger;
+    var lastRow = $('#component-table > tbody')[0].lastElementChild;
+    var lastRowNumber = lastRow.attributes['data-row'].value;
+    var newRowNumber = +lastRowNumber.split('-')[1] + 1;
+    var newRow = ('<tr class="delete-on-close" data-row="row-' + newRowNumber + '">' + (lastRow.innerHTML.replaceAll(lastRowNumber, 'row-' + newRowNumber).replaceAll(("'row':" + lastRowNumber), ("'row':" + newRowNumber))) + '</tr>');
+    newRow = $(newRow.replaceAll(("'row':" + lastRowNumber.split('-')[1]), ("'row':" + newRowNumber)));
+    $('#component-table > tbody')[0].append(newRow[0]);
+    $('#row-index-row-' + newRowNumber)[0].innerText = newRowNumber;
+    $('input#components-count')[0].value = newRowNumber;
+}
 
 function fillConfiguration(elementId) {
     //debugger;
@@ -158,9 +176,15 @@ $('#confirm-deletion').on('show.bs.modal', function (e) {
 $('#add-configuration').on('hidden.bs.modal', function (e) {
     $('#configuration-name')[0].value = '';
     $('#configuration-uri')[0].value = '';
-    $('#configuration-type')[0].value = 1;
-    $('#configuration-has-controls')[0].checked = false;
-    document.querySelectorAll('input.add-configuration-roles').forEach(elem => elem.checked = false)
+    //$('#configuration-has-controls')[0].checked = false;
+    document.querySelectorAll('select.configuration-types').forEach(elem => elem.value = 1);
+    document.querySelectorAll('input.add-configuration-roles').forEach(elem => elem.checked = false);
+    document.querySelectorAll('input.component-names').forEach(elem => elem.value = '');
+    document.querySelectorAll('input.component-queries').forEach(elem => elem.value = '');
+
+    $('input#components-count')[0].value = 0;
+    //debugger;
+    document.querySelectorAll('tr.delete-on-close').forEach(elem => elem.remove());
 });
 
 function showExceptionToast(ex) {

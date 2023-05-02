@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using RSWMonitor.MainApp.Models;
 
-namespace RSWMonitor.MainApp.Data
+namespace RSWMonitor.MainApp.Models
 {
     public partial class HealthChecksDBContext : DbContext
     {
@@ -39,9 +38,9 @@ namespace RSWMonitor.MainApp.Data
             {
                 entity.Property(e => e.ComponentName).HasMaxLength(500);
 
-                entity.Property(e => e.ComponentRoletags).HasMaxLength(500);
+                entity.Property(e => e.ComponentQuery).HasMaxLength(500);
 
-                entity.Property(e => e.ComponentSignature).HasMaxLength(500);
+                entity.Property(e => e.ComponentRoletags).HasMaxLength(500);
 
                 entity.Property(e => e.ComponentTypesId).HasDefaultValueSql("((1))");
 

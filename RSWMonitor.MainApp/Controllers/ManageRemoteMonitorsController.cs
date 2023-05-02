@@ -53,35 +53,55 @@ namespace RSWMonitor.MainApp.Controllers
         [HttpPost]
         public async Task<RedirectToActionResult> AddConfiguration(IFormCollection formCollection)
         {
-            List<string> selectedRoles = new List<string>();
+            var jsonItem = new { prop = "", row = 0 };
             var formCollectionKeys = formCollection.Keys;
-            foreach (var item in formCollectionKeys)
+            var configurationBaseData = new
             {
-                if (item.Contains("role-"))
-                {
-                    selectedRoles.Add((formCollection[item].ToString().Length < 8) ? formCollection[item].ToString() : formCollection[item].ToString()[..8]);
-                }
-            }
-            
-            var configurationProperties = new {
                 id = Int32.Parse(formCollection["configuration-db-id"]),
                 name = formCollection["configuration-name"],
-                uri = formCollection["configuration-uri"],
-                type = Int32.Parse(formCollection["configuration-type"]),
-                hasControls = (formCollection["configuration-has-controls"] == "true" ? true : false),
-                selectedRoles = selectedRoles
+                uri = formCollection["configuration-uri"]
             };
 
-            if (!(configurationProperties.name != "" && configurationProperties.uri != "" && configurationProperties.selectedRoles.Count > 0)) {
+            List<Component> components = new List<Component>();
+            bool hasComponents;
+            if (Int32.Parse(formCollection["components-count"]) > 0)
+            {
+                hasComponents = true;
+                foreach (var item in formCollectionKeys)
+                {
+                    if (item.Contains("{'prop':"))
+                    {
+                        jsonItem = JsonConvert.DeserializeAnonymousType(item, jsonItem);
+                        // TO DO: переделать всё к чертям
+
+                        //var t = jsonItem.row;
+                        //components.Insert(jsonItem.row, jsonItem.prop);
+                        //components.Add();
+                        //selectedRoles.Add((formCollection[item].ToString().Length < 8) ? formCollection[item].ToString() : formCollection[item].ToString()[..8]);
+                    }
+                }
+                        return RedirectToAction("Index", routeValues: new { failure = "" });
+            }
+            //var configurationProperties = new {
+            //    id = Int32.Parse(formCollection["configuration-db-id"]),
+            //    name = formCollection["configuration-name"],
+            //    uri = formCollection["configuration-uri"],
+            //    type = Int32.Parse(formCollection["configuration-type"]),
+            //    hasControls = (formCollection["configuration-has-controls"] == "true" ? true : false),
+            //    selectedRoles = components
+            //};
+
+            if (!(configurationBaseData.name != "" && configurationBaseData.uri != "")) {
                 return RedirectToAction("Index", routeValues: new { failure = $"Some of entered data was incorrect" });
             }
-            var configurationRoles = JsonConvert.SerializeObject(selectedRoles);
-            if (configurationProperties.id < 0)
+            var configurationRoles = JsonConvert.SerializeObject(components);
+            if (configurationBaseData.id < 0)
             {
                 Models.Configuration configurations = new Models.Configuration
                 {
-                    Name = configurationProperties.name,
-                    Uri = configurationProperties.uri,
+                    Name = configurationBaseData.name,
+                    Uri = configurationBaseData.uri,
+                    Components = components
                     //HasControls = configurationProperties.hasControls,
                     //ConfigurationTypesId = configurationProperties.type,
                     //ConfigurationRoles = configurationRoles
@@ -91,9 +111,9 @@ namespace RSWMonitor.MainApp.Controllers
             } else
             {
                 Models.Configuration? configurationToEdit = new Models.Configuration();
-                configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationProperties.id).FirstOrDefaultAsync();
-                configurationToEdit.Name = configurationProperties.name;
-                configurationToEdit.Uri = configurationProperties.uri;
+                configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).FirstOrDefaultAsync();
+                configurationToEdit.Name = configurationBaseData.name;
+                configurationToEdit.Uri = configurationBaseData.uri;
                 //configurationToEdit.HasControls = configurationProperties.hasControls;
                 //configurationToEdit.ConfigurationTypesId = configurationProperties.type;
                 //configurationToEdit.ConfigurationRoles = configurationRoles;
