@@ -64,19 +64,25 @@
                                 <th class="align-middle">Query</th>
                                 <th class="align-middle">Type</th>
                                 <th class="align-middle col-1">Roles</th>
+                                <th class="align-middle col-1">
+                                    Remove
+                                </th>
                             </tr>
                             <tr data-row="row-1">
                                 <td id="row-index-row-1" class="align-middle border-end text-end">
                                     1
                                 </td>
                                 <td class="align-middle">
-                                    <input type="text" id="{'prop':'component-name','row':1}" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">
+                                    <input type="text" id="component-name-row-1" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">
+                                    @*<input type="text" id="{'prop':'component-name','row':1}" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">*@
                                 </td>
                                 <td class="align-middle">
-                                    <input type="text" id="{'prop':'component-query','row':1}" name="{'prop':'component-query','row':1}" placeholder="URL, SELECT 1 etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
+                                    <input type="text" id="component-query-row-1" name="{'prop':'component-query','row':1}" placeholder="URL, SELECT 1 etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
+                                    @*<input type="text" id="{'prop':'component-query','row':1}" name="{'prop':'component-query','row':1}" placeholder="URL, SELECT 1 etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">*@
                                 </td>
                                 <td class="align-middle col-2">
-                                    <select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="{'prop':'component-type','row':1}">
+                                    <select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="component-type-row-1">
+                                    @*<select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="{'prop':'component-type','row':1}">*@
                                         @{
                                             foreach (var item in ViewBag.componentTypes)
                                             {
@@ -97,13 +103,21 @@
                                                     <span class="dropdown-item">
                                                         @*<input type="checkbox" name="role-@item.Name-row-1" id="role-@item.Name-row-1" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">
                                                         <label for="role-@item.Name-row-1" class="form-check-label"> @item.Name</label>*@
-                                                        <input type="checkbox" name="{'role':'@item.Name','row':1}" id="{'role':'@item.Name','row':1}" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">
-                                                        <label for="{'role':'@item.Name','row':1}" class="form-check-label"> @item.Name</label>
+                                                        <input type="checkbox" name="{'prop':'role','row':1}" id="role-@item.Name-row-1" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles add-configuration-roles-row-1">
+                                                        <label for="role-@item.Name-row-1" class="form-check-label"> @item.Name</label>
+                                                        @*<input type="checkbox" name="{'prop':'role','row':1}" id="{'role':'@item.Name','row':1}" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">*@
+                                                        @*<label for="{'role':'@item.Name','row':1}" class="form-check-label"> @item.Name</label>*@
                                                     </span>
                                                 </li>
                                             }
                                         </ul>
                                     </div>
+                                    <input type="checkbox" style="display: none;" name="component-db-id-row-1" id="component-db-id-row-1" value="-1" checked />
+                                </td>
+                                <td>
+                                    <button type="button" onclick="removeComponent(this)" class="btn btn-outline-danger btn-sm" disabled>
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         </table>
@@ -207,7 +221,7 @@
                 @foreach (var configuration in Model)
                 {
                     int index = (Model).IndexOf(configuration) + 1;
-                    <tr>
+                    <tr id="configuration-@index" data-components-count="@configuration.Components.Count">
                         <td class="border-end align-middle text-end configuration-entry-id">
                             @if (configuration.Components.Count > 0)
                             {
@@ -220,7 +234,7 @@
                                 <i title="No components" class="bi bi-x text-danger opacity-0"></i> @index
                             }
                         </td>
-                        <td class="align-middle configuration-entry-name">
+                        <td class="align-middle configuration-entry-name" data-name="@configuration.Name">
                             <span title="Configuration ID" class="badge bg-info">Cfg ID: @configuration.Id</span> 
                             @configuration.Name
                         </td>
@@ -275,15 +289,23 @@
                                         @foreach (var component in configuration.Components)
                                         {
                                             int componentIndex = (configuration.Components.ToList()).IndexOf(component) + 1;
-                                        <tr>
-                                            <td class="border-end text-end col-1">@componentIndex</td>
-                                            <td>@component.ComponentTypes.ComponentTypesName</td>
-                                            <td>
+                                        <tr data-component-db-id="@component.Id">
+                                            <td class="components-index border-end text-end col-1">@componentIndex</td>
+                                            <td class="component-type" data-type-id="@component.ComponentTypes.ComponentTypesId">@component.ComponentTypes.ComponentTypesName</td>
+                                            <td class="component-name" data-name="@component.ComponentName">
                                                 <span title="Component ID" class="badge bg-info">Com ID: @component.Id</span> 
                                                 @component.ComponentName
                                              </td>
-                                            <td>@component.ComponentQuery</td>
-                                            <td>@component.ComponentRoletags</td>
+                                            <td class="component-query">@component.ComponentQuery</td>
+                                            <td class="component-roletags" data-roletags="@component.ComponentRoletags">
+                                                @{
+                                                    var listOfComponentRoles = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
+                                                    foreach (var item in listOfComponentRoles)
+                                                    {
+                                                        <span class="badge bg-primary" data-role-name="@item">@item</span>
+                                                    }
+                                                }
+                                            </td>
                                         </tr>
                                         }
                                 </table>

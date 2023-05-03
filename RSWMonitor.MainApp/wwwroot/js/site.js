@@ -34,7 +34,7 @@ function addComponentRow() {
     var lastRowNumber = lastRow.attributes['data-row'].value;
     var newRowNumber = +lastRowNumber.split('-')[1] + 1;
     var newRow = ('<tr class="delete-on-close" data-row="row-' + newRowNumber + '">' + (lastRow.innerHTML.replaceAll(lastRowNumber, 'row-' + newRowNumber).replaceAll(("'row':" + lastRowNumber), ("'row':" + newRowNumber))) + '</tr>');
-    newRow = $(newRow.replaceAll(("'row':" + lastRowNumber.split('-')[1]), ("'row':" + newRowNumber)));
+    newRow = $(newRow.replaceAll(("'row':" + lastRowNumber.split('-')[1]), ("'row':" + newRowNumber)).replaceAll('disabled', ''));
     $('#component-table > tbody')[0].append(newRow[0]);
     $('#row-index-row-' + newRowNumber)[0].innerText = newRowNumber;
     $('input#components-count')[0].value = newRowNumber;
@@ -42,27 +42,61 @@ function addComponentRow() {
 
 function fillConfiguration(elementId) {
     //debugger;
-    var configurationId = $('#' + elementId)[0].value;
     var selector = 'tr:has(#' + elementId + ')';
+    var componentsCount = $(selector)[0].attributes['data-components-count'].value;
+    for (var i = 0; i < componentsCount - 1; i++) {
+        addComponentRow();
+    }
 
-    var name = $(selector + '>td.configuration-entry-name')[0].innerText;
+    var configurationId = $('#' + elementId)[0].value;
+    var name = $(selector + '>td.configuration-entry-name')[0].attributes['data-name'].value;
     var uri = $(selector + '>td.configuration-entry-uri')[0].innerText;
-    var type = $(selector + '>td.configuration-entry-type')[0].attributes['data-type'].value;
-    var hasControls = ($(selector + '>td.configuration-entry-has-controls')[0].attributes['data-has-controls'].value == 'True' ? true : false);
-    var roles = JSON.parse($(selector + '>td.configuration-entry-roles')[0].attributes['data-configuration-roles'].value);
 
+    var rowsData = [];
+
+    var componentsTableOfConfiguration = $(selector + ' + tr.collapse > td > table > tbody');
+    for (var i = 1; i <= componentsCount; i++) {
+        var rowData = {
+            'componentId': -1,
+            'componentTypeId': 0,
+            'componentName': '',
+            'componentQuery': '',
+            'componentRoletags': ''
+        };
+        debugger;
+        var row = $(selector + ' + tr.collapse > td > table > tbody')[0].rows[i];
+        rowData.componentId = row.attributes['data-component-db-id'].value;
+        rowData.componentTypeId = row.querySelectorAll('td.component-type')[0].attributes['data-type-id'].value;
+        rowData.componentName = row.querySelectorAll('td.component-name')[0].attributes['data-name'].value;
+        rowData.componentQuery = row.querySelectorAll('td.component-query')[0].innerText;
+        rowData.componentRoletags = row.querySelectorAll('td.component-roletags')[0].attributes['data-roletags'].value;
+        rowsData.push(rowData);
+    }
+    debugger;
     $('#configuration-name')[0].value = name;
     $('#configuration-uri')[0].value = uri;
-    $('#configuration-type')[0].value = type;
-    $('#configuration-has-controls')[0].checked = hasControls;
     $('#configuration-db-id')[0].value = configurationId;
 
-    var addConfigurationRoles = document.querySelectorAll('input.add-configuration-roles');
-    addConfigurationRoles.forEach(element => {
-        if (roles.includes((element.id).replaceAll('role-', ''))) {
-            element.checked = true;
-        }
+    rowsData.forEach(function(row, index) {
+        $("#component-type-row-" + (index + 1))[0].value = row.componentTypeId;
+        $("#component-name-row-" + (index + 1))[0].value = row.componentName;
+        $("#component-query-row-" + (index + 1))[0].value = row.componentQuery;
+        $("#component-db-id-row-" + (index + 1))[0].value = row.componentId;
+        var addConfigurationRoles = document.querySelectorAll('input.add-configuration-roles-row-' + (index + 1));
+        addConfigurationRoles.forEach(element => {
+            if (row.componentRoletags.includes((element.id).replaceAll('role-', '').replaceAll('-row-' + (index + 1), ''))) {
+                element.checked = true;
+            }
+        });
     });
+
+    //var type = $(selector + '>td.configuration-entry-type')[0].attributes['data-type'].value;
+    //var hasControls = ($(selector + '>td.configuration-entry-has-controls')[0].attributes['data-has-controls'].value == 'True' ? true : false);
+    //var roles = JSON.parse($(selector + '>td.configuration-entry-roles')[0].attributes['data-configuration-roles'].value);
+
+    //$('#configuration-type')[0].value = type;
+    //$('#configuration-has-controls')[0].checked = hasControls;
+
 
 }
 

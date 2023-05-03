@@ -1,15 +1,10 @@
-﻿using IdentityModel.OidcClient;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using RSWMonitor.MainApp.Data;
 using RSWMonitor.MainApp.Models;
-using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace RSWMonitor.MainApp.Controllers
 {
@@ -33,7 +28,7 @@ namespace RSWMonitor.MainApp.Controllers
 
             // deleting predefined system roles from list
             List<ComponentType>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();
-            
+
             try
             {
                 List<IdentityRole> Roles = await _roleManager.Roles.ToListAsync();
@@ -42,7 +37,8 @@ namespace RSWMonitor.MainApp.Controllers
                 Roles.Remove(healthManagerRoleToDelete);
                 Roles.Remove(userManagerRoleToDelete);
                 ViewBag.Roles = Roles;
-            } catch { }
+            }
+            catch { }
 
             ViewBag.ComponentTypes = componentTypes;
             ViewBag.failure = failure;
@@ -53,8 +49,8 @@ namespace RSWMonitor.MainApp.Controllers
         [HttpPost]
         public async Task<RedirectToActionResult> AddConfiguration(IFormCollection formCollection)
         {
-            var jsonItem = new { prop = "", row = 0 };
-            var formCollectionKeys = formCollection.Keys;
+            int componentsCount = Int32.Parse(formCollection["components-count"]);
+            List<Component> components = new List<Component>();
             var configurationBaseData = new
             {
                 id = Int32.Parse(formCollection["configuration-db-id"]),
@@ -62,39 +58,58 @@ namespace RSWMonitor.MainApp.Controllers
                 uri = formCollection["configuration-uri"]
             };
 
-            List<Component> components = new List<Component>();
-            bool hasComponents;
-            if (Int32.Parse(formCollection["components-count"]) > 0)
+            try
             {
-                hasComponents = true;
-                foreach (var item in formCollectionKeys)
+                for (int i = 0; i < componentsCount; i++)
                 {
-                    if (item.Contains("{'prop':"))
+                    int indexOfFormInput = i + 1;
+                    int componentId = Int32.Parse(formCollection[$"component-db-id-row-{indexOfFormInput}"]);
+                    string componentName = formCollection[$"{{'prop':'component-name','row':{indexOfFormInput}}}"];
+                    string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
+                    string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
+                    //componentName = componentName.Trim();
+                    int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
+                    if (componentName == "" || componentQuery == "" || componentRoletags == "")
                     {
-                        jsonItem = JsonConvert.DeserializeAnonymousType(item, jsonItem);
-                        // TO DO: переделать всё к чертям
-
-                        //var t = jsonItem.row;
-                        //components.Insert(jsonItem.row, jsonItem.prop);
-                        //components.Add();
-                        //selectedRoles.Add((formCollection[item].ToString().Length < 8) ? formCollection[item].ToString() : formCollection[item].ToString()[..8]);
+                        return RedirectToAction("Index", routeValues: new { failure = $"Entered data of component was incorrect" });
                     }
-                }
-                        return RedirectToAction("Index", routeValues: new { failure = "" });
-            }
-            //var configurationProperties = new {
-            //    id = Int32.Parse(formCollection["configuration-db-id"]),
-            //    name = formCollection["configuration-name"],
-            //    uri = formCollection["configuration-uri"],
-            //    type = Int32.Parse(formCollection["configuration-type"]),
-            //    hasControls = (formCollection["configuration-has-controls"] == "true" ? true : false),
-            //    selectedRoles = components
-            //};
+                    List<string> rolesList;
+                    try
+                    {
+                        rolesList = componentRoletags.Split(',').ToList();
+                        componentRoletags = JsonConvert.SerializeObject(rolesList);
 
-            if (!(configurationBaseData.name != "" && configurationBaseData.uri != "")) {
-                return RedirectToAction("Index", routeValues: new { failure = $"Some of entered data was incorrect" });
+                    } catch (Exception ex)
+                    {
+
+                        componentRoletags = JsonConvert.SerializeObject(new List<string>());
+                        //return RedirectToAction("Index", routeValues: new { failure = ex.Message });
+                    }
+
+                    if (componentId < 0)
+                        componentId = 0;
+                    components.Add(new Component
+                    {
+                        Id = componentId,
+                        ComponentName = componentName,
+                        ComponentQuery = componentQuery,
+                        ComponentTypesId = componentTypeId,
+                        ComponentRoletags = componentRoletags,
+
+                        ComponentHasControls = false
+                    });
+                }
             }
-            var configurationRoles = JsonConvert.SerializeObject(components);
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", routeValues: new { failure = $"{ex.Message}" });
+            }
+
+            if (configurationBaseData.name == "" && configurationBaseData.uri == "")
+            {
+                return RedirectToAction("Index", routeValues: new { failure = $"Entered data of configuration was incorrect" });
+            }
+            //var configurationRoles = JsonConvert.SerializeObject(components);
             if (configurationBaseData.id < 0)
             {
                 Models.Configuration configurations = new Models.Configuration
@@ -102,24 +117,20 @@ namespace RSWMonitor.MainApp.Controllers
                     Name = configurationBaseData.name,
                     Uri = configurationBaseData.uri,
                     Components = components
-                    //HasControls = configurationProperties.hasControls,
-                    //ConfigurationTypesId = configurationProperties.type,
-                    //ConfigurationRoles = configurationRoles
 
                 };
                 HealthChecksDbContext.Configurations.Add(configurations);
-            } else
+            }
+            else
             {
                 Models.Configuration? configurationToEdit = new Models.Configuration();
                 configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationBaseData.name;
                 configurationToEdit.Uri = configurationBaseData.uri;
-                //configurationToEdit.HasControls = configurationProperties.hasControls;
-                //configurationToEdit.ConfigurationTypesId = configurationProperties.type;
-                //configurationToEdit.ConfigurationRoles = configurationRoles;
+                configurationToEdit.Components = components;
             }
             HealthChecksDbContext.SaveChanges();
-            return RedirectToAction("Index", routeValues: new { failure = "" } );
+            return RedirectToAction("Index", routeValues: new { failure = "" });
         }
 
         [HttpPost]
@@ -135,11 +146,13 @@ namespace RSWMonitor.MainApp.Controllers
                     HealthChecksDbContext.SaveChanges();
                     return Ok();
                     //return RedirectToAction("Index");
-                } else
+                }
+                else
                 {
                     return BadRequest(Json(new { value = "Role name is empty!" }));
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(Json(new { value = ex.Message }));
             }
