@@ -89,15 +89,6 @@ function fillConfiguration(elementId) {
             }
         });
     });
-
-    //var type = $(selector + '>td.configuration-entry-type')[0].attributes['data-type'].value;
-    //var hasControls = ($(selector + '>td.configuration-entry-has-controls')[0].attributes['data-has-controls'].value == 'True' ? true : false);
-    //var roles = JSON.parse($(selector + '>td.configuration-entry-roles')[0].attributes['data-configuration-roles'].value);
-
-    //$('#configuration-type')[0].value = type;
-    //$('#configuration-has-controls')[0].checked = hasControls;
-
-
 }
 
 function removeConfiguration(elementId) {
@@ -202,15 +193,9 @@ $('#confirm-deletion').on('show.bs.modal', function (e) {
     $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
 });
 
-//$('#add-configuration').on('show.bs.modal', function (e) {
-//    debugger;
-//    $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
-//});
-
 $('#add-configuration').on('hidden.bs.modal', function (e) {
     $('#configuration-name')[0].value = '';
     $('#configuration-uri')[0].value = '';
-    //$('#configuration-has-controls')[0].checked = false;
     document.querySelectorAll('select.configuration-types').forEach(elem => elem.value = 1);
     document.querySelectorAll('input.add-configuration-roles').forEach(elem => elem.checked = false);
     document.querySelectorAll('input.component-names').forEach(elem => elem.value = '');

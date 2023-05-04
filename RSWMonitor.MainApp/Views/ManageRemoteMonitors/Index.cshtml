@@ -40,18 +40,6 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Configuration URI</span>
                                 <input type="text" id="configuration-uri" name="configuration-uri" placeholder="https://test.org/health" class="form-control" aria-label="Configuration uri" aria-describedby="inputGroup-sizing-sm" required>
                             </div>
-                            @*<div class="input-group input-group-sm mb-3">
-                                <label class="input-group-text" for="configuration-type">Type of configuration</label>
-                                <select class="form-select" name="configuration-type" id="configuration-type">
-                                    @{
-                                        foreach (var item in ViewBag.componentTypes)
-                                        {
-                                            <option value=@item.ComponentTypesId>@item.ComponentTypesName</option>
-                                        }
-                                    }
-                                </select>
-
-                            </div>*@
                         </div>
                         <hr />
                         <div class="align-middle">
@@ -74,15 +62,12 @@
                                 </td>
                                 <td class="align-middle">
                                     <input type="text" id="component-name-row-1" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">
-                                    @*<input type="text" id="{'prop':'component-name','row':1}" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">*@
                                 </td>
                                 <td class="align-middle">
                                     <input type="text" id="component-query-row-1" name="{'prop':'component-query','row':1}" placeholder="URL, SELECT 1 etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
-                                    @*<input type="text" id="{'prop':'component-query','row':1}" name="{'prop':'component-query','row':1}" placeholder="URL, SELECT 1 etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">*@
                                 </td>
                                 <td class="align-middle col-2">
                                     <select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="component-type-row-1">
-                                    @*<select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="{'prop':'component-type','row':1}">*@
                                         @{
                                             foreach (var item in ViewBag.componentTypes)
                                             {
@@ -101,12 +86,8 @@
                                             {
                                                 <li>
                                                     <span class="dropdown-item">
-                                                        @*<input type="checkbox" name="role-@item.Name-row-1" id="role-@item.Name-row-1" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">
-                                                        <label for="role-@item.Name-row-1" class="form-check-label"> @item.Name</label>*@
                                                         <input type="checkbox" name="{'prop':'role','row':1}" id="role-@item.Name-row-1" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles add-configuration-roles-row-1">
                                                         <label for="role-@item.Name-row-1" class="form-check-label"> @item.Name</label>
-                                                        @*<input type="checkbox" name="{'prop':'role','row':1}" id="{'role':'@item.Name','row':1}" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">*@
-                                                        @*<label for="{'role':'@item.Name','row':1}" class="form-check-label"> @item.Name</label>*@
                                                     </span>
                                                 </li>
                                             }
@@ -121,51 +102,8 @@
                                 </td>
                             </tr>
                         </table>
-                        @*<div class="input-group input-group-sm mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Component name</span>
-                            <input type="text" id="component-name" name="component-name" placeholder="Name" class="form-control" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">
-                            <div class="btn-group dropend">
-                                <button id="add-configuration-roles-button" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                    Roles
-                                </button>
-                                <ul class="dropdown-menu">
-                                    @foreach (var item in ViewBag.Roles!)
-                                    {
-                                        <li>
-                                            <span class="dropdown-item">
-                                                <input type="checkbox" name="role-@item.Name" id="role-@item.Name" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">
-                                                <label for="role-@item.Name" class="form-check-label"> @item.Name</label>
-                                            </span>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        </div>*@
                             <input class="form-check-input" style="display: none;" type="checkbox" name="configuration-db-id" value="-1" id="configuration-db-id" checked>
                         <input class="form-check-input" style="display: none;" type="checkbox" name="components-count" value="0" id="components-count" checked>
-                        @*<div class="form-check text-start">*@
-                            @*<input class="form-check-input" type="checkbox" title="not ready yet" name="configuration-has-controls" value="true" id="configuration-has-controls" disabled>*@
-                            @*<label class="form-check-label" for="configuration-has-controls">
-                            Has controls? (not ready yet)
-                            </label>*@
-                        @*</div>*@
-
-                        @*<div class="btn-group dropend">
-                            <button id="add-configuration-roles-button" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                Roles
-                            </button>
-                            <ul class="dropdown-menu">
-                                @foreach (var item in ViewBag.Roles!)
-                                {
-                                    <li>
-                                        <span class="dropdown-item">
-                                            <input type="checkbox" name="role-@item.Name" id="role-@item.Name" value="@item.Name" class="user-settings form-check-input me-1 add-configuration-roles">
-                                            <label for="role-@item.Name" class="form-check-label"> @item.Name</label>
-                                        </span>
-                                    </li>
-                                }
-                            </ul>
-                        </div>*@
                     </div>
 
                     <div class="modal-footer">
@@ -176,47 +114,25 @@
             </div>
         </div>
     </div>
-    @*<nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-configurations-tab" data-bs-toggle="tab" data-bs-target="#nav-configurations" type="button" role="tab" aria-controls="nav-configurations" aria-selected="true">Configurations</button>
-    <button class="nav-link" id="nav-logs-tab" data-bs-toggle="tab" data-bs-target="#nav-logs" type="button" role="tab" aria-controls="nav-lgos" aria-selected="false">Logs</button>
-    </div>
-    </nav>*@
     <br />
     <div class="tab-content row col-12" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-configurations" role="tabpanel" aria-labelledby="nav-configurations-tab" tabindex="0">
             <div class="row">
                 <div class="col-7">
                     <h1 class="text-start">Configurations</h1>
-
                 </div>
                 <div class="col-2 mt-2">
-                    @* <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputGroupSelect01">Count</label>
-                    <select class="form-select" id="inputGroupSelect01">
-                    <option value="50" selected>50</option>
-                    <option value="100">100</option>
-                    <option value="150">150</option>
-                    </select>
-                    </div>*@
                 </div>
                 <div class="text-end col-3 mt-2">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add-configuration"><i class="bi bi-plus-square"></i> Add configuration</button>
-
                 </div>
-
             </div>
             <table class="shadow-sm table table table-sm">
                 <tr class="sticky-table-headers">
                     <th class="col-auto text-end border-end">#</th>
                     <th class="col-5">Name</th>
                     <th class="col-5">URI</th>
-                    @*<th>Configuration type</th>*@
-                    @*<th>Roles</th>*@
-                    @*<th>Controls (WIP)</th>*@
                     <th>Edit</th>
-                    @*<th class="text-primary col-1"><i class="bi bi-pencil-square"></i></th>
-                    <th class="text-danger col-1"><i class="bi bi-trash"></i></th>*@
                 </tr>
                 @foreach (var configuration in Model)
                 {
@@ -239,29 +155,6 @@
                             @configuration.Name
                         </td>
                         <td class="align-middle configuration-entry-uri"><a target="_blank" href="@configuration.Uri">@configuration.Uri</a></td>
-                        @*<td class="align-middle configuration-entry-type" data-type="@configuration.ComponentTypes?.ComponentTypesId">@configuration.ComponentTypes?.ComponentTypesName</td>*@
-                        @*<td class="align-middle configuration-entry-roles" data-configuration-roles="@configuration.ConfigurationRoles">
-                    @{
-                    var listOfConfigurationRoles = JsonConvert.DeserializeObject<List<string>>(@configuration.ConfigurationRoles);
-                    foreach(var item in listOfConfigurationRoles)
-                    {
-                    <span class="badge bg-primary" data-role-name="@item">@item</span>
-                    }
-                    }
-                    </td>*@
-                        @*<td class="align-middle configuration-entry-has-controls" data-has-controls="@((bool)configuration.HasControls)">
-                    @if ((bool)configuration.HasControls)
-                    {
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-success btn-sm"><i class="bi bi-play-fill"></i></button>
-                    <button type="button" class="btn btn-success btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
-                    </div>
-                    <button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-stop-fill"></i></button>
-                    } else
-                    {
-                    <span class="fst-italic text-body">-</span>
-                    }
-                    </td>*@
                         @{
                             index = (Model).IndexOf(configuration) + 1;
                         }
@@ -278,7 +171,6 @@
                         <tr class="collapse config-collapse" id="collapse-@index">
                             <td colspan="5" class="px-0 pt-0 pb-1">
                                 <table class="shadow-sm table table-striped">
-                                        @*<caption class="caption-top">List of components:</caption>*@
                                     <tr>
                                         <th class="border-end text-end">#</th>
                                         <th class="col-2">Type</th>
@@ -312,8 +204,6 @@
                             </td>
                         </tr>
                         }
-                        @*<td class="align-middle"><button type="button" value="@configuration.Id" id="ed-btn-@index" data-onclick="" onclick="fillConfiguration('ed-btn-@index')" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-configuration"><i class="bi bi-pencil-square"></i></button></td>
-                <td class="align-middle"><button type="button" value="@configuration.Id" id="rd-btn-@index" data-onclick="removeConfiguration('rd-btn-@index')" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirm-deletion"><i class="bi bi-trash"></i></button></td>*@
                     </tr>
                 }
             </table>
