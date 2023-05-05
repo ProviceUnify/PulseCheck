@@ -67,7 +67,6 @@ namespace RSWMonitor.MainApp.Controllers
                     string componentName = formCollection[$"{{'prop':'component-name','row':{indexOfFormInput}}}"];
                     string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
                     string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
-                    //componentName = componentName.Trim();
                     int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
                     if (componentName == "" || componentQuery == "" || componentRoletags == "")
                     {
@@ -83,7 +82,6 @@ namespace RSWMonitor.MainApp.Controllers
                     {
 
                         componentRoletags = JsonConvert.SerializeObject(new List<string>());
-                        //return RedirectToAction("Index", routeValues: new { failure = ex.Message });
                     }
 
                     if (componentId < 0)
@@ -109,7 +107,6 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 return RedirectToAction("Index", routeValues: new { failure = $"Entered data of configuration was incorrect" });
             }
-            //var configurationRoles = JsonConvert.SerializeObject(components);
             if (configurationBaseData.id < 0)
             {
                 Models.Configuration configurations = new Models.Configuration
@@ -124,7 +121,7 @@ namespace RSWMonitor.MainApp.Controllers
             else
             {
                 Models.Configuration? configurationToEdit = new Models.Configuration();
-                configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).FirstOrDefaultAsync();
+                configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).Include(m => m.Components).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationBaseData.name;
                 configurationToEdit.Uri = configurationBaseData.uri;
                 configurationToEdit.Components = components;

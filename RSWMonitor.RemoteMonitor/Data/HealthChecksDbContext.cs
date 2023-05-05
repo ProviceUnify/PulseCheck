@@ -1,19 +1,118 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using RSWMonitor.RemoteMonitor.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace RSWMonitor.RemoteMonitor.Data
+namespace RSWMonitor.RemoteMonitor.Models
 {
-    public class HealthChecksDbContext : DbContext
+    public partial class HealthChecksDBContext : DbContext
     {
-        public HealthChecksDbContext(DbContextOptions<HealthChecksDbContext> options) : base(options)
+        public HealthChecksDBContext()
         {
-
         }
-        public DbSet<Table_test>? Table_test { get; set; }
+
+        public HealthChecksDBContext(DbContextOptions<HealthChecksDBContext> options)
+            : base(options)
+        {
+        }
+
+        public virtual DbSet<Component> Components { get; set; } = null!;
+        public virtual DbSet<ComponentType> ComponentTypes { get; set; } = null!;
+        public virtual DbSet<Configuration> Configurations { get; set; } = null!;
+        public virtual DbSet<Execution> Executions { get; set; } = null!;
+        public virtual DbSet<Failure> Failures { get; set; } = null!;
+        public virtual DbSet<HealthCheckExecutionEntry> HealthCheckExecutionEntries { get; set; } = null!;
+        public virtual DbSet<HealthCheckExecutionHistory> HealthCheckExecutionHistories { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Name=ConnectionStrings:HealthChecksDBString");
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Component>(entity =>
+            {
+                entity.Property(e => e.ComponentName).HasMaxLength(500);
+
+                entity.Property(e => e.ComponentQuery).HasMaxLength(500);
+
+                entity.Property(e => e.ComponentRoletags).HasMaxLength(500);
+
+                entity.Property(e => e.ComponentTypesId).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.ComponentTypes)
+                    .WithMany(p => p.Components)
+                    .HasForeignKey(d => d.ComponentTypesId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Components_ComponentTypes");
+
+                entity.HasOne(d => d.Configuration)
+                    .WithMany(p => p.Components)
+                    .HasForeignKey(d => d.ConfigurationId)
+                    .HasConstraintName("FK_Components_Configurations");
+            });
+
+            modelBuilder.Entity<ComponentType>(entity =>
+            {
+                entity.HasKey(e => e.ComponentTypesId);
+
+                entity.Property(e => e.ComponentTypesId).ValueGeneratedNever();
+
+                entity.Property(e => e.ComponentTypesName).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<Configuration>(entity =>
+            {
+                entity.Property(e => e.DiscoveryService).HasMaxLength(100);
+
+                entity.Property(e => e.Name).HasMaxLength(500);
+
+                entity.Property(e => e.Uri).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<Execution>(entity =>
+            {
+                entity.Property(e => e.DiscoveryService).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(500);
+
+                entity.Property(e => e.Uri).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<Failure>(entity =>
+            {
+                entity.Property(e => e.HealthCheckName).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<HealthCheckExecutionEntry>(entity =>
+            {
+                entity.HasIndex(e => e.HealthCheckExecutionId, "IX_HealthCheckExecutionEntries_HealthCheckExecutionId");
+
+                entity.Property(e => e.Name).HasMaxLength(500);
+
+                entity.HasOne(d => d.HealthCheckExecution)
+                    .WithMany(p => p.HealthCheckExecutionEntries)
+                    .HasForeignKey(d => d.HealthCheckExecutionId);
+            });
+
+            modelBuilder.Entity<HealthCheckExecutionHistory>(entity =>
+            {
+                entity.HasIndex(e => e.HealthCheckExecutionId, "IX_HealthCheckExecutionHistories_HealthCheckExecutionId");
+
+                entity.Property(e => e.Name).HasMaxLength(500);
+
+                entity.HasOne(d => d.HealthCheckExecution)
+                    .WithMany(p => p.HealthCheckExecutionHistories)
+                    .HasForeignKey(d => d.HealthCheckExecutionId);
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

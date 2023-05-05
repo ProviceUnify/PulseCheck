@@ -28,6 +28,13 @@ $(document).ready(function () {
     });
 });
 
+function removeComponentRow(row) {
+    //debugger;
+    var rowToDelete = document.querySelectorAll('tr:has(#' + row.id + ')');
+    rowToDelete[0].remove();
+    $('input#components-count')[0].value = $('input#components-count')[0].value - 1;
+}
+
 function addComponentRow() {
     //debugger;
     var lastRow = $('#component-table > tbody')[0].lastElementChild;
@@ -38,6 +45,7 @@ function addComponentRow() {
     $('#component-table > tbody')[0].append(newRow[0]);
     $('#row-index-row-' + newRowNumber)[0].innerText = newRowNumber;
     $('input#components-count')[0].value = newRowNumber;
+    $('#component-db-id-row-' + newRowNumber)[0].value = -1;
 }
 
 function fillConfiguration(elementId) {
@@ -63,7 +71,7 @@ function fillConfiguration(elementId) {
             'componentQuery': '',
             'componentRoletags': ''
         };
-        debugger;
+       //debugger;
         var row = $(selector + ' + tr.collapse > td > table > tbody')[0].rows[i];
         rowData.componentId = row.attributes['data-component-db-id'].value;
         rowData.componentTypeId = row.querySelectorAll('td.component-type')[0].attributes['data-type-id'].value;
@@ -72,7 +80,7 @@ function fillConfiguration(elementId) {
         rowData.componentRoletags = row.querySelectorAll('td.component-roletags')[0].attributes['data-roletags'].value;
         rowsData.push(rowData);
     }
-    debugger;
+   //debugger;
     $('#configuration-name')[0].value = name;
     $('#configuration-uri')[0].value = uri;
     $('#configuration-db-id')[0].value = configurationId;
