@@ -13,8 +13,8 @@ namespace RSWMonitor.RemoteMonitor
 {
     public class Program
     {
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        WebHost.CreateDefaultBuilder(args).UseUrls("http://*:25567;https://localhost:25565");
+        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        //WebHost.CreateDefaultBuilder(args).UseUrls("http://*:25567;https://localhost:25565");
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
