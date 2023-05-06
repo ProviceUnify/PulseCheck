@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.WindowsServices;
 using RSWMonitor.RemoteMonitor.Data;
 using RSWMonitor.RemoteMonitor.Models;
 using System.ServiceProcess;
@@ -13,10 +14,9 @@ namespace RSWMonitor.RemoteMonitor
 {
     public class Program
     {
-        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        //WebHost.CreateDefaultBuilder(args).UseUrls("http://*:25567;https://localhost:25565");
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            //.UseWindowsService()
                 .ConfigureServices((hostContext, services) =>
                 {
                     // Конфигурация сервисов
@@ -25,16 +25,24 @@ namespace RSWMonitor.RemoteMonitor
 
                     //services.AddControllersWithViews();
                 });
+
+
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var webApplicationOptions = new WebApplicationOptions() {
+                ContentRootPath = AppContext.BaseDirectory,
+                Args = args,
+                ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName
+            };
+            var builder = WebApplication.CreateBuilder(webApplicationOptions);
+            builder.Host.UseWindowsService();
+            
             var host = CreateHostBuilder(args).Build();
 
             // Получаем сервис из контейнера зависимостей
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
             var healthChecksDbContext = services.GetRequiredService<HealthChecksDBContext>();
-
 
 
             // Add services to the container.
@@ -97,7 +105,7 @@ namespace RSWMonitor.RemoteMonitor
 
             //app.MapRazorPages();
 
-            app.Run();
+            app.Run("http://localhost:7001");
         }
     }
 }

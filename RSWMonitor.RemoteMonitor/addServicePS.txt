@@ -1,0 +1,1 @@
+﻿New-Service -Name "m_service" -BinaryPathName "D:\Release\RSWMonitor\RSWMonitor.RemoteMonitor.exe --contentRoot D:\Release\RSWMonitor" -Description "{DESCRIPTION}" -DisplayName "M_SERVICE" -StartupType Automatic
