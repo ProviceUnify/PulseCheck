@@ -1,6 +1,10 @@
 ﻿const successToast = document.getElementById('success-toast');
 const errorToast = document.getElementById('error-toast');
 
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
 $(document).ready(function () {
     //$("input.add-configuration-roles").change(function () {
     //    $.each($("input.add-configuration-roles"), function () {
@@ -20,6 +24,14 @@ $(document).ready(function () {
     //        return true;
     //    }
     //});
+    //$('#healthcheck-iframe').on('load', function () {
+    //    $('#healthcheck-iframe').contents().find('body').append('<script>var t = document.querySelector("#outer-container"); t.addEventListener("load", (event) => {console.log(".tag")})</script>');
+    //    //debugger;
+    //    //var iframe = document.querySelectorAll('#healthcheck-iframe')[0].contentDocument.documentElement;
+    //    //console.log(iframe);
+    //});
+    //debugger;
+    
     $('input.init').on('keypress', function () {
         //debugger;
         if ($('input#components-count')[0].value == 0) {
@@ -28,6 +40,31 @@ $(document).ready(function () {
     });
 });
 
+function removeOtherRolesEntries(currentRoles) {
+    var roles = JSON.parse(currentRoles); // HOFFMAN, KSD
+    delay(200).then(() => {
+        var t = $("#healthcheck-iframe").contents().find(".tag");
+        //console.log(t.length);
+        //debugger;
+        for (var i = 0; i < t.length; i++) {
+
+            //console.log(roles.includes(t[i].innerText));
+            if (roles.includes(t[i].innerText)) {
+                t[i].parentElement.parentElement.classList.add('keep')
+            } else {
+                //t[i].parentElement.parentElement.classList.remove('delete')
+            }
+        }
+        //delay(100).then(() => {
+            var healthCheckRowsToRemove = $("#healthcheck-iframe").contents().find('.hc-checks-table__body > tr:not(.keep)');
+            healthCheckRowsToRemove.remove();
+            //healthCheckRowsToRemove.forEach(elem => { elem.remove() })
+        //});
+        //t.forEach(tag => {
+        //});
+    });
+    //delay(1000).then(() => $("#healthcheck-iframe").contents().find(".tag").remove());
+}
 function removeComponentRow(row) {
     //debugger;
     var rowToDelete = document.querySelectorAll('tr:has(#' + row.id + ')');

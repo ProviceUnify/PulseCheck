@@ -37,3 +37,11 @@ tr.config-collapse.collapsing {
     transition: none;
     display: none;
 }
+
+.has-before-after-quotes::before {
+    content: "\"";
+}
+
+.has-before-after-quotes::after {
+    content: "\"";
+}

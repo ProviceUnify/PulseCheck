@@ -38,7 +38,7 @@ namespace RSWMonitor.MainApp
             builder.Services.AddControllers().AddNewtonsoftJson();
 
 
-            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddSqlServerStorage(HealthChecksDBString);
+            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); settings.DisableDatabaseMigrations(); }).AddSqlServerStorage(HealthChecksDBString);
             //builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage();
             
             // Setting policies
@@ -90,4 +90,4 @@ namespace RSWMonitor.MainApp
     }
 }
 
-// https://codverter.com/src/sqltoclass?prg=1&db=1&sample=1
+// https://www.telerik.com/blogs/checking-health-aspnet-core-apis

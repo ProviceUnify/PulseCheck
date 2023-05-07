@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
+using RSWMonitor.RemoteMonitor.Controllers;
 using RSWMonitor.RemoteMonitor.Data;
 using RSWMonitor.RemoteMonitor.Models;
 using System.ServiceProcess;
@@ -16,13 +17,11 @@ namespace RSWMonitor.RemoteMonitor
     {
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            //.UseWindowsService()
                 .ConfigureServices((hostContext, services) =>
                 {
                     // Конфигурация сервисов
                     services.AddDbContext<HealthChecksDBContext>(options =>
                         options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")));
-
                     //services.AddControllersWithViews();
                 });
 
@@ -36,15 +35,12 @@ namespace RSWMonitor.RemoteMonitor
             };
             var builder = WebApplication.CreateBuilder(webApplicationOptions);
             builder.Host.UseWindowsService();
-            
             var host = CreateHostBuilder(args).Build();
 
             // Получаем сервис из контейнера зависимостей
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
             var healthChecksDbContext = services.GetRequiredService<HealthChecksDBContext>();
-
-
             // Add services to the container.
 
             var HealthChecksDBString = builder.Configuration.GetConnectionString("HealthChecksDBString") ?? throw new InvalidOperationException("Connection string 'HealthChecksDBString' not found.");
@@ -56,8 +52,10 @@ namespace RSWMonitor.RemoteMonitor
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             //builder.Services.AddRazorPages();
             int thisRemoteMonitorConfigurationId = builder.Configuration.GetValue<int>("ConfigurationID");
-            var t = healthChecksDbContext.Configurations.Where(m => m.Id == thisRemoteMonitorConfigurationId).Include(m => m.Components);
+            //var t = healthChecksDbContext.Configurations.Where(m => m.Id == thisRemoteMonitorConfigurationId).Include(m => m.Components);
 
+            LoadConfigurationController loadConfiguration = new LoadConfigurationController();
+            builder = loadConfiguration.Load(builder, thisRemoteMonitorConfigurationId, healthChecksDbContext);
             //var t = healthChecksDbContext.Table_test;
             //foreach (var elem in t)
             //{
@@ -66,7 +64,7 @@ namespace RSWMonitor.RemoteMonitor
             #region hc impementation
             //builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
             //builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", name: "tt", predicate: s => s.Status == ServiceControllerStatus.Running);
-            builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
+            //builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
             //builder.Services.AddHealthChecks().AddCheck<CheckByHttpRequest>("test1");
             //services.AddHealthChecks()
             //  .AddSqlServer(Configuration["ConnectionString"]) // Your database connection string
@@ -90,7 +88,7 @@ namespace RSWMonitor.RemoteMonitor
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -105,7 +103,7 @@ namespace RSWMonitor.RemoteMonitor
 
             //app.MapRazorPages();
 
-            app.Run("http://localhost:7001");
+            app.Run();
         }
     }
 }

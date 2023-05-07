@@ -64,7 +64,7 @@
                                     <input type="text" id="component-name-row-1" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">
                                 </td>
                                 <td class="align-middle">
-                                    <input type="text" id="component-query-row-1" name="{'prop':'component-query','row':1}" placeholder="URL, 'SELECT 1', process name etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
+                                    <input type="text" id="component-query-row-1" name="{'prop':'component-query','row':1}" placeholder="URL, DB connection string, process name etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
                                 </td>
                                 <td class="align-middle col-2">
                                     <select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="component-type-row-1">
@@ -206,7 +206,7 @@
                                             <td class="component-name border-end" data-name="@component.ComponentName">
                                                 @component.ComponentName
                                              </td>
-                                            <td class="component-query border-end"><samp class="bg-secondary bg-opacity-25 p-1 rounded">"@component.ComponentQuery"</samp></td>
+                                            <td class="component-query border-end"><samp style="" class="has-before-after-quotes bg-secondary bg-opacity-25 p-1 rounded">@component.ComponentQuery</samp></td>
                                             <td class="component-roletags border-end" data-roletags="@component.ComponentRoletags">
                                                 @{
                                                     var listOfComponentRoles = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
