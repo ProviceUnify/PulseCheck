@@ -54,7 +54,7 @@ namespace RSWMonitor.RemoteMonitor
             int thisRemoteMonitorConfigurationId = builder.Configuration.GetValue<int>("ConfigurationID");
             //var t = healthChecksDbContext.Configurations.Where(m => m.Id == thisRemoteMonitorConfigurationId).Include(m => m.Components);
 
-            LoadConfigurationController loadConfiguration = new LoadConfigurationController();
+            LoadConfigurationController loadConfiguration = new();
             builder = loadConfiguration.Load(builder, thisRemoteMonitorConfigurationId, healthChecksDbContext);
             //var t = healthChecksDbContext.Table_test;
             //foreach (var elem in t)

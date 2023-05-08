@@ -23,12 +23,13 @@ namespace RSWMonitor.MainApp.Models
         public virtual DbSet<Failure> Failures { get; set; } = null!;
         public virtual DbSet<HealthCheckExecutionEntry> HealthCheckExecutionEntries { get; set; } = null!;
         public virtual DbSet<HealthCheckExecutionHistory> HealthCheckExecutionHistories { get; set; } = null!;
+        public virtual DbSet<HealthStatus> HealthStatuses { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=ConnectionStrings:HealthChecksDBString");
+                optionsBuilder.UseSqlServer("Name=HealthChecksDBString");
             }
         }
 
@@ -108,6 +109,22 @@ namespace RSWMonitor.MainApp.Models
                 entity.HasOne(d => d.HealthCheckExecution)
                     .WithMany(p => p.HealthCheckExecutionHistories)
                     .HasForeignKey(d => d.HealthCheckExecutionId);
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.HealthCheckExecutionHistories)
+                    .HasForeignKey(d => d.Status)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_HealthCheckExecutionHistories_Statuses");
+            });
+
+            modelBuilder.Entity<HealthStatus>(entity =>
+            {
+                entity.HasKey(e => e.StatusId)
+                    .HasName("PK_Statuses");
+
+                entity.Property(e => e.StatusId).ValueGeneratedNever();
+
+                entity.Property(e => e.StatusName).HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

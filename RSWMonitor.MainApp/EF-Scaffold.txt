@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext 'Name=HealthChecksDBString' Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force

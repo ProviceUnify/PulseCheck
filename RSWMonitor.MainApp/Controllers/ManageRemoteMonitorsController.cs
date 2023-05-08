@@ -15,7 +15,7 @@ namespace RSWMonitor.MainApp.Controllers
         private readonly HealthChecksDBContext HealthChecksDbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        private Models.Configuration configurations = new Models.Configuration();
+        //private Models.Configuration configurations = new();
         //private ConfigurationTypes configurationTypes = new ConfigurationTypes();
         public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager)
         {
@@ -50,7 +50,7 @@ namespace RSWMonitor.MainApp.Controllers
         public async Task<RedirectToActionResult> AddConfiguration(IFormCollection formCollection)
         {
             int componentsCount = Int32.Parse(formCollection["components-count"]);
-            List<Component> components = new List<Component>();
+            List<Component> components = new();
             var configurationBaseData = new
             {
                 id = Int32.Parse(formCollection["configuration-db-id"]),
@@ -62,40 +62,49 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 for (int i = 0; i < componentsCount; i++)
                 {
-                    int indexOfFormInput = i + 1;
-                    int componentId = Int32.Parse(formCollection[$"component-db-id-row-{indexOfFormInput}"]);
-                    string componentName = formCollection[$"{{'prop':'component-name','row':{indexOfFormInput}}}"];
-                    string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
-                    string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
-                    int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
-                    if (componentName == "" || componentQuery == "" || componentRoletags == "")
-                    {
-                        return RedirectToAction("Index", routeValues: new { failure = $"Entered data of component was incorrect" });
-                    }
-                    List<string> rolesList;
                     try
                     {
-                        rolesList = componentRoletags.Split(',').ToList();
-                        componentRoletags = JsonConvert.SerializeObject(rolesList);
+                        int indexOfFormInput = i + 1;
+                        int componentId = Int32.Parse(formCollection[$"component-db-id-row-{indexOfFormInput}"]);
+                        string componentName = formCollection[$"{{'prop':'component-name','row':{indexOfFormInput}}}"];
+                        string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
+                        string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
+                        int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
+                        if (componentName == "" || componentQuery == "" || componentRoletags == "")
+                        {
+                            return RedirectToAction("Index", routeValues: new { failure = $"Entered data of component was incorrect" });
+                        }
+                        List<string> rolesList;
+                        try
+                        {
+                            rolesList = componentRoletags.Split(',').ToList();
+                            componentRoletags = JsonConvert.SerializeObject(rolesList);
 
-                    } catch (Exception ex)
-                    {
+                        }
+                        catch (Exception ex)
+                        {
 
-                        componentRoletags = JsonConvert.SerializeObject(new List<string>());
+                            componentRoletags = JsonConvert.SerializeObject(new List<string>());
+                        }
+
+                        if (componentId < 0)
+                            componentId = 0;
+                        components.Add(new Component
+                        {
+                            Id = componentId,
+                            ComponentName = componentName,
+                            ComponentQuery = componentQuery,
+                            ComponentTypesId = componentTypeId,
+                            ComponentRoletags = componentRoletags,
+
+                            ComponentHasControls = false
+                        });
                     }
-
-                    if (componentId < 0)
-                        componentId = 0;
-                    components.Add(new Component
+                    catch (Exception ex)
                     {
-                        Id = componentId,
-                        ComponentName = componentName,
-                        ComponentQuery = componentQuery,
-                        ComponentTypesId = componentTypeId,
-                        ComponentRoletags = componentRoletags,
-
-                        ComponentHasControls = false
-                    });
+                        componentsCount += 1;
+                        continue;
+                    }
                 }
             }
             catch (Exception ex)
@@ -109,7 +118,7 @@ namespace RSWMonitor.MainApp.Controllers
             }
             if (configurationBaseData.id < 0)
             {
-                Models.Configuration configurations = new Models.Configuration
+                Models.Configuration configurations = new()
                 {
                     Name = configurationBaseData.name,
                     Uri = configurationBaseData.uri,
@@ -120,7 +129,7 @@ namespace RSWMonitor.MainApp.Controllers
             }
             else
             {
-                Models.Configuration? configurationToEdit = new Models.Configuration();
+                Models.Configuration? configurationToEdit = new();
                 configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).Include(m => m.Components).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationBaseData.name;
                 configurationToEdit.Uri = configurationBaseData.uri;
@@ -137,7 +146,7 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 if (configurationId >= 0)
                 {
-                    Models.Configuration? configurationToDelete = new Models.Configuration();
+                    Models.Configuration? configurationToDelete = new();
                     configurationToDelete = HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationId).FirstOrDefault();
                     HealthChecksDbContext.Configurations?.Remove(configurationToDelete!);
                     HealthChecksDbContext.SaveChanges();

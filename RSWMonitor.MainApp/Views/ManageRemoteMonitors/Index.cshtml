@@ -19,7 +19,6 @@
 
     }
 }
-
 <div class="container text-center">
     <div class="modal fade" id="add-configuration" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -130,13 +129,16 @@
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add-configuration"><i class="bi bi-plus-square"></i> Add configuration</button>
                 </div>
             </div>
-            <table class="shadow-sm table table table-sm">
+            <table class="shadow-sm table table-sm">
+                @*<thead>*@
                 <tr class="sticky-table-headers">
                     <th class="col-1 text-end border-end">#</th>
                     <th class="col-5 border-end">Name</th>
                     <th class="col-5 border-end">URI</th>
                     <th>Edit</th>
                 </tr>
+                @*</thead>*@
+                @*<tbody>*@
                 @foreach (var configuration in Model)
                 {
                     int index = (Model).IndexOf(configuration) + 1;
@@ -181,13 +183,16 @@
                         <tr class="collapse config-collapse" id="collapse-@index">
                             <td colspan="5" class="px-0 pt-0 pb-1">
                                 <table class="shadow-sm table table-striped">
-                                    <tr>
-                                        <th class="border-end text-end col-1">#</th>
-                                        <th class="col-1 border-end">Type</th>
-                                        <th class="col-4 border-end">Name</th>
-                                        <th class="col-3 border-end">Query</th>
-                                        <th class="col-3">Roles</th>
-                                    </tr>
+                                    @*<thead>*@
+                                        <tr>
+                                            <th class="border-end text-end col-1">#</th>
+                                            <th class="col-1 border-end">Type</th>
+                                            <th class="col-4 border-end">Name</th>
+                                            <th class="col-3 border-end">Query</th>
+                                            <th class="col-3">Roles</th>
+                                        </tr>
+                                    @*</thead>*@
+                                    @*<tbody>*@
                                         @foreach (var component in configuration.Components)
                                         {
                                             int componentIndex = (configuration.Components.ToList()).IndexOf(component) + 1;
@@ -218,12 +223,14 @@
                                             </td>
                                         </tr>
                                         }
+                                    @*</tbody>*@
                                 </table>
                             </td>
                         </tr>
                         }
                     </tr>
                 }
+                @*</tbody>*@
             </table>
         </div>
     </div>

@@ -38,7 +38,14 @@ namespace RSWMonitor.MainApp
             builder.Services.AddControllers().AddNewtonsoftJson();
 
 
-            builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); settings.DisableDatabaseMigrations(); }).AddSqlServerStorage(HealthChecksDBString);
+            builder.Services.AddHealthChecksUI(settings => {
+                settings.SetEvaluationTimeInSeconds(health_check_pollingRate);
+                settings.DisableDatabaseMigrations();
+                settings.MaximumHistoryEntriesPerEndpoint(50);
+                settings.AddWebhookNotification("webhook1", "/webhook", "{ message: \"Configuration [[LIVENESS]]: [[FAILURE]] - Description: [[DESCRIPTIONS]]\"}", "{message: \"[[LIVENESS]] is Ok\"}");
+                
+
+            }).AddSqlServerStorage(HealthChecksDBString);
             //builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage();
             
             // Setting policies

@@ -13,5 +13,6 @@ namespace RSWMonitor.MainApp.Models
         public int? HealthCheckExecutionId { get; set; }
 
         public virtual Execution? HealthCheckExecution { get; set; }
+        public virtual HealthStatus StatusNavigation { get; set; } = null!;
     }
 }

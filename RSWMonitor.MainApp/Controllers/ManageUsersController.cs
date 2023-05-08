@@ -25,7 +25,7 @@ namespace RSWMonitor.MainApp.Controllers
         {
             //await _roleManager.CreateAsync(new IdentityRole("Health manager"));
             //await _roleManager.CreateAsync(new IdentityRole("User manager"));
-            UsersAndRolesViewModel usersAndRoles = new UsersAndRolesViewModel();
+            UsersAndRolesViewModel usersAndRoles = new();
             var roles = await _roleManager.Roles.ToListAsync();
             var users = await _userManager.Users.ToListAsync();
             

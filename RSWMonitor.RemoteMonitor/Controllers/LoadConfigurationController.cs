@@ -7,6 +7,7 @@ using System.ServiceProcess;
 
 namespace RSWMonitor.RemoteMonitor.Controllers
 {
+    [NonController]
     public class LoadConfigurationController : Controller
     {
         public WebApplicationBuilder Load(WebApplicationBuilder builder, int ConfigurationId, HealthChecksDBContext DbContext)

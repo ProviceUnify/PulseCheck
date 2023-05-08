@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Newtonsoft.Json;
+@using RSWMonitor.MainApp.Models;
+@{
+    ViewData["Title"] = "History";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    List<HealthStatus> healthStatus = new();
+    healthStatus = ViewBag.Statuses;
+    Dictionary<int, string> foundConfigurations = new();
+    foundConfigurations = (Dictionary<int, string>)ViewData["foundConfigurations"];
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<Execution>
+
+<div class="container text-center">
+    @*@Model.First().HealthCheckExecutionHistories.First().StatusNavigation.StatusName*@
+
+    <table class="shadow-sm table table-striped table-sm">
+        <thead>
+        <tr class="sticky-table-headers">
+            <th class="col-1 text-end border-end">#</th>
+            <th class="col-5 border-end">Confguration name</th>
+            <th class="col-5">URI</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach(Execution exec in Model)
+        {
+            int index = (Model).IndexOf(exec) + 1;
+            <tr>
+                <td class="border-end text-end col-1">
+                    <div class="row">
+                        <span class="col-6 text-start">
+                            <span title="Configuration ID in database" class="badge bg-success">ID: @foundConfigurations.Where(s => s.Value == exec.Name).First().Key</span>
+                        </span>
+                        <span class="text-end col-6">@index</span>
+                    </div>
+                </td>
+                @*<td class="border-end align-middle text-end">
+                    @index
+                </td>*@
+                <td class="align-middle border-end">
+                    @exec.Name
+                </td>
+                <td class="align-middle">
+                    <a href="@exec.Uri">@exec.Uri</a>
+                </td>
+            </tr>
+            @if (exec.HealthCheckExecutionHistories.Count > 0)
+            {
+                <tr>
+                    <td colspan="3" class="px-0 pt-0 pb-1">
+                        <table class="sortable shadow-sm table table-striped">
+                                <thead>
+                            <tr>
+                                <th class="border-end text-end col-1">#</th>
+                                <th class="col-2 border-end">Component name</th>
+                                <th class="col-4 border-end">Failure description</th>
+                                <th class="col-2 border-end">Status</th>
+                                <th class="col-3">Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var historyEntry in exec.HealthCheckExecutionHistories)
+                            {
+                                int historyEntryIndex = (exec.HealthCheckExecutionHistories.ToList()).IndexOf(historyEntry) + 1;
+                                <tr>
+                                    <td class="border-end text-end col-1">
+                                        @historyEntryIndex
+                                    </td>
+                                    <td class="border-end fw-bold">@historyEntry.Name</td>
+                                    @if (historyEntry.Description == null)
+                                    {
+                                        <td class="border-end text-center text-muted fst-italic">No data</td>
+                                    } else {
+                                        <td class="border-end text-start">@historyEntry.Description</td>
+                                    }
+                                    <td class="border-end">@historyEntry.StatusNavigation.StatusName</td> @*что тут происходит, почему оно работает*@
+                                    <td class="border-end">@historyEntry.On</td>
+                                </tr>
+                            }
+                                </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
