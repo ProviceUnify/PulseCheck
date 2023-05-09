@@ -6,6 +6,8 @@ function delay(time) {
 }
 
 $(document).ready(function () {
+    $('#sandbox-container .input-daterange').datepicker({
+    });
     //$("input.add-configuration-roles").change(function () {
     //    $.each($("input.add-configuration-roles"), function () {
     //        this.setCustomValidity('');

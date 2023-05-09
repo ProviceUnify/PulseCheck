@@ -6,6 +6,7 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
     List<HealthStatus> healthStatus = new();
     healthStatus = ViewBag.Statuses;
+    healthStatus.Reverse();
     Dictionary<int, string> foundConfigurations = new();
     foundConfigurations = (Dictionary<int, string>)ViewData["foundConfigurations"];
 }
@@ -13,78 +14,119 @@
 @model List<Execution>
 
 <div class="container text-center">
-    @*@Model.First().HealthCheckExecutionHistories.First().StatusNavigation.StatusName*@
+    <div class="tab-pane fade show active" id="nav-configurations" role="tabpanel" aria-labelledby="nav-configurations-tab" tabindex="0">
+        <div class="row">
+            <div class="col-2">
+                <h1 class="text-start">History</h1>
+            </div>
+            </div>
+        <div class="row">
 
-    <table class="shadow-sm table table-striped table-sm">
-        <thead>
-        <tr class="sticky-table-headers">
-            <th class="col-1 text-end border-end">#</th>
-            <th class="col-5 border-end">Confguration name</th>
-            <th class="col-5">URI</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach(Execution exec in Model)
+            <div class="col-2 text-end mt-2">
+                <input type="text" class="form-control form-control-sm" aria-label="text-input" placeholder="Search items...">
+            </div>
+            <div class="text-end col-10 mt-2">
+                <form method="post" asp-controller="History" asp-action="DownloadHistory">
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text">from</span>
+                            <input id="startDate" name="startDate" class="form-control w-25" type="date" />
+                            <span class="input-group-text">to</span>
+                        <input id="endDate" name="endDate" class="form-control w-25" type="date" />
+                        <select class="form-select w-auto" name="status" aria-label="Example select with button addon">
+                            <option value="-1" selected>Any status</option>
+                            @foreach (var status in healthStatus)
+                            {
+                                <option value="@status.StatusId">@status.StatusName</option>
+                            }
+                            @*<option value="0" selected>.XSLX</option>
+                            <option value="1">.PDF</option>*@
+                        </select>
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-download"></i> Save history to</button>
+                        <select class="form-select w-auto" name="fileType" aria-label="Example select with button addon">
+                            <option value="0" selected>.XSLX</option>
+                            <option value="1">.PDF</option>
+                        </select>
+                        </div>
+                </form>
+            </div>
+        </div>
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+        @foreach (Execution exec in Model)
         {
             int index = (Model).IndexOf(exec) + 1;
-            <tr>
-                <td class="border-end text-end col-1">
-                    <div class="row">
-                        <span class="col-6 text-start">
-                            <span title="Configuration ID in database" class="badge bg-success">ID: @foundConfigurations.Where(s => s.Value == exec.Name).First().Key</span>
-                        </span>
-                        <span class="text-end col-6">@index</span>
-                    </div>
-                </td>
-                @*<td class="border-end align-middle text-end">
-                    @index
-                </td>*@
-                <td class="align-middle border-end">
-                    @exec.Name
-                </td>
-                <td class="align-middle">
-                    <a href="@exec.Uri">@exec.Uri</a>
-                </td>
-            </tr>
-            @if (exec.HealthCheckExecutionHistories.Count > 0)
-            {
-                <tr>
-                    <td colspan="3" class="px-0 pt-0 pb-1">
-                        <table class="sortable shadow-sm table table-striped">
-                                <thead>
-                            <tr>
-                                <th class="border-end text-end col-1">#</th>
-                                <th class="col-2 border-end">Component name</th>
-                                <th class="col-4 border-end">Failure description</th>
-                                <th class="col-2 border-end">Status</th>
-                                <th class="col-3">Time</th>
-                            </tr>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-heading-@index">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-@index" aria-expanded="false" aria-controls="panelsStayOpen-collapse-@index">
+                        <div class="container">
+                            <div class="row text-middle">
+                                <div class="col-3 border-end text-middle">
+                                    <span class="fw-bold">Name: </span>@exec.Name <span title="Configuration ID in database" class="badge bg-success">ID: @foundConfigurations.Where(s => s.Value == exec.Name).First().Key</span>
+                                </div>
+                                <div class="col-3 text-start border-end">
+                                    <span class="fw-bold">URI: </span><a href="@exec.Uri" onclick="window.open(this.href, '_blank')">@exec.Uri</a>
+                                </div>
+                                <div class="col-5 text-center border-end">
+                                    <span class="fw-bold">On state from: </span>@exec.OnStateFrom
+                                </div>
+                                <div class="col-1 text-start ms-0">
+                                    <span class="fw-bold">Count: </span>@exec.HealthCheckExecutionHistories.Count
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapse-@index" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@index">
+                    @if (exec.HealthCheckExecutionHistories.Count > 0)
+                    {
+                        <table class="sortable shadow-sm table table-striped my-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-end text-end col-1">#</th>
+                                    <th class="col-2 border-end">Component name</th>
+                                    <th class="col-4 border-end">Failure description</th>
+                                    <th class="col-2 border-end">Status</th>
+                                    <th class="col-3" data-defaultsort="desc">Time</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach (var historyEntry in exec.HealthCheckExecutionHistories)
-                            {
-                                int historyEntryIndex = (exec.HealthCheckExecutionHistories.ToList()).IndexOf(historyEntry) + 1;
-                                <tr>
-                                    <td class="border-end text-end col-1">
-                                        @historyEntryIndex
-                                    </td>
-                                    <td class="border-end fw-bold">@historyEntry.Name</td>
-                                    @if (historyEntry.Description == null)
-                                    {
-                                        <td class="border-end text-center text-muted fst-italic">No data</td>
-                                    } else {
-                                        <td class="border-end text-start">@historyEntry.Description</td>
-                                    }
-                                    <td class="border-end">@historyEntry.StatusNavigation.StatusName</td> @*что тут происходит, почему оно работает*@
-                                    <td class="border-end">@historyEntry.On</td>
-                                </tr>
-                            }
-                                </tbody>
+                                @foreach (var historyEntry in exec.HealthCheckExecutionHistories)
+                                {
+                                    int historyEntryIndex = (exec.HealthCheckExecutionHistories.ToList()).IndexOf(historyEntry) + 1;
+                                    <tr class="align-middle">
+                                        <td class="border-end text-end col-1">
+                                            @historyEntryIndex
+                                        </td>
+                                        <td class="border-end fw-bold">@historyEntry.Name</td>
+                                        @if (historyEntry.Description == null)
+                                        {
+                                            <td class="border-end text-center text-muted fst-italic">No data</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="border-end text-start">@historyEntry.Description</td>
+                                        }
+                                        <td class="border-end">
+                                            @switch (historyEntry.StatusNavigation.StatusId)
+                                            {
+                                                case 0:
+                                                    <span class="text-danger"><i class="bi bi-x-circle"></i> @historyEntry.StatusNavigation.StatusName</span>
+                                                    break;
+                                                case 1:
+                                                    <span class="text-warning"><i class="bi bi-exclamation-triangle"></i> @historyEntry.StatusNavigation.StatusName</span>
+                                                    break;
+                                                case 2:
+                                                    <span class="text-success"><i class="bi bi-check"></i> @historyEntry.StatusNavigation.StatusName</span>
+                                                    break;
+                                            }
+                                        </td> @*что тут происходит, почему оно работает*@
+                                        <td class="border-end">@historyEntry.On</td>
+                                    </tr>
+                                }
+                            </tbody>
                         </table>
-                    </td>
-                </tr>
-            }
+                    }
+                </div>
+            </div>
         }
-        </tbody>
-    </table>
+    </div>
 </div>

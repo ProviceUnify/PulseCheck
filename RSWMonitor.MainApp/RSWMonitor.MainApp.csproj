@@ -14,6 +14,8 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="6.0.5" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" Version="6.0.5" />
     <PackageReference Include="bootstrap-sortable" Version="2.0.0" />
+    <PackageReference Include="ClosedXML" Version="0.101.0" />
+    <PackageReference Include="IronPDF" Version="2023.5.8" />
     <PackageReference Include="Microsoft.AspNet.WebHooks.Receivers" Version="1.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
@@ -29,6 +31,10 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\bootstrap-datepicker\" />
   </ItemGroup>
 
 </Project>
