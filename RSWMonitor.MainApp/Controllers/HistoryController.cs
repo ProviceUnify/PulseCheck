@@ -134,7 +134,7 @@ namespace RSWMonitor.MainApp.Controllers
                 foreach (var exec in history)
                 {
                     htmlOfPdf += "<table class='table' style='font-family: Calibri'>";
-                    htmlOfPdf += $"<tr style='background-color: lightgrey;'><th>#</th><th>Configuration name</th><th>URI</th></tr>";
+                    htmlOfPdf += $"<tr style='background-color: lightgrey;'><th style='min-width:30px; max-width:30px'>#</th><th>Configuration name</th><th>URI</th></tr>";
                     htmlOfPdf += $"<tr><td>{exec.Id}</td><td>{exec.Name}</td><td>{exec.Uri}</td></tr>";
                     if (exec.HealthCheckExecutionHistories.Count > 0)
                     {

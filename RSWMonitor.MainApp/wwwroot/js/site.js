@@ -6,8 +6,7 @@ function delay(time) {
 }
 
 $(document).ready(function () {
-    $('#sandbox-container .input-daterange').datepicker({
-    });
+    
     //$("input.add-configuration-roles").change(function () {
     //    $.each($("input.add-configuration-roles"), function () {
     //        this.setCustomValidity('');
@@ -33,7 +32,70 @@ $(document).ready(function () {
     //    //console.log(iframe);
     //});
     //debugger;
-    
+    var searchDates = {
+        startDate: '01.01.0001',
+        endDate: '12.31.9999',
+        reset_startDate: function () {
+            this.startDate = '01.01.0001';
+        },
+        reset_endDate: function () {
+            this.endDate = '12.31.9999';
+        }
+    }
+    var searchStatus = {
+        text: '',
+        value: '-1',
+        reset: function () {
+            this.reset = '';
+            this.value = '-1'
+        }
+    }
+    var foundClassList = 'bg-warning bg-opacity-25';
+
+    $('button.execute-filtering').on('click', function () {
+        $("tr:has(td.search-here)").show().removeClass(foundClassList);
+        document.querySelector('#search-form').reset();
+    });
+
+    $('input.execute-filtering').on('keyup', function () {
+        $("tr:has(td.search-here)").removeClass(foundClassList);
+        if (this.value == '') return;
+        let searchString = this.value;
+        $("td.search-here").filter(function () {
+            return $(this).text().includes(searchString);
+        }).closest("tr").addClass(foundClassList);
+    });
+
+    $('input.execute-filtering[type=date], select.execute-filtering').on('change', function (e) {
+        $("tr:has(td.search-here)").show();
+        if (this.type == 'date') {
+            if (this.valueAsDate == null) {
+                searchDates['reset_' + this.id]();
+            } else {
+                var date = this.valueAsDate.getDate();
+                var month = this.valueAsDate.getMonth() + 1;
+                searchDates[this.id] = (date < 10 ? '0' + date : date) + '.' + (month < 10 ? '0' + month : month) + '.' + this.valueAsDate.getFullYear();
+            }
+        }
+        if (this.type == 'select-one') {
+            //debugger;
+            searchStatus.text = this.selectedOptions[0].text;
+            searchStatus.value = this.value;
+        }
+        $("tr:has(td.search-here)").hide();
+        $("td.search-here-date").filter(function () {
+            let dateSection = $(this).text().split(' ')[0];
+            return (dateSection >= searchDates.startDate && dateSection <= searchDates.endDate);
+        }).closest("tr").show();
+
+        $("td.search-here-status").filter(function () {
+            if (searchStatus.value < 0) {
+                return false;
+            }
+            return !($(this).text().includes(searchStatus.text));
+        }).closest("tr").hide();
+    });
+
     $('input.init').on('keypress', function () {
         //debugger;
         if ($('input#components-count')[0].value == 0) {
