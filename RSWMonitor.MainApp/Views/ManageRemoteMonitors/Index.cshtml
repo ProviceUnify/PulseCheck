@@ -101,14 +101,14 @@
                                 </td>
                             </tr>
                         </table>
+                        <span class="text-start text-opacity-50 text-danger">Component health log entries are not saved if 2 or more components are Unhealthy or Degraded, technical limitations :(</span>
+                        <br />
                         <button type="button" onclick="addComponentRow()" class="btn btn-sm my-auto btn-warning text-end mx-auto"><i class="bi bi-plus-square"></i> Add component</button>
-
-                            <input class="form-check-input" style="display: none;" type="checkbox" name="configuration-db-id" value="-1" id="configuration-db-id" checked>
+                        <input class="form-check-input" style="display: none;" type="checkbox" name="configuration-db-id" value="-1" id="configuration-db-id" checked>
                         <input class="form-check-input" style="display: none;" type="checkbox" name="components-count" value="0" id="components-count" checked>
                     </div>
 
                     <div class="modal-footer">
-                        
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-success btn-ok">Add/edit</button>
                     </div>
@@ -150,21 +150,21 @@
                                 </span>
                                 <span class="text-end col-6">
 
-                            @if (configuration.Components.Count > 0)
-                            {
-                                <a class="text-decoration-none text-dark" >
-                                    <i class="bi bi-chevron-bar-expand text-primary"></i> @index
-                                </a>
-                            }
-                            else
-                            {
-                                <i title="No components" class="bi bi-x text-danger opacity-0"></i> @index
-                            }
+                                    @if (configuration.Components.Count > 0)
+                                    {
+                                        <a class="text-decoration-none text-dark">
+                                            <i class="bi bi-chevron-bar-expand text-primary"></i> @index
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <i title="No components" class="bi bi-x text-danger opacity-0"></i> @index
+                                    }
                                 </span>
                             </div>
                         </td>
                         <td class="align-middle configuration-entry-name border-end" data-name="@configuration.Name">
-                                @configuration.Name
+                            @configuration.Name
                         </td>
                         <td class="align-middle configuration-entry-uri border-end"><a target="_blank" href="@configuration.Uri">@configuration.Uri</a></td>
                         @{
@@ -183,16 +183,16 @@
                         <tr class="collapse config-collapse" id="collapse-@index">
                             <td colspan="5" class="px-0 pt-0 pb-1">
                                 <table class="shadow-sm table table-striped">
-                                    @*<thead>*@
-                                        <tr>
-                                            <th class="border-end text-end col-1">#</th>
-                                            <th class="col-1 border-end">Type</th>
-                                            <th class="col-4 border-end">Name</th>
-                                            <th class="col-3 border-end">Query</th>
-                                            <th class="col-3">Roles</th>
-                                        </tr>
-                                    @*</thead>*@
-                                    @*<tbody>*@
+                                        @*<thead>*@
+                                    <tr>
+                                        <th class="border-end text-end col-1">#</th>
+                                        <th class="col-1 border-end">Type</th>
+                                        <th class="col-4 border-end">Name</th>
+                                        <th class="col-3 border-end">Query</th>
+                                        <th class="col-3">Roles</th>
+                                    </tr>
+                                        @*</thead>*@
+                                        @*<tbody>*@
                                         @foreach (var component in configuration.Components)
                                         {
                                             int componentIndex = (configuration.Components.ToList()).IndexOf(component) + 1;
@@ -206,24 +206,24 @@
                                                             @componentIndex
                                                     </span>
                                                 </div>
-                                                </td>
+                                            </td>
                                             <td class="component-type border-end" data-type-id="@component.ComponentTypes.ComponentTypesId">@component.ComponentTypes.ComponentTypesName</td>
                                             <td class="component-name border-end" data-name="@component.ComponentName">
-                                                @component.ComponentName
-                                             </td>
+                                                    @component.ComponentName
+                                            </td>
                                             <td class="component-query border-end"><samp style="" class="has-before-after-quotes bg-secondary bg-opacity-25 p-1 rounded">@component.ComponentQuery</samp></td>
                                             <td class="component-roletags border-end" data-roletags="@component.ComponentRoletags">
-                                                @{
-                                                    var listOfComponentRoles = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
-                                                    foreach (var item in listOfComponentRoles)
-                                                    {
+                                                    @{
+                                                        var listOfComponentRoles = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
+                                                        foreach (var item in listOfComponentRoles)
+                                                        {
                                                         <span class="badge bg-primary" data-role-name="@item">@item</span>
+                                                        }
                                                     }
-                                                }
                                             </td>
                                         </tr>
                                         }
-                                    @*</tbody>*@
+                                        @*</tbody>*@
                                 </table>
                             </td>
                         </tr>
