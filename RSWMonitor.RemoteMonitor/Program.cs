@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using RSWMonitor.RemoteMonitor.Controllers;
@@ -98,7 +99,21 @@ namespace RSWMonitor.RemoteMonitor
 
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+                ResultStatusCodes = new Dictionary<HealthStatus, int>
+        {
+            {HealthStatus.Healthy, StatusCodes.Status200OK},
+            {HealthStatus.Degraded, StatusCodes.Status500InternalServerError},
+            {HealthStatus.Unhealthy, StatusCodes.Status503ServiceUnavailable},
+        },
+                Predicate = _ => true
+                //ResultStatusCodes =
+                //{
+                //    [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                //    [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+                //    [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                //},
+                //AllowCachingResponses = false
             });
 
             //app.MapRazorPages();

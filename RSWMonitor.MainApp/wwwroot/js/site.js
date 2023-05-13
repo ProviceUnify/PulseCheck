@@ -105,29 +105,29 @@ $(document).ready(function () {
 });
 
 function removeOtherRolesEntries(currentRoles) {
-    var roles = JSON.parse(currentRoles); // HOFFMAN, KSD
+    /*debugger;*/
+    var roles = JSON.parse(currentRoles);
     delay(200).then(() => {
         var t = $("#healthcheck-iframe").contents().find(".tag");
-        //console.log(t.length);
-        //debugger;
+        if (t.length == 0) {
+            return
+        }
         for (var i = 0; i < t.length; i++) {
-
-            //console.log(roles.includes(t[i].innerText));
             if (roles.includes(t[i].innerText)) {
-                t[i].parentElement.parentElement.classList.add('keep')
-            } else {
-                //t[i].parentElement.parentElement.classList.remove('delete')
+                t[i].closest('tr').classList.add('keep')
             }
         }
-        //delay(100).then(() => {
+        //debugger;
+        var additionalKeep = $("#healthcheck-iframe").contents().find('td:not(:has(span.tag)):nth-last-child(5)');
+        for (var l = 0; l < additionalKeep.length; l++) {
+            additionalKeep[l].closest('tr').classList.add('keep')
+        }
+        //additionalKeep.forEach(elem => {
+        //    elem.closest('tr').classList.add('keep');
+        //});
             var healthCheckRowsToRemove = $("#healthcheck-iframe").contents().find('.hc-checks-table__body > tr:not(.keep)');
             healthCheckRowsToRemove.remove();
-            //healthCheckRowsToRemove.forEach(elem => { elem.remove() })
-        //});
-        //t.forEach(tag => {
-        //});
     });
-    //delay(1000).then(() => $("#healthcheck-iframe").contents().find(".tag").remove());
 }
 function removeComponentRow(row) {
     //debugger;
@@ -153,6 +153,7 @@ function fillConfiguration(elementId) {
     //debugger;
     var selector = 'tr:has(#' + elementId + ')';
     var componentsCount = $(selector)[0].attributes['data-components-count'].value;
+    $('input#components-count')[0].value = componentsCount;
     for (var i = 0; i < componentsCount - 1; i++) {
         addComponentRow();
     }

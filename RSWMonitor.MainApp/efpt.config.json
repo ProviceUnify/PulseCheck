@@ -1,0 +1,73 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "HealthChecksDBContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "RSWMonitor.MainApp",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Components]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ComponentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Configurations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Executions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Failures]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HealthCheckExecutionEntries]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HealthCheckExecutionHistories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HealthStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserActions]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "provice-pc.HealthChecksDB.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

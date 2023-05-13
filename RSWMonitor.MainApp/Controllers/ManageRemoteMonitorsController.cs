@@ -34,8 +34,10 @@ namespace RSWMonitor.MainApp.Controllers
                 List<IdentityRole> Roles = await _roleManager.Roles.ToListAsync();
                 var healthManagerRoleToDelete = await _roleManager.FindByNameAsync("Health manager");
                 var userManagerRoleToDelete = await _roleManager.FindByNameAsync("User manager");
+                var systemRoleToDelete = await _roleManager.FindByNameAsync("system");
                 Roles.Remove(healthManagerRoleToDelete);
                 Roles.Remove(userManagerRoleToDelete);
+                //Roles.Remove(systemRoleToDelete);
                 ViewBag.Roles = Roles;
             }
             catch { }

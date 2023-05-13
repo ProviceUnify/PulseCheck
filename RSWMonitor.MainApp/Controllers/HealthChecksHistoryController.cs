@@ -10,15 +10,15 @@ using System.Globalization;
 
 namespace RSWMonitor.MainApp.Controllers
 {
-    [Route("History/{action=Index}/{top?}")]
+    [Route("HealthChecksHistory/{action=Index}/{top?}")]
     [Authorize(Policy = "HealthManagers")]
-    public class HistoryController : Controller
+    public class HealthChecksHistoryController : Controller
     {
         private readonly HealthChecksDBContext HealthChecksDbContext;
 
         //private Models.Configuration configurations = new();
         //private ConfigurationTypes configurationTypes = new ConfigurationTypes();
-        public HistoryController(HealthChecksDBContext HCContext)
+        public HealthChecksHistoryController(HealthChecksDBContext HCContext)
         {
             HealthChecksDbContext = HCContext;
         }
@@ -28,8 +28,12 @@ namespace RSWMonitor.MainApp.Controllers
             foreach (var item in HealthChecksDbContext.Executions.ToList())
             {
                 var t = HealthChecksDbContext.Configurations.Where(s => s.Name == item.Name && s.Uri == item.Uri);
-                foundConfigurations.Add(t.First().Id, t.First().Name);
-            }
+                try
+                {
+                    foundConfigurations.Add(t.First().Id, t.First().Name);
+                }
+                catch { }
+            } 
             var history = HealthChecksDbContext.Executions.Include(s => s.HealthCheckExecutionHistories).ToList();
             ViewBag.Statuses = HealthChecksDbContext.HealthStatuses.ToList();
             ViewData.Add(new KeyValuePair<string, object?>("foundConfigurations", foundConfigurations));
@@ -47,7 +51,8 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 fileType = Byte.Parse(formCollection["fileType"]);
 
-            } catch { }
+            }
+            catch { }
             try
             {
                 try
@@ -55,11 +60,14 @@ namespace RSWMonitor.MainApp.Controllers
                     try
                     {
                         status = SByte.Parse(formCollection["status"]);
-                    } catch { }
+                    }
+                    catch { }
                     startDate = DateTime.Parse(formCollection["startDate"]);
-                } catch { }
+                }
+                catch { }
                 endDate = DateTime.Parse(formCollection["endDate"]);
-            } catch { }
+            }
+            catch { }
             string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string fileName = "history.xlsx";
             var renderer = new HtmlToPdf();
@@ -68,7 +76,8 @@ namespace RSWMonitor.MainApp.Controllers
             if (status < 0)
             {
                 history = HealthChecksDbContext.Executions.Include(s => s.HealthCheckExecutionHistories.Where(s => s.On.Date >= startDate && s.On.Date <= endDate)).ToList();
-            } else
+            }
+            else
             {
                 history = HealthChecksDbContext.Executions.Include(s => s.HealthCheckExecutionHistories.Where(s => s.On.Date >= startDate && s.On.Date <= endDate && s.StatusNavigation.StatusId == status)).ToList();
             }
@@ -123,7 +132,8 @@ namespace RSWMonitor.MainApp.Controllers
                     }
                 }
                 workbook.SaveAs(stream);
-            } else if (fileType == 1)
+            }
+            else if (fileType == 1)
             {
                 contentType = "application/pdf";
                 fileName = "history.pdf";
@@ -144,7 +154,8 @@ namespace RSWMonitor.MainApp.Controllers
                             htmlOfPdf += $"<tr><td>{historyEntry.Id}</td><td>{historyEntry.Name}</td><td>{historyEntry.Description}</td><td>{healthStatuses.Where(s => s.StatusId == historyEntry.Status).First().StatusName}</td><td>{historyEntry.On}</td></tr>";
                         }
                         htmlOfPdf += "</table></td></tr>";
-                    } else
+                    }
+                    else
                     {
                         htmlOfPdf += $"<tr><td colspan='3'><table style='font-family: Calibri'><tr style='background-color: lightgrey;'><th></th><th></th><th>No data</th><th></th><th></th></tr></table></td></tr>";
                     }

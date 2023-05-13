@@ -24,13 +24,15 @@
         <form method="post" asp-controller="History" asp-action="DownloadHistory" id="search-form">
             <div class="row">
                 <div class="col-2 text-end mt-2">
-                    <input type="text" class="form-control form-control-sm execute-filtering" aria-label="text-input" placeholder="Search items...">
-                </div>
-                <div class="text-end col-10 mt-2">
                     <div class="input-group input-group-sm mb-3">
+                        <input type="text" class="form-control form-control-sm execute-filtering" aria-label="text-input" placeholder="Search items...">
                         <button type="button" class="btn btn-sm btn-danger execute-filtering">
                             <i class="bi bi-x-lg"></i>
                         </button>
+                    </div>
+                </div>
+                <div class="text-end col-10 mt-2">
+                    <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text">from</span>
                         <input id="startDate" name="startDate" class="form-control w-25 execute-filtering" type="date" />
                         <span class="input-group-text">to</span>
@@ -41,8 +43,6 @@
                             {
                                 <option value="@status.StatusId">@status.StatusName</option>
                             }
-                            @*<option value="0" selected>.XSLX</option>
-                            <option value="1">.PDF</option>*@
                         </select>
                         <button class="btn btn-primary" type="submit"><i class="bi bi-download"></i> Save history to</button>
                         <select class="form-select w-auto" name="fileType" aria-label="Example select with button addon">
@@ -54,6 +54,7 @@
             </div>
         </form>
         <div class="accordion" id="accordionPanelsStayOpenExample">
+
             @foreach (Execution exec in Model)
             {
                 int index = (Model).IndexOf(exec) + 1;
@@ -63,7 +64,21 @@
                             <div class="container">
                                 <div class="row text-middle">
                                     <div class="col-3 border-end text-middle">
-                                        <span class="fw-bold">Name: </span>@exec.Name <span title="Configuration ID in database" class="badge bg-success">ID: @foundConfigurations.Where(s => s.Value == exec.Name).First().Key</span>
+                                        <span class="fw-bold">Name: </span>@exec.Name
+
+                                        @try
+                                        {
+                                            var temp = foundConfigurations?.Where(s => s.Value == exec.Name).First().Key;
+                                            <span title="Configuration ID in database" class="badge bg-success">
+                                                ID: @temp
+                                            </span>
+                                        }
+                                        catch
+                                        {
+                                            <span title="No such configuration in database" class="badge bg-secondary">
+                                                ID: --
+                                            </span>
+                                        }
                                     </div>
                                     <div class="col-3 text-start border-end">
                                         <span class="fw-bold">URI: </span><a href="@exec.Uri" onclick="window.open(this.href, '_blank')">@exec.Uri</a>
@@ -112,13 +127,13 @@
                                                 @switch (historyEntry.StatusNavigation.StatusId)
                                                 {
                                                     case 0:
-                                                        <span class="text-danger"><i class="bi bi-x-circle"></i> @historyEntry.StatusNavigation.StatusName</span>
+                                                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> @historyEntry.StatusNavigation.StatusName</span>
                                                         break;
                                                     case 1:
-                                                        <span class="text-warning"><i class="bi bi-exclamation-triangle"></i> @historyEntry.StatusNavigation.StatusName</span>
+                                                        <span class="badge bg-warning"><i class="bi bi-exclamation-triangle"></i> @historyEntry.StatusNavigation.StatusName</span>
                                                         break;
                                                     case 2:
-                                                        <span class="text-success"><i class="bi bi-check"></i> @historyEntry.StatusNavigation.StatusName</span>
+                                                        <span class="badge bg-success"><i class="bi bi-check"></i> @historyEntry.StatusNavigation.StatusName</span>
                                                         break;
                                                 }
                                             </td> @*что тут происходит, почему оно работает*@

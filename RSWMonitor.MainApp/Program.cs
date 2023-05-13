@@ -7,6 +7,7 @@ namespace RSWMonitor.MainApp
 {
     public class Program
     {
+        // Программа пишется в спешке, поэтому никаких комментов
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -43,7 +44,7 @@ namespace RSWMonitor.MainApp
                 settings.DisableDatabaseMigrations();
                 settings.MaximumHistoryEntriesPerEndpoint(50);
                 settings.AddWebhookNotification("webhook1", "/webhook", "{ message: \"Configuration [[LIVENESS]]: [[FAILURE]] - Description: [[DESCRIPTIONS]]\"}", "{message: \"[[LIVENESS]] is Ok\"}");
-                
+                settings.SetMinimumSecondsBetweenFailureNotifications(0);
 
             }).AddSqlServerStorage(HealthChecksDBString);
             //builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage();

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HealthChecks.Uris;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
 using RSWMonitor.RemoteMonitor.Models;
@@ -19,6 +22,8 @@ namespace RSWMonitor.RemoteMonitor.Controllers
                 foreach (var component in configuration.Components)
                 {
                     List<string> roleTags = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
+
+
 
                     switch (component.ComponentTypesId)
                     {
@@ -47,8 +52,6 @@ namespace RSWMonitor.RemoteMonitor.Controllers
             {
                 builderAddHealthCheck.AddProcessHealthCheck("You are the best captain on the planet. I'm not even squidding", p => p.Length > 0, "<no components were specified>", HealthStatus.Degraded);
             }
-            //builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
-
             return builder;
         }
     }

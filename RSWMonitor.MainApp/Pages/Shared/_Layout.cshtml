@@ -52,28 +52,37 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand font-weight-bold" asp-area="" asp-page="/Index">🏥 RSWM</a>
+                <a class="navbar-brand font-weight-bold me-2" asp-area="" asp-page="/Index">🏥 RSWM</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                            @if (User.IsInRole("Health manager"))
-                            {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="ManageRemoteMonitors" asp-action="Index">🩺 Configurations</a>
+                        @if (User.IsInRole("Health manager"))
+                        {
+                            <li class="nav-item mx-2 my-auto">
+                                <span class="text-muted">•</span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="History" asp-action="Index">📜 History</a>
+                                <a class="nav-link text-dark" asp-controller="ManageRemoteMonitors" asp-action="Index">🛠️ Configurations</a>
                             </li>
-                            }
-                            @if (User.IsInRole("User manager"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="ManageUsers" asp-action="Index">👨‍👩‍👦 User management</a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="HealthChecksHistory" asp-action="Index">📜 Healths history</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User manager"))
+                        {
+                            <li class="nav-item mx-2 my-auto">
+                                <span class="text-muted">•</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="ManageUsers" asp-action="Index">👨‍👩‍👦 Users management</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="UserActionsHistory" asp-action="Index">📜 Users history</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -82,7 +91,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-            
+
             @RenderBody()
         </main>
     </div>
