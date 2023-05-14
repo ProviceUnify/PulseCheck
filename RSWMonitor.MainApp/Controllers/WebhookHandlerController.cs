@@ -7,6 +7,8 @@ namespace RSWMonitor.MainApp.Controllers
         [HttpPost("/webhook")]
         public async Task<IActionResult> WebhookNotifier()
         {
+            // potential point of resolving problem with hostory log
+
             var payload = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             return Ok();
         }

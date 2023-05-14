@@ -34,12 +34,12 @@ $(document).ready(function () {
     //debugger;
     var searchDates = {
         startDate: '01.01.0001',
-        endDate: '12.31.9999',
+        endDate: '99.99.9999', // pseudo maximum date
         reset_startDate: function () {
             this.startDate = '01.01.0001';
         },
         reset_endDate: function () {
-            this.endDate = '12.31.9999';
+            this.endDate = '99.99.9999';
         }
     }
     var searchStatus = {
@@ -53,7 +53,10 @@ $(document).ready(function () {
     var foundClassList = 'bg-warning bg-opacity-25';
 
     $('button.execute-filtering').on('click', function () {
+        //debugger;
         $("tr:has(td.search-here)").show().removeClass(foundClassList);
+        searchDates.reset_startDate();
+        searchDates.reset_endDate();
         document.querySelector('#search-form').reset();
     });
 
@@ -67,7 +70,9 @@ $(document).ready(function () {
     });
 
     $('input.execute-filtering[type=date], select.execute-filtering').on('change', function (e) {
-        $("tr:has(td.search-here)").show();
+        var e = $("tr:has(td.search-here)");
+        e.show();
+        //debugger;
         if (this.type == 'date') {
             if (this.valueAsDate == null) {
                 searchDates['reset_' + this.id]();
@@ -78,20 +83,26 @@ $(document).ready(function () {
             }
         }
         if (this.type == 'select-one') {
-            //debugger;
             searchStatus.text = this.selectedOptions[0].text;
             searchStatus.value = this.value;
         }
-        $("tr:has(td.search-here)").hide();
+
+        console.log('Date span: ', searchDates.startDate, searchDates.endDate, '; Status text and id: ', searchStatus.text, searchStatus.value);
+
         $("td.search-here-date").filter(function () {
+            //debugger;
             let dateSection = $(this).text().split(' ')[0];
-            return (dateSection >= searchDates.startDate && dateSection <= searchDates.endDate);
-        }).closest("tr").show();
+            console.log(dateSection, !(dateSection >= searchDates.startDate && dateSection <= searchDates.endDate), searchDates);
+            return !(dateSection >= searchDates.startDate && dateSection <= searchDates.endDate);
+        }).closest("tr").hide();
 
         $("td.search-here-status").filter(function () {
+            //debugger;
             if (searchStatus.value < 0) {
                 return false;
             }
+            //debugger;
+            console.log($(this).text(), !$(this).text().includes(searchStatus.text), $(this));
             return !($(this).text().includes(searchStatus.text));
         }).closest("tr").hide();
     });

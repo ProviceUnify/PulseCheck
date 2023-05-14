@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Newtonsoft.Json;
+@using RSWMonitor.MainApp.Models;
+@{
+    ViewData["Title"] = "User actions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    List<UserAction> userActions = ViewBag.UserActions;
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<HealthCheckUserActionLog>
+
+<div class="container text-center">
+    <div class="tab-pane fade show active" id="nav-configurations" role="tabpanel" aria-labelledby="nav-configurations-tab" tabindex="0">
+        <div class="row">
+            <div class="col-3">
+                <h1 class="text-start">User actions</h1>
+            </div>
+        </div>
+        <form method="post" asp-controller="UserActionsHistory" asp-action="DownloadHistory" id="search-form">
+            <div class="row">
+                <div class="col-2 text-end mt-2">
+                    <div class="input-group input-group-sm mb-3">
+                        <input type="text" class="form-control form-control-sm execute-filtering" aria-label="text-input" placeholder="Search items...">
+                        <button type="button" class="btn btn-sm btn-danger execute-filtering">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-end col-10 mt-2">
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">from</span>
+                        <input id="startDate" name="startDate" class="form-control w-auto execute-filtering" type="date" />
+                        <span class="input-group-text">to</span>
+                        <input id="endDate" name="endDate" class="form-control w-auto execute-filtering" type="date" />
+                        <select class="form-select w-auto execute-filtering" name="status" aria-label="Example select with button addon">
+                            <option value="-1" selected>Any actions</option>
+                            @foreach (var action in userActions)
+                            {
+                                <option value="@action.UserActionId">@action.UserActionName</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-download"></i> Save history to</button>
+                        <select class="form-select w-auto" name="fileType" aria-label="Example select with button addon">
+                            <option value="0" selected>.XSLX</option>
+                            <option value="1">.PDF</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            @* @foreach(HealthCheckUserActionLog action in Model)
+            {*@
+            @*int index = (Model).IndexOf(action) + 1;*@
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-heading">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse" aria-expanded="false" aria-controls="panelsStayOpen-collapse">
+                        <div class="container">
+                            <div class="row text-middle">
+                                <div class="col-4 border-end text-middle">
+                                    <span class="fw-bold">Last action from user: </span>@Model.Last().User.Email
+                                </div>
+                                <div class="col-4 text-start">
+                                    <span class="fw-bold">Last action time from: </span>@Model.Last().Datetime
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapse" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading">
+                    @*@if (action.HealthCheckExecutionHistories.Count > 0)
+                    {*@
+                    <table class="sortable shadow-sm table table-striped my-0">
+                        <thead>
+                            <tr>
+                                <th class="border-end text-end col-1">#</th>
+                                <th class="col-2 border-end">User name</th>
+                                <th class="col-2 border-end">Action</th>
+                                <th class="col-4 border-end">Action details</th>
+                                <th class="col-3" data-defaultsort="desc">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (HealthCheckUserActionLog action in Model)
+                            {
+                                int index = Model.IndexOf(action) + 1;
+                                <tr class="align-middle">
+                                    <td class="border-end text-end col-1">
+                                        @index
+                                    </td>
+                                    <td class="border-end search-here">@action.User.UserName</td>
+                                    <td class="border-end search-here-status"><span>@action.UserAction.UserActionName</span></td>
+                                    @if (action.ActionDetails == null)
+                                    {
+                                        <td class="border-end text-center text-muted fst-italic search-here">No data</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="border-end text-start search-here">@action.ActionDetails</td>
+                                    }
+                                    <td class="border-end search-here search-here-date">@action.Datetime</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @*}*@
+                </div>
+            </div>
+            @*}*@
+        </div>
+    </div>
+</div>
+</div>

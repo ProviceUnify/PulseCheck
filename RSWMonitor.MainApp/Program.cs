@@ -22,7 +22,7 @@ namespace RSWMonitor.MainApp
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(AspDBConnectionString));
             builder.Services.AddDbContext<HealthChecksDBContext>(options =>
-                options.UseSqlServer(HealthChecksDBString));
+                options.UseSqlServer(HealthChecksDBString), ServiceLifetime.Singleton);
 
             // Web session timeout (16h OR 1 session)
             builder.Services.ConfigureApplicationCookie(options => {
@@ -44,7 +44,7 @@ namespace RSWMonitor.MainApp
                 settings.DisableDatabaseMigrations();
                 settings.MaximumHistoryEntriesPerEndpoint(50);
                 settings.AddWebhookNotification("webhook1", "/webhook", "{ message: \"Configuration [[LIVENESS]]: [[FAILURE]] - Description: [[DESCRIPTIONS]]\"}", "{message: \"[[LIVENESS]] is Ok\"}");
-                settings.SetMinimumSecondsBetweenFailureNotifications(0);
+                settings.SetMinimumSecondsBetweenFailureNotifications(10);
 
             }).AddSqlServerStorage(HealthChecksDBString);
             //builder.Services.AddHealthChecksUI(settings => { settings.SetEvaluationTimeInSeconds(health_check_pollingRate); }).AddInMemoryStorage();

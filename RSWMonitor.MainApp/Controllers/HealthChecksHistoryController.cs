@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using RSWMonitor.MainApp.Models;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 
 namespace RSWMonitor.MainApp.Controllers
 {
@@ -15,25 +16,24 @@ namespace RSWMonitor.MainApp.Controllers
     public class HealthChecksHistoryController : Controller
     {
         private readonly HealthChecksDBContext HealthChecksDbContext;
-
-        //private Models.Configuration configurations = new();
-        //private ConfigurationTypes configurationTypes = new ConfigurationTypes();
         public HealthChecksHistoryController(HealthChecksDBContext HCContext)
         {
             HealthChecksDbContext = HCContext;
         }
         public IActionResult Index()
         {
-            Dictionary<int, string> foundConfigurations = new Dictionary<int, string>();
-            foreach (var item in HealthChecksDbContext.Executions.ToList())
+            Dictionary<int, string> foundConfigurations = new();
+            foreach (var t in from item in HealthChecksDbContext.Executions.ToList()
+                              let t = HealthChecksDbContext.Configurations.Where(s => s.Name == item.Name && s.Uri == item.Uri)
+                              select t)
             {
-                var t = HealthChecksDbContext.Configurations.Where(s => s.Name == item.Name && s.Uri == item.Uri);
                 try
                 {
                     foundConfigurations.Add(t.First().Id, t.First().Name);
                 }
                 catch { }
-            } 
+            }
+
             var history = HealthChecksDbContext.Executions.Include(s => s.HealthCheckExecutionHistories).ToList();
             ViewBag.Statuses = HealthChecksDbContext.HealthStatuses.ToList();
             ViewData.Add(new KeyValuePair<string, object?>("foundConfigurations", foundConfigurations));
@@ -98,7 +98,7 @@ namespace RSWMonitor.MainApp.Controllers
                 worksheet.Cell($"A2").Value = "Searched start date:";
                 worksheet.Cell($"B2").Value = startDateWord;
                 worksheet.Cell($"A3").Value = "Searched end date:";
-                worksheet.Cell($"B3").Value = endDate;
+                worksheet.Cell($"B3").Value = endDateWord;
                 var r = 5;
                 worksheet.Range($"A{r}:F{r}").Style = XLWorkbook.DefaultStyle.Font.SetBold();
 

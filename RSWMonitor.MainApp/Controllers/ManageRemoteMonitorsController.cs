@@ -14,13 +14,14 @@ namespace RSWMonitor.MainApp.Controllers
     {
         private readonly HealthChecksDBContext HealthChecksDbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        //private Models.Configuration configurations = new();
-        //private ConfigurationTypes configurationTypes = new ConfigurationTypes();
-        public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly AddEntryToUserActionHistoryController addEntry;
+        public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             HealthChecksDbContext = HCContext;
             _roleManager = roleManager;
+            _userManager = userManager;
+            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
         }
         public async Task<IActionResult> Index(string failure = "", int top = 50)
         {
@@ -137,7 +138,8 @@ namespace RSWMonitor.MainApp.Controllers
                 configurationToEdit.Uri = configurationBaseData.uri;
                 configurationToEdit.Components = components;
             }
-            HealthChecksDbContext.SaveChanges();
+            await HealthChecksDbContext.SaveChangesAsync();
+            await addEntry.Add(User, 1, $"New configuration \"{configurationBaseData.name}\" with {componentsCount} component(s) was added!");
             return RedirectToAction("Index", routeValues: new { failure = "" });
         }
 

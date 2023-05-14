@@ -18,6 +18,9 @@ namespace RSWMonitor.MainApp.Models
         {
         }
 
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<ComponentType> ComponentTypes { get; set; }
         public virtual DbSet<Configuration> Configurations { get; set; }
@@ -25,11 +28,49 @@ namespace RSWMonitor.MainApp.Models
         public virtual DbSet<Failure> Failures { get; set; }
         public virtual DbSet<HealthCheckExecutionEntry> HealthCheckExecutionEntries { get; set; }
         public virtual DbSet<HealthCheckExecutionHistory> HealthCheckExecutionHistories { get; set; }
+        public virtual DbSet<HealthCheckUserActionLog> HealthCheckUserActionLogs { get; set; }
         public virtual DbSet<HealthStatus> HealthStatuses { get; set; }
         public virtual DbSet<UserAction> UserActions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AspNetRole>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Id)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.Property(e => e.Name).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetUser>(entity =>
+            {
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.RoleId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+            });
+
             modelBuilder.Entity<Component>(entity =>
             {
                 entity.Property(e => e.ComponentName)
@@ -126,6 +167,31 @@ namespace RSWMonitor.MainApp.Models
                     .HasForeignKey(d => d.Status)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_HealthCheckExecutionHistories_Statuses");
+            });
+
+            modelBuilder.Entity<HealthCheckUserActionLog>(entity =>
+            {
+                entity.HasKey(e => e.UserActionEntryId);
+
+                entity.Property(e => e.ActionDetails)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.UserAction)
+                    .WithMany(p => p.HealthCheckUserActionLogs)
+                    .HasForeignKey(d => d.UserActionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_HealthCheckUserActionLogs_UserActions");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.HealthCheckUserActionLogs)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_HealthCheckUserActionLogs_HealthCheckUserActionLogs");
             });
 
             modelBuilder.Entity<HealthStatus>(entity =>
