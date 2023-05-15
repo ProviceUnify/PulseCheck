@@ -49,13 +49,14 @@
                                 <th class="align-middle border-end text-end">#</th>
                                 <th class="align-middle">Name</th>
                                 <th class="align-middle">Query</th>
-                                <th class="align-middle">Type</th>
-                                <th class="align-middle col-1">Roles</th>
-                                <th class="align-middle col-1">
+                                <th class="align-middle col-1">Type</th>
+                                <th class="align-middle col-auto">Has controls?</th>
+                                <th class="align-middle col-auto">Roles</th>
+                                <th class="align-middle col-auto">
                                     Remove
                                 </th>
                             </tr>
-                            <tr data-row="row-1">
+                            <tr data-row="row-1" class="align-middle">
                                 <td id="row-index-row-1" class="align-middle border-end text-end">
                                     1
                                 </td>
@@ -74,6 +75,10 @@
                                             }
                                         }
                                     </select>
+                                </td>
+
+                                <td class="align-middle">
+                                    <input id="component-has-controls-row-1" class="form-check-input" name="{'prop':'component-has-controls','row':1}" type="checkbox" />
                                 </td>
                                 <td class="align-middle">
                                     <div class="btn-group dropend">
@@ -187,16 +192,17 @@
                                     <tr>
                                         <th class="border-end text-end col-1">#</th>
                                         <th class="col-1 border-end">Type</th>
-                                        <th class="col-4 border-end">Name</th>
+                                        <th class="col-3 border-end">Name</th>
                                         <th class="col-3 border-end">Query</th>
-                                        <th class="col-3">Roles</th>
+                                        <th class="col-2 border-end">Roles</th>
+                                        <th class="col-3">Controls</th>
                                     </tr>
                                         @*</thead>*@
                                         @*<tbody>*@
                                         @foreach (var component in configuration.Components)
                                         {
                                             int componentIndex = (configuration.Components.ToList()).IndexOf(component) + 1;
-                                        <tr data-component-db-id="@component.Id">
+                                        <tr data-component-db-id="@component.Id" class="align-middle">
                                             <td class="components-index border-end text-end col-1">
                                                 <div class="row">
                                                     <span class="col-6 text-start">
@@ -219,6 +225,24 @@
                                                         {
                                                         <span class="badge bg-primary" data-role-name="@item">@item</span>
                                                         }
+                                                    }
+                                            </td>
+                                            <td title="Controls unavailable for this component" class="component-has-controls" data-has-controls="@component.ComponentHasControls">
+                                                    @if (component.ComponentHasControls)
+                                                    {
+                                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                                        <button type="button" class="btn btn-sm btn-success"><i class="bi bi-play-fill"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-success"><i class="bi bi-arrow-clockwise"></i></button>
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-danger"><i class="bi bi-stop-fill"></i></button>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                                        <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-play-fill"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-arrow-clockwise"></i></button>
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-stop-fill"></i></button>
                                                     }
                                             </td>
                                         </tr>

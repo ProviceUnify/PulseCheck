@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using IronPdf;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RSWMonitor.MainApp.Models;
@@ -16,9 +17,14 @@ namespace RSWMonitor.MainApp.Controllers
     public class HealthChecksHistoryController : Controller
     {
         private readonly HealthChecksDBContext HealthChecksDbContext;
-        public HealthChecksHistoryController(HealthChecksDBContext HCContext)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly AddEntryToUserActionHistoryController addEntry;
+
+        public HealthChecksHistoryController(HealthChecksDBContext HCContext, UserManager<IdentityUser> userManager)
         {
             HealthChecksDbContext = HCContext;
+            _userManager = userManager;
+            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
         }
         public IActionResult Index()
         {
@@ -40,7 +46,7 @@ namespace RSWMonitor.MainApp.Controllers
             return View(history);
         }
         [HttpPost]
-        public IActionResult DownloadHistory(IFormCollection formCollection)
+        public async Task<IActionResult> DownloadHistory(IFormCollection formCollection)
         {
             byte fileType = 0;
             sbyte status = -1;
@@ -165,6 +171,7 @@ namespace RSWMonitor.MainApp.Controllers
             }
             var content = stream.ToArray();
             //return RedirectToAction("Index");
+            await addEntry.Add(User, 4, $"Requesting report about health statuses!");
             return File(content, contentType, fileName);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using IdentityModel.OidcClient;
+using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,19 @@ namespace RSWMonitor.MainApp.Controllers
     [Authorize(Policy = "UserManagers")]
     public class ManageUsers : Controller
     {
+        private readonly HealthChecksDBContext HealthChecksDbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly AddEntryToUserActionHistoryController addEntry;
 
-        public ManageUsers(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public ManageUsers(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
+            HealthChecksDbContext = HCContext;
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
+            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
         }
         public async Task<IActionResult> Index()
         {
@@ -44,12 +49,15 @@ namespace RSWMonitor.MainApp.Controllers
                 if (value == "EmailConfirmed" && isChecked)
                 {
                     user.EmailConfirmed = true;
+                    await addEntry.Add(User, 10, $"Confirmation of new user: \"{user.UserName}\"!");
                 } else if (isChecked)
                 {
                     await _userManager.AddToRoleAsync(user, value);
+                    await addEntry.Add(User, 9, $"Adding user \"{user.UserName}\" to role \"{value}\"!");
                 } else
                 {
                     await _userManager.RemoveFromRoleAsync(user, value);
+                    await addEntry.Add(User, 9, $"Removing user \"{user.UserName}\" from role \"{value}\"!");
                 }
                 await _userManager.UpdateAsync(user);
             
@@ -76,6 +84,7 @@ namespace RSWMonitor.MainApp.Controllers
                     return BadRequest(Json(new { value = "Role name is empty!" }));
                 }
                 await _roleManager.CreateAsync(new IdentityRole(roleName));
+                await addEntry.Add(User, 11, $"Adding new role: \"{roleName}\"!");
                 return Ok();
             } catch (Exception ex)
             {
@@ -88,6 +97,7 @@ namespace RSWMonitor.MainApp.Controllers
             var result = await _roleManager.DeleteAsync(roleToDelete);
             if (result.Succeeded)
             {
+                await addEntry.Add(User, 12, $"Removing role: \"{roleName}\"!");
                 return Ok();
             } else
             {

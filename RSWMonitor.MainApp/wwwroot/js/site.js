@@ -182,7 +182,8 @@ function fillConfiguration(elementId) {
             'componentTypeId': 0,
             'componentName': '',
             'componentQuery': '',
-            'componentRoletags': ''
+            'componentRoletags': '',
+            'componentHasControls': false
         };
        //debugger;
         var row = $(selector + ' + tr.collapse > td > table > tbody')[0].rows[i];
@@ -191,6 +192,7 @@ function fillConfiguration(elementId) {
         rowData.componentName = row.querySelectorAll('td.component-name')[0].attributes['data-name'].value;
         rowData.componentQuery = row.querySelectorAll('td.component-query')[0].innerText;
         rowData.componentRoletags = row.querySelectorAll('td.component-roletags')[0].attributes['data-roletags'].value;
+        rowData.componentHasControls = (row.querySelectorAll('td.component-has-controls')[0].attributes['data-has-controls'].value == "True") ? true : false;
         rowsData.push(rowData);
     }
    //debugger;
@@ -202,6 +204,7 @@ function fillConfiguration(elementId) {
         $("#component-type-row-" + (index + 1))[0].value = row.componentTypeId;
         $("#component-name-row-" + (index + 1))[0].value = row.componentName;
         $("#component-query-row-" + (index + 1))[0].value = row.componentQuery;
+        $("#component-has-controls-row-" + (index + 1))[0].checked = row.componentHasControls;
         $("#component-db-id-row-" + (index + 1))[0].value = row.componentId;
         var addConfigurationRoles = document.querySelectorAll('input.add-configuration-roles-row-' + (index + 1));
         addConfigurationRoles.forEach(element => {

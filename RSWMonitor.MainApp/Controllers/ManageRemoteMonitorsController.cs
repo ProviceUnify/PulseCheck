@@ -26,7 +26,6 @@ namespace RSWMonitor.MainApp.Controllers
         public async Task<IActionResult> Index(string failure = "", int top = 50)
         {
             List<Models.Configuration>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
-
             // deleting predefined system roles from list
             List<ComponentType>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();
 
@@ -52,6 +51,7 @@ namespace RSWMonitor.MainApp.Controllers
         [HttpPost]
         public async Task<RedirectToActionResult> AddConfiguration(IFormCollection formCollection)
         {
+            bool isUpdate = false;
             int componentsCount = Int32.Parse(formCollection["components-count"]);
             List<Component> components = new();
             var configurationBaseData = new
@@ -73,6 +73,14 @@ namespace RSWMonitor.MainApp.Controllers
                         string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
                         string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
                         int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
+                        bool componentHasControls = false;
+                        try
+                        {
+                            componentHasControls = (formCollection[$"{{'prop':'component-has-controls','row':{indexOfFormInput}}}"]) == "on" ? true : false;
+                        } catch
+                        {
+                            componentHasControls = false;
+                        }
                         if (componentName == "" || componentQuery == "" || componentRoletags == "")
                         {
                             return RedirectToAction("Index", routeValues: new { failure = $"Entered data of component was incorrect" });
@@ -100,7 +108,7 @@ namespace RSWMonitor.MainApp.Controllers
                             ComponentTypesId = componentTypeId,
                             ComponentRoletags = componentRoletags,
 
-                            ComponentHasControls = false
+                            ComponentHasControls = componentHasControls
                         });
                     }
                     catch (Exception ex)
@@ -132,6 +140,7 @@ namespace RSWMonitor.MainApp.Controllers
             }
             else
             {
+                isUpdate = true;
                 Models.Configuration? configurationToEdit = new();
                 configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).Include(m => m.Components).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationBaseData.name;
@@ -139,12 +148,20 @@ namespace RSWMonitor.MainApp.Controllers
                 configurationToEdit.Components = components;
             }
             await HealthChecksDbContext.SaveChangesAsync();
-            await addEntry.Add(User, 1, $"New configuration \"{configurationBaseData.name}\" with {componentsCount} component(s) was added!");
+            if (isUpdate)
+            {
+                await addEntry.Add(User, 2, $"Configuration \"{configurationBaseData.name}\" with {componentsCount} component(s) was edited!");
+
+            } else
+            {
+                await addEntry.Add(User, 1, $"New configuration \"{configurationBaseData.name}\" with {componentsCount} component(s) was added!");
+
+            }
             return RedirectToAction("Index", routeValues: new { failure = "" });
         }
 
         [HttpPost]
-        public IActionResult RemoveConfiguration(int configurationId = -1)
+        public async Task<IActionResult> RemoveConfiguration(int configurationId = -1)
         {
             try
             {
@@ -153,7 +170,8 @@ namespace RSWMonitor.MainApp.Controllers
                     Models.Configuration? configurationToDelete = new();
                     configurationToDelete = HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationId).FirstOrDefault();
                     HealthChecksDbContext.Configurations?.Remove(configurationToDelete!);
-                    HealthChecksDbContext.SaveChanges();
+                    await HealthChecksDbContext.SaveChangesAsync();
+                    await addEntry.Add(User, 3, $"Configuration \"{configurationToDelete.Name}\" was removed!");
                     return Ok();
                     //return RedirectToAction("Index");
                 }

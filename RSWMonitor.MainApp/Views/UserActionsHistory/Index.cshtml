@@ -5,6 +5,49 @@
     ViewData["Title"] = "User actions";
     Layout = "~/Pages/Shared/_Layout.cshtml";
     List<UserAction> userActions = ViewBag.UserActions;
+
+    void getStyledActionType(UserAction action)
+    {
+        switch (action.UserActionId)
+        {
+            case 1:
+                <span class="badge bg-success"><i class="bi bi-plus"></i> @action.UserActionName</span>
+                break;
+            case 2:
+                <span class="badge bg-warning text-dark"><i class="bi bi-pencil-square"></i> @action.UserActionName</span>
+                break;
+            case 3:
+                <span class="badge bg-danger"><i class="bi bi-trash"></i> @action.UserActionName</span>
+                break;
+            case 4:
+                <span class="badge bg-info text-dark"><i class="bi bi-download"></i> @action.UserActionName</span>
+                break;
+            case 5:
+                <span class="badge bg-info text-dark"><i class="bi bi-download"></i> @action.UserActionName</span>
+                break;
+            case 6:
+                <span class="badge bg-success"><i class="bi bi-play-fill"></i> @action.UserActionName</span>
+                break;
+            case 7:
+                <span class="badge bg-warning text-dark"><i class="bi bi-arrow-clockwise"></i> @action.UserActionName</span>
+                break;
+            case 8:
+                <span class="badge bg-danger"><i class="bi bi-stop-fill"></i> @action.UserActionName</span>
+                break;
+            case 9:
+                <span class="badge bg-warning text-dark"><i class="bi bi-pencil-square"></i> @action.UserActionName</span>
+                break;
+            case 10:
+                <span class="badge bg-success"><i class="bi bi-check"></i> @action.UserActionName</span>
+                break;
+            case 11:
+                <span class="badge bg-success"><i class="bi bi-plus"></i> @action.UserActionName</span>
+                break;
+            case 12:
+                <span class="badge bg-danger"><i class="bi bi-trash"></i> @action.UserActionName</span>
+                break;
+        }
+    }
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<HealthCheckUserActionLog>
@@ -60,8 +103,11 @@
                                 <div class="col-4 border-end text-middle">
                                     <span class="fw-bold">Last action from user: </span>@Model.Last().User.Email
                                 </div>
-                                <div class="col-4 text-start">
-                                    <span class="fw-bold">Last action time from: </span>@Model.Last().Datetime
+                                <div class="col-4 border-end text-center">
+                                    <span class="fw-bold">Time of action from: </span>@Model.Last().Datetime
+                                </div>
+                                <div class="col-4 text-center">
+                                    <span class="fw-bold">Action type: </span>@{getStyledActionType(Model.Last().UserAction);}
                                 </div>
                             </div>
                         </div>
@@ -75,8 +121,8 @@
                             <tr>
                                 <th class="border-end text-end col-1">#</th>
                                 <th class="col-2 border-end">User name</th>
-                                <th class="col-2 border-end">Action</th>
                                 <th class="col-4 border-end">Action details</th>
+                                <th class="col-2 border-end">Action</th>
                                 <th class="col-3" data-defaultsort="desc">Time</th>
                             </tr>
                         </thead>
@@ -89,7 +135,6 @@
                                         @index
                                     </td>
                                     <td class="border-end search-here">@action.User.UserName</td>
-                                    <td class="border-end search-here-status"><span>@action.UserAction.UserActionName</span></td>
                                     @if (action.ActionDetails == null)
                                     {
                                         <td class="border-end text-center text-muted fst-italic search-here">No data</td>
@@ -98,6 +143,9 @@
                                     {
                                         <td class="border-end text-start search-here">@action.ActionDetails</td>
                                     }
+                                    <td class="border-end search-here-status">@{
+                                            getStyledActionType(action.UserAction);
+                                        }</td>
                                     <td class="border-end search-here search-here-date">@action.Datetime</td>
                                 </tr>
                             }
