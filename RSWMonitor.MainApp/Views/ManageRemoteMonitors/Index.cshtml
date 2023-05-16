@@ -227,20 +227,20 @@
                                                         }
                                                     }
                                             </td>
-                                            <td title="Controls unavailable for this component" class="component-has-controls" data-has-controls="@component.ComponentHasControls">
+                                            <td class="component-has-controls" data-has-controls="@component.ComponentHasControls">
                                                     @if (component.ComponentHasControls)
                                                     {
                                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <button type="button" class="btn btn-sm btn-success"><i class="bi bi-play-fill"></i></button>
-                                                        <button type="button" class="btn btn-sm btn-success"><i class="bi bi-arrow-clockwise"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-success" onclick="sendWebhook('@configuration.Uri', @configuration.Id, 0, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-play-fill"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-warning text-black" onclick="sendWebhook('@configuration.Uri', @configuration.Id, 1, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-arrow-clockwise"></i></button>
                                                     </div>
-                                                    <button type="button" class="btn btn-sm btn-danger"><i class="bi bi-stop-fill"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="sendWebhook('@configuration.Uri', @configuration.Id, 2, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-stop-fill"></i></button>
                                                     }
                                                     else
                                                     {
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-play-fill"></i></button>
-                                                        <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-arrow-clockwise"></i></button>
+                                                        <button type="button" class="btn btn-sm  btn-warning text-black" disabled><i class="bi bi-arrow-clockwise"></i></button>
                                                     </div>
                                                     <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-stop-fill"></i></button>
                                                     }

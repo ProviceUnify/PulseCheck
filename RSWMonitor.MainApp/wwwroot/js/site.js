@@ -279,6 +279,22 @@ function createRole(element) {
     });
 }
 
+function sendWebhook(url, id, action, query, type) {
+    //debugger;
+    url = url.replaceAll('/health', "/webhook");
+    $.ajax({
+        url: '/SendWebhook/SendWebhook',
+        type: 'POST',
+        data: { url: url, id: id, action: action, query: query, type: type },
+        success: function (response) {
+            showToast();
+        },
+        error: function (response) {
+            showExceptionToast(response);
+        }
+    });
+}
+
 function removeRole(elementId) {
     var element = $('#' + elementId)[0];
     //debugger;
@@ -293,7 +309,6 @@ function removeRole(elementId) {
             showToast();
         },
         error: function (response) {
-            //debugger;
             showExceptionToast(response);
         }
     });

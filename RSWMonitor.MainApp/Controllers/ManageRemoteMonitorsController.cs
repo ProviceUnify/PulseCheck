@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RSWMonitor.MainApp.Models;
 using System.Data;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json.Nodes;
 
 namespace RSWMonitor.MainApp.Controllers
 {
@@ -16,6 +20,7 @@ namespace RSWMonitor.MainApp.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AddEntryToUserActionHistoryController addEntry;
+        private static readonly HttpClient client = new HttpClient();
         public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             HealthChecksDbContext = HCContext;
