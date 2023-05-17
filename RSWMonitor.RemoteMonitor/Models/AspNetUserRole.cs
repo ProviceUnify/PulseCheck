@@ -5,11 +5,9 @@ using System.Collections.Generic;
 
 namespace RSWMonitor.RemoteMonitor.Models
 {
-    public partial class Failure
+    public partial class AspNetUserRole
     {
-        public int Id { get; set; }
-        public string HealthCheckName { get; set; }
-        public DateTime LastNotified { get; set; }
-        public bool IsUpAndRunning { get; set; }
+        public string UserId { get; set; }
+        public string RoleId { get; set; }
     }
 }

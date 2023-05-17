@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Manage.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -22,20 +23,31 @@ namespace RSWMonitor.RemoteMonitor
                 {
                     // Конфигурация сервисов
                     services.AddDbContext<HealthChecksDBContext>(options =>
-                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")));
+                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")), ServiceLifetime.Singleton);
                     //services.AddControllersWithViews();
                 });
 
 
         public static void Main(string[] args)
         {
-            var webApplicationOptions = new WebApplicationOptions() {
-                ContentRootPath = AppContext.BaseDirectory,
-                Args = args,
-                ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName
-            };
-            var builder = WebApplication.CreateBuilder(webApplicationOptions);
-            builder.Host.UseWindowsService();
+            var builder = WebApplication.CreateBuilder(args);
+            try
+            {
+                throw new Exception();
+
+                // enable for using as windows service !PREVENTING USING AS IIS SITE!
+                //var webApplicationOptions = new WebApplicationOptions()
+                //{
+                //    ContentRootPath = AppContext.BaseDirectory,
+                //    Args = args,
+                //    ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName
+                //};
+                //builder = WebApplication.CreateBuilder(webApplicationOptions);
+                //builder.Host.UseWindowsService();
+            } catch (Exception ex)
+            {
+                builder = WebApplication.CreateBuilder(args);
+            }
             var host = CreateHostBuilder(args).Build();
 
             // Получаем сервис из контейнера зависимостей
@@ -46,7 +58,7 @@ namespace RSWMonitor.RemoteMonitor
 
             var HealthChecksDBString = builder.Configuration.GetConnectionString("HealthChecksDBString") ?? throw new InvalidOperationException("Connection string 'HealthChecksDBString' not found.");
             builder.Services.AddDbContext<HealthChecksDBContext>(options =>
-                options.UseSqlServer(HealthChecksDBString));
+                options.UseSqlServer(HealthChecksDBString), ServiceLifetime.Singleton);
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddControllers();
             //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -57,11 +69,13 @@ namespace RSWMonitor.RemoteMonitor
 
             LoadConfigurationController loadConfiguration = new();
             builder = loadConfiguration.Load(builder, thisRemoteMonitorConfigurationId, healthChecksDbContext);
-            //var t = healthChecksDbContext.Table_test;
+            //var t = healthChecksDbContext.Configurations;
+
             //foreach (var elem in t)
             //{
             //    builder.Services.AddHealthChecks().AddUrlGroup(new Uri(elem.Uri), elem.Name);
             //}
+            //builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "vk");
             #region hc impementation
             //builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
             //builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", name: "tt", predicate: s => s.Status == ServiceControllerStatus.Running);
@@ -100,13 +114,13 @@ namespace RSWMonitor.RemoteMonitor
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-                ResultStatusCodes = new Dictionary<HealthStatus, int>
-        {
-            {HealthStatus.Healthy, StatusCodes.Status200OK},
-            {HealthStatus.Degraded, StatusCodes.Status500InternalServerError},
-            {HealthStatus.Unhealthy, StatusCodes.Status503ServiceUnavailable},
-        },
-                Predicate = _ => true
+        //        ResultStatusCodes = new Dictionary<HealthStatus, int>
+        //{
+        //    {HealthStatus.Healthy, StatusCodes.Status200OK},
+        //    {HealthStatus.Degraded, StatusCodes.Status500InternalServerError},
+        //    {HealthStatus.Unhealthy, StatusCodes.Status503ServiceUnavailable},
+        //},
+        //        Predicate = _ => true
                 //ResultStatusCodes =
                 //{
                 //    [HealthStatus.Healthy] = StatusCodes.Status200OK,

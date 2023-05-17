@@ -24,7 +24,7 @@ namespace RSWMonitor.MainApp.Controllers
                 var responseString = await response.Content.ReadAsStringAsync(); // response
                 if (!((int)response.StatusCode == 200))
                 {
-                    return BadRequest(Json(new { value = response.ReasonPhrase }));
+                    return BadRequest(Json(new { value = responseString }));
                 }
                 return Ok();
 

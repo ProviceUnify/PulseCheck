@@ -1,9 +1,8 @@
-﻿using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.ServiceProcess;
-
+using Microsoft.Win32.TaskScheduler;
 
 namespace RSWMonitor.RemoteMonitor.Controllers
 {
@@ -24,13 +23,21 @@ namespace RSWMonitor.RemoteMonitor.Controllers
             {
                 var payload = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
                 ControlParams? controlParams = JsonConvert.DeserializeObject<ControlParams>(payload);
+                //string sch = "test";
+                //TaskDefinition td = TaskService.Instance.NewTask();
+                //td.RegistrationInfo.Author = "RSWM monitor";
+                //td.RegistrationInfo.Description = "test start";
+                //td.Actions.Add(new ExecAction("D:\\Program Files\\Audacity\\Audacity.exe"));
+                ////TaskService.Instance.RootFolder.RegisterTaskDefinition(sch, td).Run();
+
+                //var folder = TaskService.Instance.RootFolder.CreateFolder("Test123");
+                //folder.RegisterTaskDefinition(sch, td, TaskCreation.CreateOrUpdate, "Provice", "41274Provice_PC").Run();
+                //folder.DeleteFolder("Test123");
+
                 var process = new Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = controlParams.query;
-                //process.StartInfo.CreateNoWindow = true;
                 process.Start();
-                //var process = Process.GetProcessesByName(controlParams.query);
-                //process.First().Kill();
 
                 return Ok(controlParams.query);
             } catch (Exception ex)

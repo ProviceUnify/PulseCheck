@@ -15,13 +15,13 @@ namespace RSWMonitor.RemoteMonitor.Controllers
     {
         public WebApplicationBuilder Load(WebApplicationBuilder builder, int ConfigurationId, HealthChecksDBContext DbContext)
         {
-            Configuration configuration = DbContext.Configurations.Where(m => m.Id == ConfigurationId).Include(m => m.Components).FirstOrDefault();
+            Configuration? configuration = DbContext.Configurations.Where(m => m.Id == ConfigurationId).Include(m => m.Components).First();
             var builderAddHealthCheck = builder.Services.AddHealthChecks();
             if (configuration?.Components.Count > 0)
             {
                 foreach (var component in configuration.Components)
                 {
-                    List<string> roleTags = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
+                    List<string>? roleTags = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
 
 
 
@@ -34,6 +34,7 @@ namespace RSWMonitor.RemoteMonitor.Controllers
                             builderAddHealthCheck.AddWindowsServiceHealthCheck(component.ComponentQuery, s => s.Status == ServiceControllerStatus.Running, name: component.ComponentName, tags: roleTags);
                             break;
                         case 3:
+                            // process name for health check; full path with .exe for controls
                             builderAddHealthCheck.AddProcessHealthCheck(component.ComponentQuery, p => p.Length > 0, component.ComponentName, tags: roleTags);
                             break;
                         case 4:
@@ -50,7 +51,7 @@ namespace RSWMonitor.RemoteMonitor.Controllers
             }
             else
             {
-                builderAddHealthCheck.AddProcessHealthCheck("You are the best captain on the planet. I'm not even squidding", p => p.Length > 0, "<no components were specified>", HealthStatus.Degraded);
+                builderAddHealthCheck.AddProcessHealthCheck("You are the best captain on the planet. I'm not even squidding", p => p.Length > 0, "<no components were specified>", Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
             }
             return builder;
         }
