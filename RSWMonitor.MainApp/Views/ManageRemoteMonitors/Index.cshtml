@@ -44,11 +44,54 @@
                         <div class="align-middle">
                             <h3 class="text-start align-middle col-6">Components </h3>
                         </div>
+
+
+                        <div class="accordion mb-3" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed border-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Properties description:
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse text-start" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-5 border-end">
+                                                <h6>Properties description:</h6>
+                                                <ul>
+                                                    <li class=""><b>Name</b> - will be visible as name of component in configuration</li>
+                                                    <li class=""><b>Type</b> - type of component; affect on how data from "Target info" will be processed</li>
+                                                    <li class=""><b>Has controls?</b> - enable or disable controls for component</li>
+                                                    <li class=""><b>Roles</b> - select roles, that can see data about component</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-7">
+                                                <h6>"Target info" description:</h6>
+                                                <ul>
+                                                    <li class="">Type is <b>"@ViewBag.componentTypes[0].ComponentTypesName"</b> - wait for connection string (eg. "Server=...;Database=...;User id=...;Password=...")</li>
+                                                    <li class="">Type is <b>"@ViewBag.componentTypes[1].ComponentTypesName"</b> - wait for Windows Service name</li>
+                                                    <li class="">Type is <b>"@ViewBag.componentTypes[2].ComponentTypesName"</b> - wait for path to <b>.exe</b> file if component <b>has controls</b> or just process name</li>
+                                                    <li class="">Type is <b>"@ViewBag.componentTypes[3].ComponentTypesName"</b> - wait for URL</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                       @* <div class="card mb-3">
+                            <div class="card-body text-start">
+                                
+                            </div>
+                        </div>*@
                         <table id="component-table" class="shadow-sm table table table-sm">
                             <tr>
                                 <th class="align-middle border-end text-end">#</th>
                                 <th class="align-middle">Name</th>
-                                <th class="align-middle">Query</th>
+                                <th class="align-middle">Target info</th>
                                 <th class="align-middle col-1">Type</th>
                                 <th class="align-middle col-auto">Has controls?</th>
                                 <th class="align-middle col-auto">Roles</th>
@@ -64,7 +107,7 @@
                                     <input type="text" id="component-name-row-1" name="{'prop':'component-name','row':1}" placeholder="Name" class="init form-control form-control-sm component-names" aria-label="Component name" aria-describedby="inputGroup-sizing-sm">
                                 </td>
                                 <td class="align-middle">
-                                    <input type="text" id="component-query-row-1" name="{'prop':'component-query','row':1}" placeholder="URL, DB connection string, process name etc." class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
+                                    <input type="text" id="component-query-row-1" name="{'prop':'component-query','row':1}" placeholder="See the 'Target info description' section" class="init form-control form-control-sm component-queries" aria-label="Query name" aria-describedby="inputGroup-sizing-sm">
                                 </td>
                                 <td class="align-middle col-2">
                                     <select class="form-select form-select-sm components-types" name="{'prop':'component-type','row':1}" id="component-type-row-1">
@@ -193,7 +236,7 @@
                                         <th class="border-end text-end col-1">#</th>
                                         <th class="col-1 border-end">Type</th>
                                         <th class="col-3 border-end">Name</th>
-                                        <th class="col-3 border-end">Query</th>
+                                        <th class="col-3 border-end">Target info</th>
                                         <th class="col-2 border-end">Roles</th>
                                         <th class="col-3">Controls</th>
                                     </tr>
@@ -217,7 +260,7 @@
                                             <td class="component-name border-end" data-name="@component.ComponentName">
                                                     @component.ComponentName
                                             </td>
-                                            <td class="component-query border-end"><samp style="" class="has-before-after-quotes bg-secondary bg-opacity-25 p-1 rounded">@component.ComponentQuery</samp></td>
+                                            <td class="component-query border-end"><samp style="" class="has-before-after-quotes bg-secondary bg-opacity-25 p-1 rounded">@component.ComponentFullPathToExe</samp></td>
                                             <td class="component-roletags border-end" data-roletags="@component.ComponentRoletags">
                                                     @{
                                                         var listOfComponentRoles = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
@@ -231,18 +274,18 @@
                                                     @if (component.ComponentHasControls)
                                                     {
                                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <button type="button" class="btn btn-sm btn-success" onclick="sendWebhook('@configuration.Uri', @configuration.Id, 0, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-play-fill"></i></button>
-                                                        <button type="button" class="btn btn-sm btn-warning text-black" onclick="sendWebhook('@configuration.Uri', @configuration.Id, 1, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-arrow-clockwise"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-success" onclick="sendWebhook('@configuration.Uri', @component.Id, 0, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-play-fill"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-warning text-black" onclick="sendWebhook('@configuration.Uri', @component.Id, 1, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-arrow-clockwise"></i></button>
                                                     </div>
-                                                    <button type="button" class="btn btn-sm btn-danger" onclick="sendWebhook('@configuration.Uri', @configuration.Id, 2, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-stop-fill"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="sendWebhook('@configuration.Uri', @component.Id, 2, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-stop-fill"></i></button>
                                                     }
                                                     else
                                                     {
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-play-fill"></i></button>
-                                                        <button type="button" class="btn btn-sm  btn-warning text-black" disabled><i class="bi bi-arrow-clockwise"></i></button>
+                                                        <button type="button" class="btn btn-sm  btn-secondary" disabled><i class="bi bi-arrow-clockwise"></i></button>
                                                     </div>
-                                                    <button type="button" class="btn btn-sm btn-secondary" disabled><i class="bi bi-stop-fill"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-stop-fill"></i></button>
                                                     }
                                             </td>
                                         </tr>

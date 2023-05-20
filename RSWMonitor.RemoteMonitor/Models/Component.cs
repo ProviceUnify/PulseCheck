@@ -14,6 +14,7 @@ namespace RSWMonitor.RemoteMonitor.Models
         public string ComponentQuery { get; set; }
         public string ComponentRoletags { get; set; }
         public bool ComponentHasControls { get; set; }
+        public string ComponentFullPathToExe { get; set; }
 
         public virtual ComponentType ComponentTypes { get; set; }
         public virtual Configuration Configuration { get; set; }

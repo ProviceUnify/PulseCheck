@@ -73,6 +73,8 @@ namespace RSWMonitor.RemoteMonitor.Models
 
             modelBuilder.Entity<Component>(entity =>
             {
+                entity.Property(e => e.ComponentFullPathToExe).HasMaxLength(500);
+
                 entity.Property(e => e.ComponentName)
                     .IsRequired()
                     .HasMaxLength(500);

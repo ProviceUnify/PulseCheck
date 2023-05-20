@@ -78,10 +78,14 @@ namespace RSWMonitor.MainApp.Controllers
                         string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
                         string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
                         int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
+                        componentQuery = componentQuery.Replace("\\","/");
+                        string componentFullpathToExe = componentQuery;
+                        componentQuery = Path.GetFileNameWithoutExtension(componentFullpathToExe);
+
                         bool componentHasControls = false;
                         try
                         {
-                            componentHasControls = (formCollection[$"{{'prop':'component-has-controls','row':{indexOfFormInput}}}"]) == "on" ? true : false;
+                            componentHasControls = formCollection[$"{{'prop':'component-has-controls','row':{indexOfFormInput}}}"] == "on" ? true : false;
                         } catch
                         {
                             componentHasControls = false;
@@ -112,6 +116,7 @@ namespace RSWMonitor.MainApp.Controllers
                             ComponentQuery = componentQuery,
                             ComponentTypesId = componentTypeId,
                             ComponentRoletags = componentRoletags,
+                            ComponentFullPathToExe = componentFullpathToExe,
 
                             ComponentHasControls = componentHasControls
                         });
