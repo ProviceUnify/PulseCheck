@@ -39,13 +39,7 @@ namespace RSWMonitor.MainApp.Controllers
                 'type': '{type}'
                 }}", Encoding.UTF8, "application/json"); // setting data string
 
-                //var content = new StringContent($@"{{
-                //'url': '{ url }',
-                //'id': '{ id }',
-                //'action': '{ action }',
-                //'query': '{ query }',
-                //'type': '{ type }'
-                //}}", Encoding.UTF8, "application/json"); // setting data string
+                // TODO remote component restart
                 var response = await client.PostAsync(new Uri($"{url}"), content); //sending
 
                 if ((int)response.StatusCode == 200)
@@ -62,21 +56,6 @@ namespace RSWMonitor.MainApp.Controllers
                         1 => 7,
                         2 => 8
                     };
-                    //switch(action)
-                    //{
-                    //    case 0:
-                    //        performedAction = "was started";
-                    //        performedActionId = 6;
-                    //        break;
-                    //    case 1:
-                    //        performedAction = "was restarted";
-                    //        performedActionId = 7;
-                    //        break;
-                    //    case 2:
-                    //        performedAction = "was stopped";
-                    //        performedActionId = 8;
-                    //        break;
-                    //}
 
                     await addEntry.Add(User, performedActionId, $"The component \"{currentComponent.ComponentName}\" {performedAction}!");
 
