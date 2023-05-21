@@ -34,16 +34,6 @@ namespace RSWMonitor.RemoteMonitor
             try
             {
                 throw new Exception();
-
-                // enable for using as windows service !PREVENTING USING AS IIS SITE!
-                //var webApplicationOptions = new WebApplicationOptions()
-                //{
-                //    ContentRootPath = AppContext.BaseDirectory,
-                //    Args = args,
-                //    ApplicationName = System.Diagnostics.Process.GetCurrentProcess().ProcessName
-                //};
-                //builder = WebApplication.CreateBuilder(webApplicationOptions);
-                //builder.Host.UseWindowsService();
             } catch (Exception ex)
             {
                 builder = WebApplication.CreateBuilder(args);
@@ -67,33 +57,10 @@ namespace RSWMonitor.RemoteMonitor
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
-            //builder.Services.AddRazorPages();
             int thisRemoteMonitorConfigurationId = builder.Configuration.GetValue<int>("ConfigurationID");
-            //var t = healthChecksDbContext.Configurations.Where(m => m.Id == thisRemoteMonitorConfigurationId).Include(m => m.Components);
 
             LoadConfigurationController loadConfiguration = new();
             builder = loadConfiguration.Load(builder, thisRemoteMonitorConfigurationId, healthChecksDbContext);
-            //var t = healthChecksDbContext.Configurations;
-
-            //foreach (var elem in t)
-            //{
-            //    builder.Services.AddHealthChecks().AddUrlGroup(new Uri(elem.Uri), elem.Name);
-            //}
-            //builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "vk");
-            #region hc impementation
-            //builder.Services.AddHealthChecks().AddUrlGroup(new Uri("https://vk.com"), "VK");
-            //builder.Services.AddHealthChecks().AddWindowsServiceHealthCheck("Rockstar Service", name: "tt", predicate: s => s.Status == ServiceControllerStatus.Running);
-            //builder.Services.AddHealthChecks().AddProcessHealthCheck("mspaint", predicate: p => p.Length > 0, tags: new[] { "KSD", "EOL" });
-            //builder.Services.AddHealthChecks().AddCheck<CheckByHttpRequest>("test1");
-            //services.AddHealthChecks()
-            //  .AddSqlServer(Configuration["ConnectionString"]) // Your database connection string
-            //  .AddDiskStorageHealthCheck(s => s.AddDrive("C:\\", 1024)) // 1024 MB (1 GB) free minimum
-            //  .AddProcessAllocatedMemoryHealthCheck(512) // 512 MB max allocated memory
-            //  .AddProcessHealthCheck("ProcessName", p => p.Length > 0) // check if process is running
-            //  .AddWindowsServiceHealthCheck("someservice", s => s.Status == ServiceControllerStatus.Running); // check if a windows service is running
-            #endregion
 
             var app = builder.Build();
 
@@ -119,21 +86,7 @@ namespace RSWMonitor.RemoteMonitor
 
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-        //        ResultStatusCodes = new Dictionary<HealthStatus, int>
-        //{
-        //    {HealthStatus.Healthy, StatusCodes.Status200OK},
-        //    {HealthStatus.Degraded, StatusCodes.Status500InternalServerError},
-        //    {HealthStatus.Unhealthy, StatusCodes.Status503ServiceUnavailable},
-        //},
-        //        Predicate = _ => true
-                //ResultStatusCodes =
-                //{
-                //    [HealthStatus.Healthy] = StatusCodes.Status200OK,
-                //    [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
-                //    [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
-                //},
-                //AllowCachingResponses = false
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
 
             //app.MapRazorPages();
