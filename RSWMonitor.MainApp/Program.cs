@@ -59,6 +59,14 @@ namespace RSWMonitor.MainApp
 
             var app = builder.Build();
 
+            app.UseExceptionHandler(
+                new ExceptionHandlerOptions()
+                {
+                    AllowStatusCode404Response = true, // important!
+                    ExceptionHandlingPath = "/error"
+                }
+            );
+
             // Configure the HTTP request pipeline.
             // Setting additional parameters for HealthChecksUI page
             try

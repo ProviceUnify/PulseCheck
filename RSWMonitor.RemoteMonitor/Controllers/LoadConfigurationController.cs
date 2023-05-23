@@ -28,7 +28,7 @@ namespace RSWMonitor.RemoteMonitor.Controllers
                     switch (component.ComponentTypesId)
                     {
                         case 1:
-                            builderAddHealthCheck.AddSqlServer(component.ComponentFullPathToExe, "SELECT 1", name: component.ComponentName, tags: roleTags);
+                            builderAddHealthCheck.AddSqlServer(component.ComponentFullPathToExe, "SELECT 1", name: component.ComponentName, tags: roleTags, failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy); // wrong name of prop
                             break;
                         case 2:
                             builderAddHealthCheck.AddWindowsServiceHealthCheck(component.ComponentQuery, s => s.Status == ServiceControllerStatus.Running, name: component.ComponentName, tags: roleTags);

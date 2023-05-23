@@ -6,6 +6,6 @@
     //    "Uri": "https://localhost:44338/health"
     //  }
     //],
-    "PollingRate": "3"
+    "PollingRate": "10"
   }
 }

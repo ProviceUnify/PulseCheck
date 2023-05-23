@@ -23,7 +23,7 @@ namespace RSWMonitor.RemoteMonitor
                 {
                     // Конфигурация сервисов
                     services.AddDbContext<HealthChecksDBContext>(options =>
-                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")), ServiceLifetime.Singleton);
+                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")));
                     //services.AddControllersWithViews();
                 });
 
@@ -51,7 +51,7 @@ namespace RSWMonitor.RemoteMonitor
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(AspDBConnectionString));
             builder.Services.AddDbContext<HealthChecksDBContext>(options =>
-                options.UseSqlServer(HealthChecksDBString), ServiceLifetime.Singleton);
+                options.UseSqlServer(HealthChecksDBString)/*, ServiceLifetime.Singleton*/);
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddControllers();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -64,6 +64,14 @@ namespace RSWMonitor.RemoteMonitor
 
             var app = builder.Build();
 
+            app.UseExceptionHandler(
+                new ExceptionHandlerOptions()
+                {
+                    AllowStatusCode404Response = true, // important!
+                    ExceptionHandlingPath = "/error"
+                }
+            );
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -71,6 +79,7 @@ namespace RSWMonitor.RemoteMonitor
             }
             else
             {
+               
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -86,7 +95,12 @@ namespace RSWMonitor.RemoteMonitor
 
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+                ResultStatusCodes =
+                {
+                    [Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Healthy] = StatusCodes.Status200OK,
+                    [Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy] = StatusCodes.Status400BadRequest
+                }
             });
 
             //app.MapRazorPages();
