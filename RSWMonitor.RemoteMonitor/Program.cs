@@ -1,17 +1,10 @@
 using HealthChecks.UI.Client;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Manage.Internal;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.WindowsServices;
 using RSWMonitor.RemoteMonitor.Controllers;
 using RSWMonitor.RemoteMonitor.Data;
 using RSWMonitor.RemoteMonitor.Models;
-using System.ServiceProcess;
 
 namespace RSWMonitor.RemoteMonitor
 {
@@ -31,13 +24,6 @@ namespace RSWMonitor.RemoteMonitor
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            try
-            {
-                throw new Exception();
-            } catch (Exception ex)
-            {
-                builder = WebApplication.CreateBuilder(args);
-            }
             var host = CreateHostBuilder(args).Build();
 
             // ѕолучаем сервис из контейнера зависимостей
@@ -59,8 +45,8 @@ namespace RSWMonitor.RemoteMonitor
             .AddEntityFrameworkStores<ApplicationDbContext>();
             int thisRemoteMonitorConfigurationId = builder.Configuration.GetValue<int>("ConfigurationID");
 
-            LoadConfigurationController loadConfiguration = new();
-            builder = loadConfiguration.Load(builder, thisRemoteMonitorConfigurationId, healthChecksDbContext);
+            LoadConfigurationController loadConfiguration = new(healthChecksDbContext);
+            builder = loadConfiguration.Load(builder, thisRemoteMonitorConfigurationId);
 
             var app = builder.Build();
 
@@ -79,7 +65,7 @@ namespace RSWMonitor.RemoteMonitor
             }
             else
             {
-               
+
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();

@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.ServiceProcess;
-using Microsoft.Win32.TaskScheduler;
 using RSWMonitor.RemoteMonitor.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
-using AutoMapper;
 using System.Runtime.InteropServices;
 
 namespace RSWMonitor.RemoteMonitor.Controllers

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
@@ -13,7 +15,13 @@ namespace RSWMonitor.RemoteMonitor.Controllers
     [NonController]
     public class LoadConfigurationController : Controller
     {
-        public WebApplicationBuilder Load(WebApplicationBuilder builder, int ConfigurationId, HealthChecksDBContext DbContext)
+        private HealthChecksDBContext DbContext;
+        public LoadConfigurationController(HealthChecksDBContext _DbContext)
+        {
+            DbContext = _DbContext;
+        }
+
+        public WebApplicationBuilder Load(WebApplicationBuilder builder, int ConfigurationId)
         {
             Configuration? configuration = DbContext.Configurations.Where(m => m.Id == ConfigurationId).Include(m => m.Components).First();
             var builderAddHealthCheck = builder.Services.AddHealthChecks();
