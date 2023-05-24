@@ -49,6 +49,9 @@ namespace RSWMonitor.RemoteMonitor.Controllers
                             builderAddHealthCheck.AddUrlGroup(new Uri(component.ComponentQuery), component.ComponentName, tags: roleTags, timeout: TimeSpan.FromSeconds(30));
                             break;
                         case 5:
+                            builderAddHealthCheck.AddMySql(component.ComponentFullPathToExe, component.ComponentName, tags: roleTags);
+                            break;
+                            case 6:
                             // implement custom health check dll
                             break;
                         default:
