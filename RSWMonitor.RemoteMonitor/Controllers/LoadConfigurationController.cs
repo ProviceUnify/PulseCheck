@@ -1,11 +1,5 @@
-﻿using HealthChecks.Uris;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
 using RSWMonitor.RemoteMonitor.Models;
 using System.ServiceProcess;
@@ -51,7 +45,7 @@ namespace RSWMonitor.RemoteMonitor.Controllers
                         case 5:
                             builderAddHealthCheck.AddMySql(component.ComponentFullPathToExe, component.ComponentName, tags: roleTags);
                             break;
-                            case 6:
+                        case 6:
                             // implement custom health check dll
                             break;
                         default:

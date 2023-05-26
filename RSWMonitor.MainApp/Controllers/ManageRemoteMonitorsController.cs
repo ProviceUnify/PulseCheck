@@ -28,7 +28,7 @@ namespace RSWMonitor.MainApp.Controllers
             _userManager = userManager;
             addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
         }
-        public async Task<IActionResult> Index(string failure = "", int top = 50)
+        public async Task<IActionResult> Index(string failure = "")
         {
             List<Models.Configuration>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
             // deleting predefined system roles from list
@@ -39,10 +39,8 @@ namespace RSWMonitor.MainApp.Controllers
                 List<IdentityRole> Roles = await _roleManager.Roles.ToListAsync();
                 var healthManagerRoleToDelete = await _roleManager.FindByNameAsync("Health manager");
                 var userManagerRoleToDelete = await _roleManager.FindByNameAsync("User manager");
-                var systemRoleToDelete = await _roleManager.FindByNameAsync("system");
                 Roles.Remove(healthManagerRoleToDelete);
                 Roles.Remove(userManagerRoleToDelete);
-                //Roles.Remove(systemRoleToDelete);
                 ViewBag.Roles = Roles;
             }
             catch { }
