@@ -7,10 +7,10 @@ using System.ServiceProcess;
 namespace RSWMonitor.RemoteMonitor.Controllers
 {
     [NonController]
-    public class LoadConfigurationController : Controller
+    public class ConfigurationLoaderController : Controller
     {
         private HealthChecksDBContext DbContext;
-        public LoadConfigurationController(HealthChecksDBContext _DbContext)
+        public ConfigurationLoaderController(HealthChecksDBContext _DbContext)
         {
             DbContext = _DbContext;
         }

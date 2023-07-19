@@ -29,7 +29,7 @@ namespace RSWMonitor.MainApp.Controllers
             //String address = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}"; // get global url (https://localhost...)
             try
             {
-                var userId = User.Identities.First().Claims.Where(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").FirstOrDefault().Value;
+                var userId = User.Identities.First().Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
                 var currentComponent = HealthChecksDbContext.Components.Where(c => c.Id == id).FirstOrDefault();
                 var content = new StringContent($@"{{
                 'url': '{url}',
@@ -48,16 +48,20 @@ namespace RSWMonitor.MainApp.Controllers
                     {
                         0 => "was started",
                         1 => "was restarted",
-                        2 => "was stopped"
+                        2 => "was stopped",
+                        3 => "was changed",
+                        _ => ""
                     };
                     sbyte performedActionId = action switch
                     {
                         0 => 6,
                         1 => 7,
-                        2 => 8
+                        2 => 8,
+                        3 => 2,
+                        _ => 2
                     };
 
-                    await addEntry.Add(User, performedActionId, $"The component \"{currentComponent.ComponentName}\" {performedAction}!");
+                    await addEntry.Add(User, performedActionId, $"The component \"{currentComponent?.ComponentName}\" {performedAction}!");
 
                     return Ok();
                 }
@@ -65,7 +69,7 @@ namespace RSWMonitor.MainApp.Controllers
                 try
                 {
                     var responseObject = JsonConvert.DeserializeObject<Dictionary<String, Dictionary<String, Object>>>(response.Content.ReadAsStringAsync().Result);
-                    var responseString = responseObject["value"].Values.FirstOrDefault();
+                    var responseString = responseObject!["value"].Values.FirstOrDefault();
                     return BadRequest(Json(new { value = responseString }));
 
                 } catch

@@ -27,7 +27,7 @@ namespace RSWMonitor.MainApp.Controllers
         public async Task<IActionResult> Index()
         {
             UsersAndRolesViewModel usersAndRoles = new();
-            var roles = await _roleManager.Roles.ToListAsync();
+            var roles = await HealthChecksDbContext.AspNetRoles.OrderByDescending(k => k.IsRemovable).ToListAsync();
             var users = await _userManager.Users.ToListAsync();
 
 
@@ -91,6 +91,10 @@ namespace RSWMonitor.MainApp.Controllers
         }
         public async Task<IActionResult> RemoveRole(string roleName)
         {
+            if (!HealthChecksDbContext.AspNetRoles.Where(r => r.Name == roleName).FirstOrDefault().IsRemovable)
+            {
+                return BadRequest(Json(new { value = "Role not suppossed to be deleted" }));
+            }
             IdentityRole roleToDelete = await _roleManager.FindByNameAsync(roleName);
             var result = await _roleManager.DeleteAsync(roleToDelete);
             if (result.Succeeded)

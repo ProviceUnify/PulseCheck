@@ -235,10 +235,11 @@
                                     <tr>
                                         <th class="border-end text-end col-1">#</th>
                                         <th class="col-1 border-end">Type</th>
-                                        <th class="col-3 border-end">Name</th>
+                                        <th class="col-2 border-end">Name</th>
                                         <th class="col-3 border-end">Target info</th>
                                         <th class="col-2 border-end">Roles</th>
-                                        <th class="col-3">Controls</th>
+                                        <th class="col-1 border-end">Save</th>
+                                        <th class="col-4">Controls</th>
                                     </tr>
                                         @*</thead>*@
                                         @*<tbody>*@
@@ -264,11 +265,16 @@
                                             <td class="component-roletags border-end" data-roletags="@component.ComponentRoletags">
                                                     @{
                                                         var listOfComponentRoles = JsonConvert.DeserializeObject<List<string>>(component.ComponentRoletags);
-                                                        foreach (var item in listOfComponentRoles)
+                                                        foreach (var item in listOfComponentRoles!)
                                                         {
                                                         <span class="badge bg-primary" data-role-name="@item">@item</span>
                                                         }
                                                     }
+                                            </td>
+                                            <td class="border-end">
+                                                <button class="btn btn-sm btn-warning" onclick="sendWebhook('@configuration.Uri', @component.Id, 3, '@component.ComponentQuery', @component.ComponentTypesId)">
+                                                    <i class="bi bi-save"></i>
+                                                </button>
                                             </td>
                                             <td class="component-has-controls" data-has-controls="@component.ComponentHasControls">
                                                     @if (component.ComponentHasControls)
