@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RSWMonitor.MainApp.Models;
+using RSWMonitor.MainApp.Services;
 
 namespace RSWMonitor.MainApp.Controllers
 {
@@ -14,7 +15,7 @@ namespace RSWMonitor.MainApp.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly AddEntryToUserActionHistoryController addEntry;
+        private readonly AddEntryToUserActionHistoryService addEntry;
 
         public ManageUsers(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
@@ -22,7 +23,7 @@ namespace RSWMonitor.MainApp.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
-            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
+            addEntry = new AddEntryToUserActionHistoryService(HealthChecksDbContext, _userManager);
         }
         public async Task<IActionResult> Index()
         {

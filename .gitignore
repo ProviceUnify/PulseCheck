@@ -232,4 +232,4 @@ _Pvt_Extensions
 *.zip
 /RSWMonitor.MainApp/appsettings.json
 /logs/*nlog*.txt
-/RSWMonitor.RemoteMonitor/logs/internal-nlog-AspNetCore.txt
+/RSWMonitor.RemoteMonitor/logs/*nlog*.txt

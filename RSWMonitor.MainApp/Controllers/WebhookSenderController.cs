@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using RSWMonitor.MainApp.Models;
+using RSWMonitor.MainApp.Services;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -11,18 +12,18 @@ using System.Text;
 namespace RSWMonitor.MainApp.Controllers
 {
     [Authorize(Policy = "HealthManagers")]
-    public class SendWebhookController : Controller
+    public class WebhookSenderController : Controller
     {
-        private readonly HealthChecksDBContext HealthChecksDbContext;
-        private readonly AddEntryToUserActionHistoryController addEntry;
+        private readonly HealthChecksDBContext _healthChecksDbContext;
+        private readonly AddEntryToUserActionHistoryService _addEntry;
         private readonly UserManager<IdentityUser> _userManager;
         private static readonly HttpClient client = new HttpClient();
 
-        public SendWebhookController(HealthChecksDBContext HCContext, UserManager<IdentityUser> userManager)
+        public WebhookSenderController(HealthChecksDBContext HCContext, UserManager<IdentityUser> userManager)
         {
-            HealthChecksDbContext = HCContext;
+            _healthChecksDbContext = HCContext;
             _userManager = userManager;
-            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
+            _addEntry = new AddEntryToUserActionHistoryService(_healthChecksDbContext, _userManager);
         }
         public async Task<IActionResult> SendWebhook(string url, int id, int action, string query, int type)
         {
@@ -30,7 +31,7 @@ namespace RSWMonitor.MainApp.Controllers
             try
             {
                 var userId = User.Identities.First().Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
-                var currentComponent = HealthChecksDbContext.Components.Where(c => c.Id == id).FirstOrDefault();
+                var currentComponent = _healthChecksDbContext.Components.Where(c => c.Id == id).FirstOrDefault();
                 var content = new StringContent($@"{{
                 'url': '{url}',
                 'id': '{id}',
@@ -39,7 +40,6 @@ namespace RSWMonitor.MainApp.Controllers
                 'type': '{type}'
                 }}", Encoding.UTF8, "application/json"); // setting data string
 
-                // TODO remote component restart
                 var response = await client.PostAsync(new Uri($"{url}"), content); //sending
 
                 if ((int)response.StatusCode == 200)
@@ -61,7 +61,7 @@ namespace RSWMonitor.MainApp.Controllers
                         _ => 2
                     };
 
-                    await addEntry.Add(User, performedActionId, $"The component \"{currentComponent?.ComponentName}\" {performedAction}!");
+                    await _addEntry.Add(User, performedActionId, $"The component \"{currentComponent?.ComponentName}\" {performedAction}!");
 
                     return Ok();
                 }

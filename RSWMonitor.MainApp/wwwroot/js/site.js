@@ -279,11 +279,11 @@ function createRole(element) {
     });
 }
 
-function sendWebhook(url, id, action, query, type) {
+function sendWebhook(url, action = -1, id = -1, query = '', type = -1) {
     //debugger;
     url = url.replaceAll('/health', "/webhook");
     $.ajax({
-        url: '/SendWebhook/SendWebhook',
+        url: '/WebhookSender/SendWebhook',
         type: 'POST',
         data: { url: url, id: id, action: action, query: query, type: type },
         success: function (response) {

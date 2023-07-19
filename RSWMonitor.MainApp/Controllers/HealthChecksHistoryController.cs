@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RSWMonitor.MainApp.Models;
+using RSWMonitor.MainApp.Services;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -18,13 +19,13 @@ namespace RSWMonitor.MainApp.Controllers
     {
         private readonly HealthChecksDBContext HealthChecksDbContext;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly AddEntryToUserActionHistoryController addEntry;
+        private readonly AddEntryToUserActionHistoryService addEntry;
 
         public HealthChecksHistoryController(HealthChecksDBContext HCContext, UserManager<IdentityUser> userManager)
         {
             HealthChecksDbContext = HCContext;
             _userManager = userManager;
-            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
+            addEntry = new AddEntryToUserActionHistoryService(HealthChecksDbContext, _userManager);
         }
         public IActionResult Index()
         {

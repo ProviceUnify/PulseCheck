@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using RSWMonitor.MainApp.Models;
 using System.Security.Claims;
 
-namespace RSWMonitor.MainApp.Controllers
+namespace RSWMonitor.MainApp.Services
 {
     [NonController]
-    public class AddEntryToUserActionHistoryController : Controller
+    public class AddEntryToUserActionHistoryService : Controller
     {
-        private readonly HealthChecksDBContext HealthChecksDbContext;
+        private readonly HealthChecksDBContext _healthChecksDbContext;
         private readonly UserManager<IdentityUser> _userManager;
-        public AddEntryToUserActionHistoryController(HealthChecksDBContext HCContext, UserManager<IdentityUser> userManager)
+        public AddEntryToUserActionHistoryService(HealthChecksDBContext HCContext, UserManager<IdentityUser> userManager)
         {
-            HealthChecksDbContext = HCContext;
+            _healthChecksDbContext = HCContext;
             _userManager = userManager;
         }
         public async Task<IActionResult> Add(ClaimsPrincipal user, sbyte userAction, string actionDetails = "")
@@ -29,7 +29,7 @@ namespace RSWMonitor.MainApp.Controllers
                 };
                 try
                 {
-                    await HealthChecksDbContext.HealthCheckUserActionLogs.AddAsync(newAction);
+                    await _healthChecksDbContext.HealthCheckUserActionLogs.AddAsync(newAction);
                 }
                 catch (Exception ex) { }
             }
@@ -37,7 +37,7 @@ namespace RSWMonitor.MainApp.Controllers
             {
 
             }
-            HealthChecksDbContext.SaveChanges();
+            _healthChecksDbContext.SaveChanges();
             return Ok();
         }
     }

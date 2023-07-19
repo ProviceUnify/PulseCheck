@@ -149,7 +149,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <span class="text-start text-opacity-50 text-danger">Component health log entries are not saved if 2 or more components are Unhealthy or Degraded, technical limitations :(</span>
+                        @*<span class="text-start text-opacity-50 text-danger">Component health log entries are not saved if 2 or more components are Unhealthy or Degraded, technical limitations :(</span>*@
                         <br />
                         <button type="button" onclick="addComponentRow()" class="btn btn-sm my-auto btn-warning text-end mx-auto"><i class="bi bi-plus-square"></i> Add component</button>
                         <input class="form-check-input" style="display: none;" type="checkbox" name="configuration-db-id" value="-1" id="configuration-db-id" checked>
@@ -182,7 +182,8 @@
                 <tr class="sticky-table-headers">
                     <th class="col-1 text-end border-end">#</th>
                     <th class="col-5 border-end">Name</th>
-                    <th class="col-5 border-end">URI</th>
+                    <th class="col-4 border-end">URI</th>
+                    <th class="col-1 border-end">Save</th>
                     <th>Edit</th>
                 </tr>
                 @*</thead>*@
@@ -218,6 +219,12 @@
                         @{
                             index = (Model).IndexOf(configuration) + 1;
                         }
+
+                    <td class="border-end">
+                        <button class="btn btn-sm btn-warning" onclick="sendWebhook('@configuration.Uri', 3)">
+                            <i class="bi bi-save"></i>
+                        </button>
+                    </td>
                         <td class="align-middle border-end">
                             <button type="button" value="@configuration.Id" id="ed-btn-@index" data-onclick="" onclick="fillConfiguration('ed-btn-@index')" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-configuration">
                                 <i class="bi bi-pencil-square"></i>
@@ -236,9 +243,8 @@
                                         <th class="border-end text-end col-1">#</th>
                                         <th class="col-1 border-end">Type</th>
                                         <th class="col-2 border-end">Name</th>
-                                        <th class="col-3 border-end">Target info</th>
+                                        <th class="col-4 border-end">Target info</th>
                                         <th class="col-2 border-end">Roles</th>
-                                        <th class="col-1 border-end">Save</th>
                                         <th class="col-4">Controls</th>
                                     </tr>
                                         @*</thead>*@
@@ -271,19 +277,14 @@
                                                         }
                                                     }
                                             </td>
-                                            <td class="border-end">
-                                                <button class="btn btn-sm btn-warning" onclick="sendWebhook('@configuration.Uri', @component.Id, 3, '@component.ComponentQuery', @component.ComponentTypesId)">
-                                                    <i class="bi bi-save"></i>
-                                                </button>
-                                            </td>
                                             <td class="component-has-controls" data-has-controls="@component.ComponentHasControls">
                                                     @if (component.ComponentHasControls)
                                                     {
                                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <button type="button" class="btn btn-sm btn-success" onclick="sendWebhook('@configuration.Uri', @component.Id, 0, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-play-fill"></i></button>
-                                                        <button type="button" class="btn btn-sm btn-warning text-black" onclick="sendWebhook('@configuration.Uri', @component.Id, 1, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-arrow-clockwise"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-success" onclick="sendWebhook('@configuration.Uri', 0, @component.Id, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-play-fill"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-warning text-black" onclick="sendWebhook('@configuration.Uri', 1, @component.Id, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-arrow-clockwise"></i></button>
                                                     </div>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="sendWebhook('@configuration.Uri', @component.Id, 2, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-stop-fill"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="sendWebhook('@configuration.Uri', 2, @component.Id, '@component.ComponentQuery', @component.ComponentTypesId)"><i class="bi bi-stop-fill"></i></button>
                                                     }
                                                     else
                                                     {

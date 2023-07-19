@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RSWMonitor.MainApp.Models;
+using RSWMonitor.MainApp.Services;
 using System.Data;
 using System.Net;
 using System.Net.Http;
@@ -19,14 +20,14 @@ namespace RSWMonitor.MainApp.Controllers
         private readonly HealthChecksDBContext HealthChecksDbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly AddEntryToUserActionHistoryController addEntry;
+        private readonly AddEntryToUserActionHistoryService addEntry;
         private static readonly HttpClient client = new HttpClient();
         public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             HealthChecksDbContext = HCContext;
             _roleManager = roleManager;
             _userManager = userManager;
-            addEntry = new AddEntryToUserActionHistoryController(HealthChecksDbContext, _userManager);
+            addEntry = new AddEntryToUserActionHistoryService(HealthChecksDbContext, _userManager);
         }
         public async Task<IActionResult> Index(string failure = "")
         {
