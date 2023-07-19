@@ -231,3 +231,5 @@ _Pvt_Extensions
 .fake/
 *.zip
 /RSWMonitor.MainApp/appsettings.json
+/logs/*nlog*.txt
+/RSWMonitor.RemoteMonitor/logs/internal-nlog-AspNetCore.txt
