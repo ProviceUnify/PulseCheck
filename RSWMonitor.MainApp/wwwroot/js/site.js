@@ -181,7 +181,7 @@ function fillConfiguration(elementId) {
             'componentId': -1,
             'componentTypeId': 0,
             'componentName': '',
-            'componentQuery': '',
+            'componentTargetInfo': '',
             'componentRoletags': '',
             'componentHasControls': false
         };
@@ -190,7 +190,7 @@ function fillConfiguration(elementId) {
         rowData.componentId = row.attributes['data-component-db-id'].value;
         rowData.componentTypeId = row.querySelectorAll('td.component-type')[0].attributes['data-type-id'].value;
         rowData.componentName = row.querySelectorAll('td.component-name')[0].attributes['data-name'].value;
-        rowData.componentQuery = row.querySelectorAll('td.component-query')[0].innerText;
+        rowData.componentTargetInfo = row.querySelectorAll('td.component-targetInfo')[0].innerText;
         rowData.componentRoletags = row.querySelectorAll('td.component-roletags')[0].attributes['data-roletags'].value;
         rowData.componentHasControls = (row.querySelectorAll('td.component-has-controls')[0].attributes['data-has-controls'].value == "True") ? true : false;
         rowsData.push(rowData);
@@ -203,7 +203,7 @@ function fillConfiguration(elementId) {
     rowsData.forEach(function(row, index) {
         $("#component-type-row-" + (index + 1))[0].value = row.componentTypeId;
         $("#component-name-row-" + (index + 1))[0].value = row.componentName;
-        $("#component-query-row-" + (index + 1))[0].value = row.componentQuery;
+        $("#component-targetInfo-row-" + (index + 1))[0].value = row.componentTargetInfo;
         $("#component-has-controls-row-" + (index + 1))[0].checked = row.componentHasControls;
         $("#component-db-id-row-" + (index + 1))[0].value = row.componentId;
         var addConfigurationRoles = document.querySelectorAll('input.add-configuration-roles-row-' + (index + 1));
@@ -290,6 +290,10 @@ function sendWebhook(url, action = -1, id = -1, query = '', type = -1) {
             showToast();
         },
         error: function (response) {
+            if (response.status == 401) {
+                response.responseText = 'Unathorized';
+                //showExceptionToast('Unathorized');
+            }
             showExceptionToast(response);
         }
     });

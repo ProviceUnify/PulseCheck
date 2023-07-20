@@ -21,6 +21,10 @@ body {
     min-width: 80%;
 }
 
+/*tr.config-collapse {
+    transition-duration: 3s;
+}*/
+
 .scrollable-tables {
     /*overflow-y: auto;*/
     /*height: 65em;*/

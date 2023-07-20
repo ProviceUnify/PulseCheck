@@ -7,6 +7,7 @@ using RSWMonitor.MainApp.Models;
 using RSWMonitor.MainApp.Services;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Text;
 
 namespace RSWMonitor.MainApp.Controllers
@@ -25,12 +26,34 @@ namespace RSWMonitor.MainApp.Controllers
             _userManager = userManager;
             _addEntry = new AddEntryToUserActionHistoryService(_healthChecksDbContext, _userManager);
         }
-        public async Task<IActionResult> SendWebhook(string url, int id, int action, string query, int type)
+        public async Task<IActionResult> SendWebhook(string url, int id = -1, int action = -1, string query = "", int type = -1, ClaimsPrincipal userClaims = null)
         {
             //String address = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}"; // get global url (https://localhost...)
             try
             {
-                var userId = User.Identities.First().Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
+                var currentUser = User;
+                string userId = "";
+                if (currentUser == null)
+                {
+                    //userId = userClaims.Identities.First().Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
+                    currentUser = userClaims;
+
+                } else
+                {
+                }
+                    userId = currentUser.Identities.First().Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
+                //try
+                //{
+                //} catch (NullReferenceException ex)
+                //{
+                //    try
+                //    {
+                //    }
+                //     catch
+                //    {
+                //        return BadRequest(Json(new { value = ex.Message }));
+                //    }
+                //}
                 var currentComponent = _healthChecksDbContext.Components.Where(c => c.Id == id).FirstOrDefault();
                 var content = new StringContent($@"{{
                 'url': '{url}',
@@ -44,6 +67,7 @@ namespace RSWMonitor.MainApp.Controllers
 
                 if ((int)response.StatusCode == 200)
                 {
+                    if (action == 3) return Ok();
                     string performedAction = action switch
                     {
                         0 => "was started",
@@ -61,7 +85,7 @@ namespace RSWMonitor.MainApp.Controllers
                         _ => 2
                     };
 
-                    await _addEntry.Add(User, performedActionId, $"The component \"{currentComponent?.ComponentName}\" {performedAction}!");
+                    await _addEntry.Add(currentUser, performedActionId, $"The component \"{currentComponent?.ComponentName}\" {performedAction}!");
 
                     return Ok();
                 }

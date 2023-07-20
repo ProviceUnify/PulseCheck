@@ -143,10 +143,10 @@ namespace RSWMonitor.RemoteMonitor.Services
             try
             {
                 var process = new Process();
-                string processName = Path.GetFileNameWithoutExtension(component.ComponentFullPathToExe);
+                string processName = Path.GetFileNameWithoutExtension(component.ComponentTargetInfo);
                 if (Process.GetProcessesByName(processName).Length == 0)
                 {
-                    process.StartInfo.FileName = component.ComponentFullPathToExe;
+                    process.StartInfo.FileName = component.ComponentTargetInfo;
                     process.Start();
 
                     if (Process.GetProcessesByName(processName).Length == 0) return BadRequest(Json(new { value = ControlFailedProcessNotStartedPhrase }));
@@ -164,7 +164,7 @@ namespace RSWMonitor.RemoteMonitor.Services
         {
             try
             {
-                string processName = Path.GetFileNameWithoutExtension(component.ComponentFullPathToExe);
+                string processName = Path.GetFileNameWithoutExtension(component.ComponentTargetInfo);
                 Process[] process = Process.GetProcessesByName(processName);
                 if (process.Length > 0)
                 {
@@ -187,7 +187,7 @@ namespace RSWMonitor.RemoteMonitor.Services
             try
             {
                 var service = new ServiceController();
-                service.ServiceName = component.ComponentQuery;
+                service.ServiceName = component.ComponentTargetInfo;
                 service.MachineName = new Uri(controlParams.url).GetComponents(UriComponents.Host, UriFormat.UriEscaped);
                 if (service.Status == ServiceControllerStatus.Stopped)
                 {
@@ -211,7 +211,7 @@ namespace RSWMonitor.RemoteMonitor.Services
             try
             {
                 var service = new ServiceController();
-                service.ServiceName = component.ComponentQuery;
+                service.ServiceName = component.ComponentTargetInfo;
                 service.MachineName = new Uri(controlParams.url).GetComponents(UriComponents.Host, UriFormat.UriEscaped);
                 if (service.Status == ServiceControllerStatus.Running)
                 {

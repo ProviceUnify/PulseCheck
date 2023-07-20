@@ -17,23 +17,25 @@ namespace RSWMonitor.MainApp.Controllers
     [Authorize(Policy = "HealthManagers")]
     public class ManageRemoteMonitorsController : Controller
     {
-        private readonly HealthChecksDBContext HealthChecksDbContext;
+        private readonly HealthChecksDBContext _healthChecksDbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AddEntryToUserActionHistoryService addEntry;
+        private readonly WebhookSenderController _webhookSenderController;
         private static readonly HttpClient client = new HttpClient();
         public ManageRemoteMonitorsController(HealthChecksDBContext HCContext, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
-            HealthChecksDbContext = HCContext;
+            _healthChecksDbContext = HCContext;
             _roleManager = roleManager;
             _userManager = userManager;
-            addEntry = new AddEntryToUserActionHistoryService(HealthChecksDbContext, _userManager);
+            addEntry = new AddEntryToUserActionHistoryService(_healthChecksDbContext, _userManager);
+            _webhookSenderController = new WebhookSenderController(_healthChecksDbContext, _userManager);
         }
         public async Task<IActionResult> Index(string failure = "")
         {
-            List<Models.Configuration>? configurations = HealthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
+            List<Models.Configuration>? configurations = _healthChecksDbContext.Configurations?.Include(m => m.Components).ToList();
             // deleting predefined system roles from list
-            List<ComponentType>? componentTypes = HealthChecksDbContext.ComponentTypes?.ToList();
+            List<ComponentType>? componentTypes = _healthChecksDbContext.ComponentTypes?.ToList();
 
             try
             {
@@ -74,12 +76,9 @@ namespace RSWMonitor.MainApp.Controllers
                         int indexOfFormInput = i + 1;
                         int componentId = Int32.Parse(formCollection[$"component-db-id-row-{indexOfFormInput}"]);
                         string componentName = formCollection[$"{{'prop':'component-name','row':{indexOfFormInput}}}"];
-                        string componentQuery = formCollection[$"{{'prop':'component-query','row':{indexOfFormInput}}}"];
+                        string componentTargetInfo = formCollection[$"{{'prop':'component-targetInfo','row':{indexOfFormInput}}}"];
                         string componentRoletags = formCollection[$"{{'prop':'role','row':{indexOfFormInput}}}"];
                         int componentTypeId = Int32.Parse(formCollection[$"{{'prop':'component-type','row':{indexOfFormInput}}}"]);
-                        componentQuery = componentQuery.Replace("\\","/");
-                        string componentFullpathToExe = componentQuery;
-                        componentQuery = Path.GetFileNameWithoutExtension(componentFullpathToExe);
 
                         bool componentHasControls = false;
                         try
@@ -89,7 +88,7 @@ namespace RSWMonitor.MainApp.Controllers
                         {
                             componentHasControls = false;
                         }
-                        if (componentName == "" || componentQuery == "" || componentRoletags == "")
+                        if (componentName == "" || componentTargetInfo == "" || componentRoletags == "")
                         {
                             return RedirectToAction("Index", routeValues: new { failure = $"Entered data of component was incorrect" });
                         }
@@ -100,7 +99,7 @@ namespace RSWMonitor.MainApp.Controllers
                             componentRoletags = JsonConvert.SerializeObject(rolesList);
 
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
                             componentRoletags = JsonConvert.SerializeObject(new List<string>());
@@ -112,15 +111,14 @@ namespace RSWMonitor.MainApp.Controllers
                         {
                             Id = componentId,
                             ComponentName = componentName,
-                            ComponentQuery = componentQuery,
+                            ComponentTargetInfo = componentTargetInfo,
                             ComponentTypesId = componentTypeId,
                             ComponentRoletags = componentRoletags,
-                            ComponentFullPathToExe = componentFullpathToExe,
 
                             ComponentHasControls = componentHasControls
                         });
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         componentsCount += 1;
                         continue;
@@ -134,7 +132,7 @@ namespace RSWMonitor.MainApp.Controllers
 
             if (configurationBaseData.name == "" && configurationBaseData.uri == "")
             {
-                return RedirectToAction("Index", routeValues: new { failure = $"Entered data of configuration was incorrect" });
+                return RedirectToAction("Index", routeValues: new { failure = $"Entered data of configuration were incorrect" });
             }
             if (configurationBaseData.id < 0)
             {
@@ -145,18 +143,18 @@ namespace RSWMonitor.MainApp.Controllers
                     Components = components
 
                 };
-                HealthChecksDbContext.Configurations.Add(configurations);
+                _healthChecksDbContext.Configurations.Add(configurations);
             }
             else
             {
                 isUpdate = true;
                 Models.Configuration? configurationToEdit = new();
-                configurationToEdit = await HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).Include(m => m.Components).FirstOrDefaultAsync();
+                configurationToEdit = await _healthChecksDbContext.Configurations?.Where(c => c.Id == configurationBaseData.id).Include(m => m.Components).FirstOrDefaultAsync();
                 configurationToEdit.Name = configurationBaseData.name;
                 configurationToEdit.Uri = configurationBaseData.uri;
                 configurationToEdit.Components = components;
             }
-            await HealthChecksDbContext.SaveChangesAsync();
+            await _healthChecksDbContext.SaveChangesAsync();
             if (isUpdate)
             {
                 await addEntry.Add(User, 2, $"Configuration \"{configurationBaseData.name}\" with {componentsCount} component(s) was edited!");
@@ -166,6 +164,7 @@ namespace RSWMonitor.MainApp.Controllers
                 await addEntry.Add(User, 1, $"New configuration \"{configurationBaseData.name}\" with {componentsCount} component(s) was added!");
 
             }
+            await RestartConfiguration(configurationBaseData.uri, 3, configurationBaseData.id);
             return RedirectToAction("Index", routeValues: new { failure = "" });
         }
 
@@ -176,10 +175,10 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 if (configurationId >= 0)
                 {
-                    Models.Configuration? configurationToDelete = new();
-                    configurationToDelete = HealthChecksDbContext.Configurations?.Where(c => c.Id == configurationId).FirstOrDefault();
-                    HealthChecksDbContext.Configurations?.Remove(configurationToDelete!);
-                    await HealthChecksDbContext.SaveChangesAsync();
+                    Configuration? configurationToDelete = new();
+                    configurationToDelete = _healthChecksDbContext.Configurations?.Where(c => c.Id == configurationId).FirstOrDefault();
+                    _healthChecksDbContext.Configurations?.Remove(configurationToDelete!);
+                    await _healthChecksDbContext.SaveChangesAsync();
                     await addEntry.Add(User, 3, $"Configuration \"{configurationToDelete.Name}\" was removed!");
                     return Ok();
                     //return RedirectToAction("Index");
@@ -193,6 +192,13 @@ namespace RSWMonitor.MainApp.Controllers
             {
                 return BadRequest(Json(new { value = ex.Message }));
             }
+        }
+
+        private async Task<IActionResult> RestartConfiguration(string configurationUri, int action, int id)
+        {
+            configurationUri = configurationUri.Replace("/health", "/webhook");
+            await _webhookSenderController.SendWebhook(configurationUri, action: action, userClaims: User, id: id);
+            return Ok();
         }
     }
 }

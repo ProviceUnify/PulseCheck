@@ -113,13 +113,11 @@ namespace RSWMonitor.MainApp.Models
 
             modelBuilder.Entity<Component>(entity =>
             {
-                entity.Property(e => e.ComponentFullPathToExe).HasMaxLength(500);
-
                 entity.Property(e => e.ComponentName).HasMaxLength(500);
 
-                entity.Property(e => e.ComponentQuery).HasMaxLength(500);
-
                 entity.Property(e => e.ComponentRoletags).HasMaxLength(500);
+
+                entity.Property(e => e.ComponentTargetInfo).HasMaxLength(500);
 
                 entity.HasOne(d => d.ComponentTypes)
                     .WithMany(p => p.Components)
