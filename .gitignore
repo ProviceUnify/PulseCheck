@@ -231,5 +231,6 @@ _Pvt_Extensions
 .fake/
 *.zip
 /PulseCheck.MainApp/appsettings.json
+/PulseCheck.RemoteMonitor/appsettings.json
 /logs/*nlog*.txt
 /PulseCheck.RemoteMonitor/logs/*nlog*.txt
