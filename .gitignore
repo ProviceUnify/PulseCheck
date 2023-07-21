@@ -230,6 +230,6 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 *.zip
-/RSWMonitor.MainApp/appsettings.json
+/PulseCheck.MainApp/appsettings.json
 /logs/*nlog*.txt
-/RSWMonitor.RemoteMonitor/logs/*nlog*.txt
+/PulseCheck.RemoteMonitor/logs/*nlog*.txt

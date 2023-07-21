@@ -1,1 +1,0 @@
-﻿New-Service -Name "RSWMonitor.Service" -BinaryPathName "D:\Release\RSWMonitor.Service\RSWMonitor.RemoteMonitor.exe --contentRoot D:\Release\RSWMonitor.Service" -Description "Collect and provide data about health statuses of configured software" -DisplayName "RSWMonitor Service" -StartupType Automatic

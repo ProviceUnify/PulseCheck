@@ -1,0 +1,1 @@
+﻿New-Service -Name "PulseCheck.Service" -BinaryPathName "D:\Release\PulseCheck.Service\PulseCheck.RemoteMonitor.exe --contentRoot D:\Release\PulseCheck.Service" -Description "Collect and provide data about health statuses of configured software" -DisplayName "PulseCheck Service" -StartupType Automatic
