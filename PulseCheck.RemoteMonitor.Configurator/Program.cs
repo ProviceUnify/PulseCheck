@@ -8,7 +8,7 @@ namespace PulseCheck.RemoteMonitor.Configurator
         static void Main(string[] args)
         {
             PrintHeader();
-            Console.WriteLine(" Preparing...");
+            Console.WriteLine(" Preparing...\n");
             Console.ForegroundColor = ConsoleColor.Green;
             try
             {
@@ -18,15 +18,13 @@ namespace PulseCheck.RemoteMonitor.Configurator
                 Console.WriteLine(" + Deserialization complete;\n");
                 if (deserializedettings!.Configured)
                 {
+                    ShowAllSettings(deserializedettings);
                     Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine(" + This site's appconfig is configured.\n ~ Press:\n\t[Enter]\t- Show settings & exit (Default);\n\t[Space]\t- Change settings");
+                    Console.WriteLine("\n + This site's appconfig is configured.\n ~ Press:\n\t[Enter]\t- Exit;\n\t[Space]\t- Change settings");
                     var key = Console.ReadKey(true).Key;
                     switch (key)
                     {
                         case ConsoleKey.Enter:
-                            ShowAllSettings(deserializedettings);
-                            Console.WriteLine("Press any key to exit");
-                            Console.ReadKey();
                             return;
                         case ConsoleKey.Spacebar:
                             EditSettings(deserializedettings);
