@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PulseCheck.MainApp", "Pulse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PulseCheck.RemoteMonitor", "..\PulseCheck.RemoteMonitor\PulseCheck.RemoteMonitor.csproj", "{06B47928-4783-4676-B03F-84D3C467E35F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PulseCheck.RemoteMonitor.Configurator", "..\PulseCheck.RemoteMonitor.Configurator\PulseCheck.RemoteMonitor.Configurator.csproj", "{4FF32AFD-9211-4A69-993F-9A4A3F059F0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{06B47928-4783-4676-B03F-84D3C467E35F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06B47928-4783-4676-B03F-84D3C467E35F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06B47928-4783-4676-B03F-84D3C467E35F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF32AFD-9211-4A69-993F-9A4A3F059F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF32AFD-9211-4A69-993F-9A4A3F059F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF32AFD-9211-4A69-993F-9A4A3F059F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF32AFD-9211-4A69-993F-9A4A3F059F0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
