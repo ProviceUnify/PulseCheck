@@ -2,15 +2,33 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PulseCheck.MainApp.Data;
 using PulseCheck.MainApp.Models;
+using System;
 
 namespace PulseCheck.MainApp
 {
     public class Program
     {
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    // Конфигурация сервисов
+                    services.AddDbContext<HealthChecksDBContext>(options =>
+                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("HealthChecksDBString")));
+                    //services.AddControllersWithViews();
+                });
         // Программа пишется в спешке, поэтому никаких комментов
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var host = CreateHostBuilder(args).Build();
+
+            // Получаем сервис из контейнера зависимостей
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var healthChecksDbContext = services.GetRequiredService<HealthChecksDBContext>();
+
+            //var builder = WebApplication.CreateBuilder(args);
 
             var AspDBConnectionString = builder.Configuration.GetConnectionString("AspDBConnectionString") ?? throw new InvalidOperationException("Connection string 'AspDBConnectionString' not found."); // ASP.NET default database
             var HealthChecksDBString = builder.Configuration.GetConnectionString("HealthChecksDBString") ?? throw new InvalidOperationException("Connection string 'HealthChecksDBString' not found."); // HealthChecks database
@@ -51,6 +69,7 @@ namespace PulseCheck.MainApp
                 //settings.SetMinimumSecondsBetweenFailureNotifications(10);
 
             }).AddSqlServerStorage(HealthChecksDBString);
+            //}).AddInMemoryStorage();
 
             #region Setting policies
             builder.Services.AddAuthorization(options =>

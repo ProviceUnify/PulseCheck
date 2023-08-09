@@ -74,7 +74,7 @@
                     <tr class="sticky-table-headers bg-light"><th>#</th><th>Name</th><th class="text-danger"><i class="bi bi-trash"></i></th></tr>
                     @foreach (var item in Model.roles!)
                     {
-                        var isRemovable = item.IsRemovable;
+                        var isRemovable = (bool)item.IsRemovable;
                         int roleIndex = (Model.roles).IndexOf(item) + 1;
                         <tr class="align-middle">
                             <td>@roleIndex</td>

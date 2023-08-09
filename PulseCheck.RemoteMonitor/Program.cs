@@ -25,8 +25,8 @@ namespace PulseCheck.RemoteMonitor
 
         public static void Main(string[] args)
         {
-                var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-                logger.Debug("init main");
+            var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            logger.Debug("init main");
             try
             {
 

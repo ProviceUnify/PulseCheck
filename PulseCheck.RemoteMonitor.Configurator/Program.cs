@@ -14,11 +14,11 @@ namespace PulseCheck.RemoteMonitor.Configurator
             {
                 string appsettings = File.ReadAllText(appsettingsFilePath);
                 Console.WriteLine(" + \"appsettings.production.json\" file found;");
-                var deserializedettings = JsonConvert.DeserializeObject<SettingsData>(appsettings);
+                var deserializedSettings = JsonConvert.DeserializeObject<SettingsData>(appsettings);
                 Console.WriteLine(" + Deserialization complete;\n");
-                if (deserializedettings!.Configured)
+                if (deserializedSettings!.Configured)
                 {
-                    ShowAllSettings(deserializedettings);
+                    ShowAllSettings(deserializedSettings);
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("\n + This site's appconfig is configured.\n ~ Press:\n\t[Enter]\t- Exit;\n\t[Space]\t- Change settings");
                     var key = Console.ReadKey(true).Key;
@@ -27,23 +27,23 @@ namespace PulseCheck.RemoteMonitor.Configurator
                         case ConsoleKey.Enter:
                             return;
                         case ConsoleKey.Spacebar:
-                            EditSettings(deserializedettings);
-                            SaveSettings(deserializedettings);
+                            EditSettings(deserializedSettings);
+                            SaveSettings(deserializedSettings);
                             return;
                     }
                 }
                 else
                 {
-                    StartupSettings(deserializedettings);
+                    StartupSettings(deserializedSettings);
                     try
                     {
-                        EditSettings(deserializedettings);
+                        EditSettings(deserializedSettings);
                     }
                     catch (SavingCancelledException)
                     {
                         return;
                     }
-                    SaveSettings(deserializedettings);
+                    SaveSettings(deserializedSettings);
                     return;
                 }
                 Console.ForegroundColor = ConsoleColor.Green;

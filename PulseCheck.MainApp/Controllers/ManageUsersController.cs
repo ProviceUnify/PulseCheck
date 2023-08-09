@@ -92,7 +92,7 @@ namespace PulseCheck.MainApp.Controllers
         }
         public async Task<IActionResult> RemoveRole(string roleName)
         {
-            if (!HealthChecksDbContext.AspNetRoles.Where(r => r.Name == roleName).FirstOrDefault().IsRemovable)
+            if (!(bool)HealthChecksDbContext.AspNetRoles.Where(r => r.Name == roleName).FirstOrDefault().IsRemovable)
             {
                 return BadRequest(Json(new { value = "Role not suppossed to be deleted" }));
             }
